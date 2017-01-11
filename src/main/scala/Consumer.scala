@@ -1,4 +1,4 @@
-import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerIterator, WhiteList }
+import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerIterator, Whitelist }
 import kafka.consumer._
 import kafka.serializer.{DefaultDecoder, Decoder}
 import scala.collection.JavaConversions._
@@ -12,7 +12,7 @@ abstract class Consumer(topics: List[String]) {
 }
 
 case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
-    private val filterSpec = new WhiteList(topics.mkString(","))
+    private val filterSpec = new Whitelist(topics.mkString(","))
 
     protected val keyDecoder: Decoder[Array[Byte]] = new DefaultDecoder()
     protected val valueDecoder: Decoder[Array[Byte]] = new DefaultDecoder()

@@ -1,7 +1,7 @@
 import java.util.Properties
 import kafka.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
 
-case class Producer[A] (topics: List[String]) {
+case class Producer[A] (topic: String) {
     protected val config = new ProducerConfig(KafkaConfig())
     private lazy val producer = new KafkaProducer[A, A](config)
 

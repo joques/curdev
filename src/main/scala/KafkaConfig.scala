@@ -5,7 +5,7 @@ import KafkaConfig._
 
 trait KafkaConfig extends Properties {
     private val consumerPrefixWithDot = consumerPrefix + "."
-    private val producerPrefixWithDot = producerPrefixWith + "."
+    private val producerPrefixWithDot = producerPrefix + "."
     private val allKeys = Seq(groupId, zookeeperConnect, brokers, serializer, partitioner, requiredAcks)
 
     lazy val typesafeConfig = ConfigFactory.load()

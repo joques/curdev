@@ -4,7 +4,7 @@ import kafka.message.NoCompressionCodec
 
 case class Producer[A] () {
     val props = new Properties()
-    props.put("compression.codec", NoCompressionCodec.codec)
+    props.put("compression.codec", NoCompressionCodec.codec.toString)
     props.put("producer.type", "sync")
     props.put("metadata.broker.list", "127.0.0.1:8092")
     props.put("batch.num.messages", 200.toString)

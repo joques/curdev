@@ -24,8 +24,8 @@ object KafkaConfig {
     val producerPrefix = "producer"
 
     // consumer keys
-    val groupId = s"$consumerPrefix.group.id"
-    val zookeeperConnect = s"$consumerPrefix.zookeeper.connect"
+    val groupId = "1234"
+    val zookeeperConnect = "127.0.0.1:49164"
 
     val brokers = s"$producerPrefix.metadata.broker.list"
     val serializer = s"$producerPrefix.serializer.class"

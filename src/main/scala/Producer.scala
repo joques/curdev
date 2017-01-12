@@ -2,7 +2,9 @@ import java.util.Properties
 import kafka.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
 
 case class Producer[A] () {
-    protected val config = new ProducerConfig(KafkaConfig())
+    val props = new Properties()
+    props.put("metadata.broker.list", "127.0.0.1:")
+    protected val config = new ProducerConfig(props)
     private lazy val producer = new KafkaProducer[A, A](config)
 
     def send(topic: String, message: A) = sendMessage(producer, keyedMessage(topic, message))

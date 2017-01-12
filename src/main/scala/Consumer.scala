@@ -3,6 +3,7 @@ import kafka.consumer._
 import kafka.serializer.{DefaultDecoder, Decoder}
 import scala.collection.JavaConverters._
 import kafka.api._
+import java.util.Properties
 
 abstract class Consumer(topics: List[String]) {
     val props = new Properties()

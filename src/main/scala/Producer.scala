@@ -1,14 +1,15 @@
 import java.util.{Properties, UUID}
 import kafka.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
+import kafka.message.NoCompressionCodec
 
 case class Producer[A] () {
     val props = new Properties()
     props.put("compression.codec", NoCompressionCodec.codec)
     props.put("producer.type", "sync")
     props.put("metadata.broker.list", "127.0.0.1:8092")
-    props.put("batch.num.messages", 200)
-    props.put("message.send.max.retries", 3)
-    props.put("request.required.acks", -1)
+    props.put("batch.num.messages", 200.toString)
+    props.put("message.send.max.retries", 3.toString)
+    props.put("request.required.acks", (-1).toString)
     props.put("client.id", UUID.randomUUID().toString)
 
     protected val config = new ProducerConfig(props)

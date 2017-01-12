@@ -7,10 +7,10 @@ case class Producer[A] () {
 
     def send(topic: String, message: A) = sendMessage(producer, keyedMessage(topic, message))
 
-    def sendStream(stream: Stream[A]) = {
+    def sendStream(topic: String, stream: Stream[A]) = {
         val iter = stream.iterator
         while(iter.hasNext) {
-            send(iter.next())
+            send(topic, iter.next())
         }
     }
 

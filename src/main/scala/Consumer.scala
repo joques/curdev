@@ -5,8 +5,12 @@ import scala.collection.JavaConverters._
 import kafka.api._
 
 abstract class Consumer(topics: List[String]) {
-    protected val kafkaConfig = KafkaConfig()
-    protected val config = new ConsumerConfig(kafkaConfig)
+    val props = new Properties()
+    props.put("group.id", "1234")
+    props.put("zookeeper.connect", "127.0.0.1:2181")
+    props.put("auto.offset.reset", "smallest")
+    protected val config = new ProducerConfig(props)
+
 
     def read(): Iterable[String]
 }

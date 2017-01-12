@@ -1,9 +1,16 @@
-import java.util.Properties
+import java.util.{Properties, UUID}
 import kafka.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
 
 case class Producer[A] () {
     val props = new Properties()
-    props.put("metadata.broker.list", "127.0.0.1:")
+    props.put("compression.codec", NoCompressionCodec.codec)
+    props.put("producer.type", "sync")
+    props.put("metadata.broker.list", "127.0.0.1:8092")
+    props.put("batch.num.messages", 200)
+    props.put("message.send.max.retries", 3)
+    props.put("request.required.acks", -1)
+    props.put("client.id", UUID.randomUUID().toString)
+
     protected val config = new ProducerConfig(props)
     private lazy val producer = new KafkaProducer[A, A](config)
 

@@ -1,11 +1,11 @@
 import java.util.Properties
 import kafka.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
 
-case class Producer[A] (topic: String) {
+case class Producer[A] () {
     protected val config = new ProducerConfig(KafkaConfig())
     private lazy val producer = new KafkaProducer[A, A](config)
 
-    def send(message: A) = sendMessage(producer, keyedMessage(topic, message))
+    def send(topic: String, message: A) = sendMessage(producer, keyedMessage(topic, message))
 
     def sendStream(stream: Stream[A]) = {
         val iter = stream.iterator
@@ -19,7 +19,7 @@ case class Producer[A] (topic: String) {
 }
 
 object Producer {
-    def apply[T](topic: String, props: Properties) = new Producer[T](topic) {
+    def apply[T](props: Properties) = new Producer[T]() {
         override val config = new ProducerConfig(props)
     }
 }

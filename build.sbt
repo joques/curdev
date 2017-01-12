@@ -2,7 +2,7 @@ name := "yester"
 version := "0.1.0"
 organization := "NUST - Programme Development Unit & FCI"
 scalaVersion := "2.12.1"
-scalaOptions := Seq("-unchecked", "-deprecation")
+scalacOptions := Seq("-unchecked", "-deprecation")
 libraryDependencies ++= Seq(
     "org.apache.kafka" % "kafka_2.10" % "0.8.1"
     exclude("javax.jms", "jms")

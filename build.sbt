@@ -4,6 +4,7 @@ organization := "NUST - Programme Development Unit & FCI"
 scalaVersion := "2.12.1"
 scalacOptions := Seq("-unchecked", "-deprecation")
 libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-library" % scalaVersion.value,
     "org.apache.kafka" % "kafka_2.10" % "0.8.1"
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")

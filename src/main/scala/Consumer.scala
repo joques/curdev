@@ -1,4 +1,4 @@
-import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerIterator, Whitelist }
+import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
 import kafka.consumer._
 import kafka.serializer.{DefaultDecoder, Decoder}
 import scala.collection.JavaConverters._
@@ -10,7 +10,7 @@ abstract class Consumer(topics: List[String]) {
     props.put("group.id", "1234")
     props.put("zookeeper.connect", "127.0.0.1:2181")
     props.put("auto.offset.reset", "smallest")
-    protected val config = new ProducerConfig(props)
+    protected val config = new ConsumerConfig(props)
 
 
     def read(): Iterable[String]

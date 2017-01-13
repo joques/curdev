@@ -26,6 +26,23 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
     private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, keyDecoder, valueDecoder)(0)
 
     def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
+
+    def read(writer: (Array[Byte]) => Unit) = {
+        // read on the stream
+        for (messageAndTopic <- stream) {
+            try {
+                writer(messageAndTopic.message)
+            }
+            catch {
+                case e: Throwable =>
+                    if (true) {
+                        error("Error processing message, skipping this message: ", e)
+                    } else {
+                        throw e
+                    }
+            }
+        }
+    }
 }
 
 object StreamConsumer {

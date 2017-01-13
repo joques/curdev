@@ -25,7 +25,7 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
     private lazy val consumer = KafkaConsumer.create(config)
     private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, keyDecoder, valueDecoder)(0)
 
-    def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
+    // def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 
     def read(writer: (Array[Byte]) => Unit) = {
         // read on the stream

@@ -6,6 +6,6 @@ object Yester {
         val yConsumer = new Consumer(topicList)
         println("displaying consumer and producer...")
         println(yConsumer.toString)
-        yConsumer.read().forEach(println)
+        yConsumer.read().foreach(println)
     }
 }

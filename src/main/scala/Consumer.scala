@@ -25,6 +25,7 @@ case class Consumer (topics: List[String]) {
     def read(): ConsumerRecords[String, String] = {
         println("polling the queue...")
         val polRes: ConsumerRecords[String, String] = consumer.poll(100)
+        polRes
     }
 
     // private lazy val consumerMap = consumer.createMessageStreams(Map("find-users-req" -> 1))

@@ -1,4 +1,4 @@
-import org.apache.kafka.clients.consumer.{ KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
+import org.apache.kafka.clients.consumer.{ KafkaConsumer, ConsumerConfig }
 import kafka.serializer.{DefaultDecoder, Decoder}
 import scala.collection.JavaConversions._
 import kafka.api._
@@ -9,7 +9,7 @@ import java.util.Properties
 // }
 
 case class Consumer (topics: List[String]) {
-    private val filterSpec = new Whitelist(topics.mkString(","))
+    // private val filterSpec = new Whitelist(topics.mkString(","))
 
     private val props = new Properties()
     props.put("group.id", "1234")

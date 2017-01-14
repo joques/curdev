@@ -9,6 +9,7 @@ object Yester {
         println("displaying consumer and producer...")
         println(yConsumer.toString)
         val records: ConsumerRecords[String, String] = yConsumer.read()
+        println("now let's dig in...")
         val recordIter = records.iterator()
         val singleRecord = recordIter.next()
         println(singleRecord.key())

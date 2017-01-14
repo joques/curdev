@@ -23,6 +23,7 @@ case class Consumer (topics: List[String]) {
     consumer.subscribe(topics)
 
     def read(): ConsumerRecords[String, String] = {
+        println("polling the queue...")
         consumer.poll(100)
     }
 

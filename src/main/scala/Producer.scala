@@ -1,5 +1,5 @@
 import java.util.{Properties, UUID}
-import kafka.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
+import kafka.clients.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
 import kafka.message.NoCompressionCodec
 
 case class Producer[A] () {

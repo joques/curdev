@@ -4,6 +4,7 @@ import kafka.message._
 import kafka.utils._
 import kafka.serializer.{DefaultDecoder, Decoder}
 import scala.collection.JavaConversions._
+import scala.collection.GenTraversableOnce
 import kafka.api._
 import java.util.Properties
 

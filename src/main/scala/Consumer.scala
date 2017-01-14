@@ -23,7 +23,7 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
     protected val valueDecoder: Decoder[Array[Byte]] = new DefaultDecoder()
 
     private lazy val consumer = KafkaConsumer.create(config)
-    private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, keyDecoder, valueDecoder)(0)
+    private lazy val stream: Iterable[String] = consumer.createMessageStreamsByFilter(filterSpec, 1, keyDecoder, valueDecoder)(0)
 
     // def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 
@@ -36,7 +36,7 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
             catch {
                 case e: Throwable =>
                     if (true) {
-                        error("Error processing message, skipping this message: ", e)
+                        error("Error processing message, skipping this message: " + e.toString)
                     } else {
                         throw e
                     }

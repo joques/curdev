@@ -1,5 +1,4 @@
 import org.apache.kafka.clients.consumer.{ KafkaConsumer, ConsumerConfig }
-import kafka.serializer.{DefaultDecoder, Decoder}
 import scala.collection.JavaConversions._
 import kafka.api._
 import java.util.Properties

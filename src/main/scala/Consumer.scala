@@ -27,11 +27,11 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
 
     // def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 
-    def read(writer: (Array[Byte]) => Unit) = {
+    def read() = {
         // read on the stream
         for (messageAndTopic <- stream) {
             try {
-                writer(messageAndTopic.message)
+                println(messageAndTopic.message)
             }
             catch {
                 case e: Throwable =>

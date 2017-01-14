@@ -1,4 +1,4 @@
-import kafka.clients.consumer.{ KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
+import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
 import kafka.consumer._
 import kafka.message._
 import kafka.utils._

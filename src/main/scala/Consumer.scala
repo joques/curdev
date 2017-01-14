@@ -1,7 +1,7 @@
 import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
 import kafka.consumer._
 import kafka.serializer.{DefaultDecoder, Decoder}
-// import scala.collection.JavaConversions._
+import scala.collection.JavaConversions._
 import kafka.api._
 import java.util.Properties
 

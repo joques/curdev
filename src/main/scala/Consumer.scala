@@ -18,28 +18,29 @@ case class Consumer (topics: List[String]) {
     private val props = new Properties()
     props.put("group.id", "1234")
     props.put("zookeeper.connect", "localhost:2181")
-    props.put("auto.offset.reset", "largest")
+    props.put("auto.offset.reset", "smallest")
     private val config = new ConsumerConfig(props)
 
     private lazy val consumer = KafkaConsumer.create(config)
     private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, new DefaultDecoder(), new DefaultDecoder()).get(0)
 
-    def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
+    // def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 
-    // def read(writer: (Array[Byte]) => Unit) = {
-    //     // read on the stream
-    //     for (messageAndTopic <- stream) {
-    //         try {
-    //             writer(messageAndTopic.message)
-    //         }
-    //         catch {
-    //             case e: Throwable =>
-    //                 if (true) {
-    //                     sys.error("Error processing message, skipping this message: " + e.toString)
-    //                 } else {
-    //                     throw e
-    //                 }
-    //         }
-    //     }
-    // }
+    def read(writer: (Array[Byte]) => Unit) = {
+        println("inside consumer.read ....")
+        // read on the stream
+        for (messageAndTopic <- stream) {
+            try {
+                writer(messageAndTopic.message)
+            }
+            catch {
+                case e: Throwable =>
+                    if (true) {
+                        sys.error("Error processing message, skipping this message: " + e.toString)
+                    } else {
+                        throw e
+                    }
+            }
+        }
+    }
 }

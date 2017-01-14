@@ -5,11 +5,11 @@ import scala.collection.JavaConversions._
 import kafka.api._
 import java.util.Properties
 
-abstract class Consumer(topics: List[String]) {
-    def read(): Iterable[String]
-}
+// abstract class Consumer(topics: List[String]) {
+//     def read(): Iterable[String]
+// }
 
-case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
+case class Consumer (topics: List[String]) {
     private val filterSpec = new Whitelist(topics.mkString(","))
 
     private val props = new Properties()

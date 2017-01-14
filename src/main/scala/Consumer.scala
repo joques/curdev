@@ -19,7 +19,7 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
     private val config = new ConsumerConfig(props)
 
     private lazy val consumer = KafkaConsumer.create(config)
-    private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, new DefaultDecoder(), new DefaultDecoder()).get(0)
+    private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, new DefaultDecoder(), new DefaultDecoder())
 
     // def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 

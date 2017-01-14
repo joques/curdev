@@ -15,8 +15,8 @@ case class Consumer (topics: List[String]) {
     props.put("group.id", "1234")
     props.put("bootstrap.servers", "localhost:9092")
     props.put("enable.auto.commit", "true")
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringSerializer")
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringSerializer")
+    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     // private val config = new ConsumerConfig(props)
 
     private lazy val consumer: KafkaConsumer[String, String] = new KafkaConsumer(props)

@@ -1,11 +1,11 @@
 name := "yester"
 version := "0.1.0"
 organization := "NUST - Programme Development Unit & FCI"
-scalaVersion := "2.11.1"
+scalaVersion := "2.12.1"
 autoScalaLibrary := false
 scalacOptions := Seq("-unchecked", "-deprecation")
 libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-library" % "2.11.1",
+    "org.scala-lang" % "scala-library" % "2.12.1",
     "org.apache.kafka" % "kafka_2.10" % "0.8.1"
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")

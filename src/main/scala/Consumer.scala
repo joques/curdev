@@ -1,10 +1,6 @@
-import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
-import kafka.consumer._
-import kafka.message._
-import kafka.utils._
+import org.apache.kafka.clients.consumer.{ KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
 import kafka.serializer.{DefaultDecoder, Decoder}
 import scala.collection.JavaConversions._
-import scala.collection.GenTraversableOnce
 import kafka.api._
 import java.util.Properties
 
@@ -26,7 +22,7 @@ case class Consumer (topics: List[String]) {
     private lazy val stream = consumerMap.getOrElse("find-users-req", List()).head
     def read(): Stream[String] = {
         println("inside consumer read...")
-        Stream.cons(new String(stream.head.message), read())
+        Stream.cons(new String(stream.head.message()), read())
     }
 
     // def read(writer: (Array[Byte]) => Unit) = {

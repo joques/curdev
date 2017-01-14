@@ -4,6 +4,9 @@ object Yester {
         val topicList = List("find-users-req", "create-users-req")
         val yProducer = new Producer[String]()
         val yConsumer = new Consumer(topicList)
-        yConsumer.read(println)
+        val allReads = yConsumer.read()
+        for (singleElt <- allReads) {
+            println(singleElt)
+        }
     }
 }

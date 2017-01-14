@@ -1,4 +1,4 @@
-import org.apache.kafka.clients.consumer.KafkaConsumer
+import org.apache.kafka.clients.consumer.{KafkaConsumer, ConsumerRecords}
 import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConversions._
 import kafka.api._
@@ -21,6 +21,10 @@ case class Consumer (topics: List[String]) {
 
     private lazy val consumer: KafkaConsumer[String, String] = new KafkaConsumer(props)
     consumer.subscribe(topics)
+
+    def read(): ConsumerRecords[String, String] = {
+        consumer.poll(100)
+    }
 
     // private lazy val consumerMap = consumer.createMessageStreams(Map("find-users-req" -> 1))
     // private lazy val stream = consumerMap.getOrElse("find-users-req", List()).head

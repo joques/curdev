@@ -8,7 +8,7 @@ object Yester {
         val yConsumer = new Consumer(topicList)
         println("displaying consumer and producer...")
         println(yConsumer.toString)
-        val records: ConsumerRecords[String, String] = yConsumer.poll(100)
+        val records: ConsumerRecords[String, String] = yConsumer.read()
         for (singleRecord <- records) {
             println(singleRecord.key())
             println(singleRecord.value())

@@ -19,15 +19,15 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
     private val config = new ConsumerConfig(props)
 
     private lazy val consumer = KafkaConsumer.create(config)
-    private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, new DefaultDecoder(), new DefaultDecoder())
+    private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, new DefaultDecoder(), new DefaultDecoder()).get(0)
 
     // def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 
-    def read() = {
+    def read(writer: (Array[Byte]) => Unit) = {
         // read on the stream
         for (messageAndTopic <- stream) {
             try {
-                println(messageAndTopic.message)
+                writer(messageAndTopic.message)
             }
             catch {
                 case e: Throwable =>

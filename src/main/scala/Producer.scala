@@ -30,7 +30,5 @@ case class Producer[A] () {
 }
 
 object Producer {
-    def apply[T](props: Properties) = new Producer[T]() {
-        override val config = new ProducerConfig(props)
-    }
+    def apply[T]() = new Producer[T]()
 }

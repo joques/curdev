@@ -40,7 +40,3 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
         }
     }
 }
-
-object StreamConsumer {
-    def apply(topics: List[String]) = new StreamConsumer(topics)
-}

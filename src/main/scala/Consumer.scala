@@ -31,6 +31,7 @@ case class Consumer (topics: List[String]) {
         // read on the stream
         for (messageAndTopic <- stream) {
             try {
+                println(messageAndTopic.toString)
                 writer(messageAndTopic.message)
             }
             catch {

@@ -17,7 +17,7 @@ abstract class Consumer(topics: List[String]) {
 }
 
 case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
-    private val filterSpec = new Whitelist(topics.mkString(","))
+    private val filterSpec = new Whitelist(topics)
 
     protected val keyDecoder: Decoder[Array[Byte]] = new DefaultDecoder()
     protected val valueDecoder: Decoder[Array[Byte]] = new DefaultDecoder()

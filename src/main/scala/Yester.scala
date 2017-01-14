@@ -8,6 +8,7 @@ object Yester {
         val yConsumer = new Consumer(topicList)
         println("displaying consumer and producer...")
         println(yConsumer.toString)
+        println("calling read() from yester...")
         val records: ConsumerRecords[String, String] = yConsumer.read()
         println("now let's dig in...")
         val recordIter = records.iterator()

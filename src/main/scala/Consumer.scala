@@ -30,6 +30,8 @@ case class Consumer (topics: List[String]) {
         println("inside consumer.read ....")
         println("taking a look at the stream")
         println(stream)
+        println("looking at the head")
+        println(stream.head)
         // read on the stream
         for (messageAndTopic <- stream) {
             try {

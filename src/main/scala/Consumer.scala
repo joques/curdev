@@ -28,6 +28,8 @@ case class Consumer (topics: List[String]) {
 
     def read(writer: (Array[Byte]) => Unit) = {
         println("inside consumer.read ....")
+        println("taking a look at the stream")
+        println(stream)
         // read on the stream
         for (messageAndTopic <- stream) {
             try {

@@ -1,5 +1,5 @@
-import kafka.clients.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
-import kafka.clients.consumer._
+import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
+import kafka.consumer._
 import kafka.message._
 import kafka.utils._
 import kafka.serializer.{DefaultDecoder, Decoder}

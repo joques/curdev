@@ -9,10 +9,15 @@ object Yester {
         println("displaying consumer and producer...")
         println(yConsumer.toString)
         val records: ConsumerRecords[String, String] = yConsumer.read()
-        for (singleRecord <- records) {
-            println(singleRecord.key())
-            println(singleRecord.value())
-            println(singleRecord.offset())
-        }
+        val recordIter = records.iterator()
+        val singleRecord = recordIter.next()
+        println(singleRecord.key())
+        println(singleRecord.value())
+        println(singleRecord.offset())
+        // for (singleRecord <- records) {
+        //     println(singleRecord.key())
+        //     println(singleRecord.value())
+        //     println(singleRecord.offset())
+        // }
     }
 }

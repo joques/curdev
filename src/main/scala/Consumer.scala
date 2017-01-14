@@ -17,7 +17,7 @@ case class Consumer (topics: List[String]) {
 
     private val props = new Properties()
     props.put("group.id", "1234")
-    props.put("zookeeper.connect", "127.0.0.1:9092")
+    props.put("zookeeper.connect", "localhost:2181")
     props.put("auto.offset.reset", "smallest")
     private val config = new ConsumerConfig(props)
 

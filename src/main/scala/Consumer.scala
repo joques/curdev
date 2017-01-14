@@ -1,4 +1,4 @@
-import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
+import kafka.clients.consumer.{ KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
 import kafka.consumer._
 import kafka.message._
 import kafka.utils._
@@ -18,7 +18,7 @@ case class Consumer (topics: List[String]) {
     private val props = new Properties()
     props.put("group.id", "1234")
     props.put("zookeeper.connect", "127.0.0.1:2181")
-    props.put("auto.offset.reset", "earliest")
+    props.put("auto.offset.reset", "smallest")
     private val config = new ConsumerConfig(props)
 
     private lazy val consumer = KafkaConsumer.create(config)

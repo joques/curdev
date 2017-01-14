@@ -1,7 +1,7 @@
 import kafka.consumer.{ Consumer => KafkaConsumer, ConsumerConfig, ConsumerIterator, Whitelist }
 import kafka.consumer._
 import kafka.serializer.{DefaultDecoder, Decoder}
-import scala.collection.JavaConverters._
+import scala.collection.JavaConvesions._
 import kafka.api._
 import java.util.Properties
 
@@ -23,7 +23,7 @@ case class StreamConsumer (topics: List[String]) extends Consumer(topics) {
     protected val valueDecoder: Decoder[Array[Byte]] = new DefaultDecoder()
 
     private lazy val consumer = KafkaConsumer.create(config)
-    private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, keyDecoder, valueDecoder)(0)
+    private lazy val stream = consumer.createMessageStreamsByFilter(filterSpec, 1, keyDecoder, valueDecoder).get(0)
 
     // def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 

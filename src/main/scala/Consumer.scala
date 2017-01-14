@@ -23,20 +23,20 @@ case class Consumer (topics: List[String]) {
 
     def read(): Stream[String] = Stream.cons(new String(stream.head.message), read())
 
-    def read(writer: (Array[Byte]) => Unit) = {
-        // read on the stream
-        for (messageAndTopic <- stream) {
-            try {
-                writer(messageAndTopic.message)
-            }
-            catch {
-                case e: Throwable =>
-                    if (true) {
-                        sys.error("Error processing message, skipping this message: " + e.toString)
-                    } else {
-                        throw e
-                    }
-            }
-        }
-    }
+    // def read(writer: (Array[Byte]) => Unit) = {
+    //     // read on the stream
+    //     for (messageAndTopic <- stream) {
+    //         try {
+    //             writer(messageAndTopic.message)
+    //         }
+    //         catch {
+    //             case e: Throwable =>
+    //                 if (true) {
+    //                     sys.error("Error processing message, skipping this message: " + e.toString)
+    //                 } else {
+    //                     throw e
+    //                 }
+    //         }
+    //     }
+    // }
 }

@@ -6,7 +6,7 @@ object Yester {
         val yConsumer = new Consumer(topicList)
         val smt = yConsumer.read()
         for (singleMsg <- smt){
-            println(singleMsg)
+            println(singleMsg.message)
         }
     }
 }

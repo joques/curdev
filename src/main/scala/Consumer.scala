@@ -19,7 +19,7 @@ case class Consumer (topics: List[String]) {
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     // props.put("session.timeout.ms", "20000")
     // props.put("fetch.message.min.bytes", "50000")
-    props.put("auto.offset.reset", "earliest")
+    props.put("auto.offset.reset", "smallest")
 
     private lazy val consumer: KafkaConsumer[String,String] = new KafkaConsumer(props)
     consumer.subscribe(topics)

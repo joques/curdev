@@ -29,7 +29,7 @@ case class Consumer (topics: List[String]) {
 
     def read(): ConsumerRecords[String,String] = {
         println("polling the queue...")
-        val polRes: ConsumerRecords[String, String] = consumer.poll(2000)
+        val polRes: ConsumerRecords[String, String] = consumer.poll(10000)
         polRes
     }
 }

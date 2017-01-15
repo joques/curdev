@@ -14,6 +14,7 @@ case class Consumer (topics: List[String]) {
     private val props = new Properties()
     props.put("group.id", "yester")
     props.put("bootstrap.servers", "localhost:9092")
+    props.put("zookeeper.connect", "localhost:2181")
     props.put("enable.auto.commit", "true")
     props.put("auto.commit.interval.ms", "1000")
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")

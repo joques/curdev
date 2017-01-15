@@ -20,49 +20,16 @@ case class Consumer (topics: List[String]) {
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("session.timeout.ms", "10000")
     props.put("fetch.message.min.bytes", "50000")
-    props.put("receive.buffer.bytes", "262144")
-    props.put("max.partition.fetch.bytes", "2097152")
-    // private val config = new ConsumerConfig(props)
 
-    private lazy val consumer: KafkaConsumer[String, String] = new KafkaConsumer(props)
+    private lazy val consumer: KafkaConsumer[String,String] = new KafkaConsumer(props)
     consumer.subscribe(topics)
 
     println("listing the topic subscription...")
     println(consumer.subscription())
 
-    def read(): ConsumerRecords[String, String] = {
+    def read(): ConsumerRecords[String,String] = {
         println("polling the queue...")
-        val polRes: ConsumerRecords[String, String] = consumer.poll(500)
+        val polRes: ConsumerRecords[String, String] = consumer.poll(1000)
         polRes
     }
-
-    // private lazy val consumerMap = consumer.createMessageStreams(Map("find-users-req" -> 1))
-    // private lazy val stream = consumerMap.getOrElse("find-users-req", List()).head
-    // def read(): Stream[String] = {
-    //     println("inside consumer read...")
-    //     Stream.cons(new String(stream.head.message()), read())
-    // }
-
-    // def read(writer: (Array[Byte]) => Unit) = {
-    //     println("inside consumer.read ....")
-    //     println("taking a look at the stream")
-    //     println(stream)
-    //     println("looking at the head")
-    //     println(stream.head)
-    //     // read on the stream
-    //     for (messageAndTopic <- stream) {
-    //         try {
-    //             println(messageAndTopic.toString)
-    //             writer(messageAndTopic.message)
-    //         }
-    //         catch {
-    //             case e: Throwable =>
-    //                 if (true) {
-    //                     sys.error("Error processing message, skipping this message: " + e.toString)
-    //                 } else {
-    //                     throw e
-    //                 }
-    //         }
-    //     }
-    // }
 }

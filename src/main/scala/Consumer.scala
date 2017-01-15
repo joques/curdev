@@ -14,13 +14,13 @@ case class Consumer (topics: List[String]) {
     private val props = new Properties()
     props.put("group.id", "yester")
     props.put("bootstrap.servers", "localhost:9092")
-    // props.put("zookeeper.connect", "localhost:2181")
-    props.put("enable.auto.commit", "false")
-    // props.put("auto.commit.interval.ms", "3000")
+    props.put("zookeeper.connect", "localhost:2181")
+    props.put("enable.auto.commit", "true")
+    props.put("auto.commit.interval.ms", "3000")
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     // props.put("session.timeout.ms", "10000")
-    // props.put("fetch.message.min.bytes", "50000")
+    props.put("fetch.message.max.bytes", "16777216")
     props.put("auto.offset.reset", "earliest")
 
     private lazy val consumer: KafkaConsumer[String,String] = new KafkaConsumer(props)
@@ -31,8 +31,7 @@ case class Consumer (topics: List[String]) {
 
     def read(): ConsumerRecords[String,String] = {
         println("polling the queue...")
-        val polRes: ConsumerRecords[String, String] = consumer.poll(100)
-        consumer.commitSync()
+        val polRes: ConsumerRecords[String, String] = consumer.poll(400)
         polRes
     }
 }

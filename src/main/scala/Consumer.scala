@@ -15,7 +15,7 @@ case class Consumer (topics: List[String]) {
     props.put("group.id", "yester")
     props.put("bootstrap.servers", "localhost:9092")
     props.put("zookeeper.connect", "localhost:2181")
-    props.put("enable.auto.commit", "true")
+    props.put("enable.auto.commit", "false")
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("session.timeout.ms", "10000")

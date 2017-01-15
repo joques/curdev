@@ -26,6 +26,9 @@ case class Consumer (topics: List[String]) {
     private lazy val consumer: KafkaConsumer[String, String] = new KafkaConsumer(props)
     consumer.subscribe(topics)
 
+    println("listing the topic subscription...")
+    println(consumer.subscription())
+
     def read(): ConsumerRecords[String, String] = {
         println("polling the queue...")
         val polRes: ConsumerRecords[String, String] = consumer.poll(500)

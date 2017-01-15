@@ -20,7 +20,7 @@ case class Consumer (topics: List[String]) {
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     // props.put("session.timeout.ms", "20000")
     // props.put("fetch.message.min.bytes", "50000")
-    props.put("auto.offset.reset", "none")
+    props.put("auto.offset.reset", "earliest")
 
     private lazy val consumer: KafkaConsumer[String,String] = new KafkaConsumer(props)
     consumer.subscribe(topics)
@@ -30,7 +30,7 @@ case class Consumer (topics: List[String]) {
 
     def read(): ConsumerRecords[String,String] = {
         println("polling the queue...")
-        val polRes: ConsumerRecords[String, String] = consumer.poll(1000)
+        val polRes: ConsumerRecords[String, String] = consumer.poll(200)
         polRes
     }
 }

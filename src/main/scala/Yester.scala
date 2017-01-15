@@ -12,15 +12,11 @@ object Yester {
         val records: ConsumerRecords[String, String] = yConsumer.read()
         println("now let's dig in...")
         println(records)
-        val recordIter = records.records("find-users-req")
-        val singleRecord = recordIter.next()
-        println(singleRecord.key())
-        println(singleRecord.value())
-        println(singleRecord.offset())
-        // for (singleRecord <- records) {
-        //     println(singleRecord.key())
-        //     println(singleRecord.value())
-        //     println(singleRecord.offset())
-        // }
+        val recordIter = records.records("find-users-req").toSeq
+        for (singleRecord <- recordIter) {
+            println(singleRecord.key())
+            println(singleRecord.value())
+            println(singleRecord.offset())
+        }
     }
 }

@@ -12,8 +12,8 @@ object Yester {
         val records: ConsumerRecords[String, String] = yConsumer.read()
         println("now let's dig in...")
         println(records)
-        val recordIter = records.records("find-users-req").toSeq
-        for (singleRecord <- recordIter) {
+        val recordList = records.records("find-users-req").toList
+        for (singleRecord <- recordList) {
             println(singleRecord.key())
             println(singleRecord.value())
             println(singleRecord.offset())

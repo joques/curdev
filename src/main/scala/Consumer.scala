@@ -12,7 +12,7 @@ case class Consumer (topics: List[String]) {
     // private val filterSpec = new Whitelist(topics.mkString(","))
 
     private val props = new Properties()
-    // props.put("group.id", "1234")
+    props.put("group.id", "kafka-node-group")
     props.put("bootstrap.servers", "localhost:9092")
     props.put("enable.auto.commit", "true")
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")

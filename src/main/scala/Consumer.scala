@@ -22,7 +22,6 @@ case class Consumer (topics: List[String]) {
     props.put("fetch.message.min.bytes", "50000")
 
     private lazy val consumer: KafkaConsumer[String,String] = new KafkaConsumer(props)
-    consumer.assign(List(0,1))
     consumer.subscribe(topics)
 
     println("listing the topic subscription...")

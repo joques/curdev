@@ -16,7 +16,7 @@ case class Consumer (topics: List[String]) {
     props.put("bootstrap.servers", "localhost:9092")
     props.put("zookeeper.connect", "localhost:2181")
     props.put("enable.auto.commit", "true")
-    props.put("auto.commit.interval.ms", "1000")
+    props.put("auto.commit.interval.ms", "3000")
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("session.timeout.ms", "10000")
@@ -31,7 +31,7 @@ case class Consumer (topics: List[String]) {
 
     def read(): ConsumerRecords[String,String] = {
         println("polling the queue...")
-        val polRes: ConsumerRecords[String, String] = consumer.poll(6000)
+        val polRes: ConsumerRecords[String, String] = consumer.poll(500)
         polRes
     }
 }

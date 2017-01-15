@@ -13,7 +13,7 @@ case class Consumer (topics: List[String]) {
 
     private val props = new Properties()
     props.put("group.id", "1234")
-    props.put("bootstrap.servers", "localhost:9092")
+    props.put("bootstrap.servers", "localhost:2181")
     props.put("enable.auto.commit", "true")
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")

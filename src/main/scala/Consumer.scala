@@ -17,6 +17,10 @@ case class Consumer (topics: List[String]) {
     props.put("enable.auto.commit", "true")
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put("session.timeout.ms", 10000)
+    props.put("fetch.min.bytes", 50000)
+    props.put("receive.buffer.bytes", 262144)
+    props.put("max.partition.fetch.bytes", 2097152)
     // private val config = new ConsumerConfig(props)
 
     private lazy val consumer: KafkaConsumer[String, String] = new KafkaConsumer(props)
@@ -24,7 +28,7 @@ case class Consumer (topics: List[String]) {
 
     def read(): ConsumerRecords[String, String] = {
         println("polling the queue...")
-        val polRes: ConsumerRecords[String, String] = consumer.poll(1000)
+        val polRes: ConsumerRecords[String, String] = consumer.poll(500)
         polRes
     }
 

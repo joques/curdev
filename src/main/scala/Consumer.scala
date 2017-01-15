@@ -12,7 +12,7 @@ case class Consumer (topics: List[String]) {
     // private val filterSpec = new Whitelist(topics.mkString(","))
 
     private val props = new Properties()
-    props.put("group.id", "yester-003")
+    props.put("group.id", "yester-004")
     props.put("bootstrap.servers", "localhost:9092")
     props.put("zookeeper.connect", "localhost:2181")
     props.put("enable.auto.commit", "true")

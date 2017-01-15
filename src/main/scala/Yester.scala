@@ -1,4 +1,5 @@
 import org.apache.kafka.clients.consumer.{ ConsumerRecords, ConsumerRecord }
+import scala.collection.JavaConversions._
 
 object Yester {
     def main(args: Array[String]) {

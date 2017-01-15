@@ -13,7 +13,7 @@ object Yester {
         val records: ConsumerRecords[String, String] = yConsumer.read()
         println("now let's dig in...")
         println(records.count())
-        val recordIter: Iterator[ConsumerRecord[String,String]] = records.records("find-users-req").iterator()
+        val recordIter: Iterator[ConsumerRecord[String,String]] = records.iterator()
         while(recordIter.hasNext()) {
             val singleRecord = recordIter.next()
             println("showing content of current element...")

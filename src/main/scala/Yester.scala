@@ -11,6 +11,7 @@ object Yester {
         println("calling read() from yester...")
         val records: ConsumerRecords[String, String] = yConsumer.read()
         println("now let's dig in...")
+        println(records)
         val recordIter = records.iterator()
         val singleRecord = recordIter.next()
         println(singleRecord.key())

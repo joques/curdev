@@ -8,19 +8,12 @@ import java.util.Properties
 import java.util.UUID
 import play.api.libs.json.{Reads, Json}
 
-case class SimpleRequestMessage (messageId: String, requestContent: String)
-
-object SimpleRequestMessageJsonImplicits {
-    implicit val simpleRequestMessageFmt = Json.format[SimpleRequestMessage]
-    implicit val simpleRequestMessageWrites = Json.writes[SimpleRequestMessage]
-    implicit val simpleRequestMessageReads = Json.reads[SimpleRequestMessage]
-}
 
 case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {
     var consumer: KafkaConsumer[String, String] = null
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
-    // implicit val reader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
+    implicit val reader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
 
     def startConsuming() : Unit = {
         pool.execute(this)

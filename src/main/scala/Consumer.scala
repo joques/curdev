@@ -20,6 +20,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     def run() : Unit = {
         try{
             val props = new Properties()
+            val groupIDSuffix: String = UUID.randomUUID().toString
             props.put("group.id", s"yester-$groupIDSuffix")
             props.put("bootstrap.servers", "localhost:9092")
             props.put("zookeeper.connect", "localhost:2181")

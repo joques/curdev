@@ -17,6 +17,11 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         pool.execute(this)
     }
 
+    override def close(): Unit = {
+        shouldRun = false
+        shutDownAndAwaitTermination(pool)
+    }
+
     def run() : Unit = {
         try{
             val props = new Properties()

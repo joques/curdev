@@ -53,9 +53,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     println(record.value)
                     println(record.offset())
 
-                    val message = record.value().as[SimpleRequestMessage]
-                    println("printing message")
-                    println(message)
+                    // val message = record.value().as[SimpleRequestMessage]
+                    // println("printing message")
+                    // println(message)
 
                     println("printing details about the new record -- end")
                 }

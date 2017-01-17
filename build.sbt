@@ -13,5 +13,5 @@ libraryDependencies ++= Seq(
     exclude("com.sun.jdmk", "jmxtools")
     exclude("com.sun.jmx", "jmxri"),
     "com.typesafe" % "config" % "1.2.1",
-    "com.typesafe.play" % "play-json_2.10" % "2.4.0-M2"
+    "com.typesafe.play" % "play-json_2.11" % "2.4.0-M2"
 )

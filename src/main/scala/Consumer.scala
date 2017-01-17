@@ -12,6 +12,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     var consumer: KafkaConsumer[String, String] = null
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
+    implicit val reader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
 
     def startConsuming() : Unit = {
         pool.execute(this)
@@ -20,10 +21,6 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     override def close(): Unit = {
         shouldRun = false
         shutDownAndAwaitTermination(pool)
-    }
-
-    def readJsonRequest (value: ConsumerRecord[String,String])(implicit reader: Reads[SimpleRequestMessage]): SimpleRequestMessage = {
-        val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
     }
 
     def run() : Unit = {
@@ -62,10 +59,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     println(record.value)
                     println(record.offset())
 
-                    // val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
+                    val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
                     // println("printing message")
                     // println(message)
-                    println(readJsonRequest(record))
 
                     println("printing details about the new record -- end")
                 }

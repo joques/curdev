@@ -22,6 +22,10 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         shutDownAndAwaitTermination(pool)
     }
 
+    def readJsonRequest (value: ConsumerRecord[String,String])(implicit reader: Reads[SimpleRequestMessage]): SimpleRequestMessage = {
+        val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
+    }
+
     def run() : Unit = {
         try{
             val props = new Properties()
@@ -58,9 +62,10 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     println(record.value)
                     println(record.offset())
 
-                    val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
+                    // val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
                     // println("printing message")
                     // println(message)
+                    println(readJsonRequest(record))
 
                     println("printing details about the new record -- end")
                 }

@@ -1,4 +1,4 @@
-import play.api.libs.json.json
+import play.api.libs.json.Json
 
 case class SimpleRequestMessage (messageId: String, requestContent: String)
 

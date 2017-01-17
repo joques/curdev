@@ -6,7 +6,8 @@ autoScalaLibrary := false
 scalacOptions := Seq("-unchecked", "-deprecation")
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.0",
-    // "org.apache.kafka" % "kafka-clients" % "0.9.0",
+    "io.reactivex" % "rxscala_2.11" % "0.26.0",
+    "org.apache.kafka" % "kafka-clients" % "0.9.0.0",
     "org.apache.kafka" % "kafka_2.11" % "0.9.0.1"
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")

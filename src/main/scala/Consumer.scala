@@ -20,7 +20,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
     def run() : Unit = {
         try{
-            private val props = new Properties()
+            val props = new Properties()
             props.put("group.id", s"yester-$groupIDSuffix")
             props.put("bootstrap.servers", "localhost:9092")
             props.put("zookeeper.connect", "localhost:2181")
@@ -39,7 +39,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             while(shouldRun) {
                 println("yester consumer loop -- begin")
 
-                val records: ConsumerRecords[String,String] consumer.poll(200)
+                val records: ConsumerRecords[String,String] = consumer.poll(200)
                 val itRec = records.iterator()
 
                 while(itRec.hasNext()) {
@@ -87,32 +87,32 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     }
 }
 
-case class Consumer (topics: List[String]) {
-    // private val filterSpec = new Whitelist(topics.mkString(","))
-
-    private val props = new Properties()
-    val groupIDSuffix: String = UUID.randomUUID().toString
-    props.put("group.id", s"yester-$groupIDSuffix")
-    props.put("bootstrap.servers", "localhost:9092")
-    props.put("zookeeper.connect", "localhost:2181")
-    props.put("enable.auto.commit", "true")
-    props.put("auto.commit.interval.ms", "3000")
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-    props.put("session.timeout.ms", "10000")
-    props.put("fetch.min.bytes", "50000")
-    props.put("max.partition.fetch.bytes", "2097152")
-    props.put("auto.offset.reset", "latest")
-
-    private lazy val consumer: KafkaConsumer[String,String] = new KafkaConsumer(props)
-    consumer.subscribe(topics)
-
-    println("listing the topic subscription...")
-    println(consumer.subscription())
-
-    def read(): ConsumerRecords[String,String] = {
-        println("polling the queue...")
-        val polRes: ConsumerRecords[String, String] = consumer.poll(2000)
-        polRes
-    }
-}
+// case class Consumer (topics: List[String]) {
+//     // private val filterSpec = new Whitelist(topics.mkString(","))
+//
+//     private val props = new Properties()
+//     val groupIDSuffix: String = UUID.randomUUID().toString
+//     props.put("group.id", s"yester-$groupIDSuffix")
+//     props.put("bootstrap.servers", "localhost:9092")
+//     props.put("zookeeper.connect", "localhost:2181")
+//     props.put("enable.auto.commit", "true")
+//     props.put("auto.commit.interval.ms", "3000")
+//     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+//     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+//     props.put("session.timeout.ms", "10000")
+//     props.put("fetch.min.bytes", "50000")
+//     props.put("max.partition.fetch.bytes", "2097152")
+//     props.put("auto.offset.reset", "latest")
+//
+//     private lazy val consumer: KafkaConsumer[String,String] = new KafkaConsumer(props)
+//     consumer.subscribe(topics)
+//
+//     println("listing the topic subscription...")
+//     println(consumer.subscription())
+//
+//     def read(): ConsumerRecords[String,String] = {
+//         println("polling the queue...")
+//         val polRes: ConsumerRecords[String, String] = consumer.poll(2000)
+//         polRes
+//     }
+// }

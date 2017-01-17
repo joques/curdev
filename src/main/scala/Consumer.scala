@@ -6,7 +6,6 @@ import scala.collection.JavaConversions._
 import rx.lang.scala.Observable
 import java.util.Properties
 import java.util.UUID
-import java.Random
 import play.api.libs.json.{Reads, Json}
 
 case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {

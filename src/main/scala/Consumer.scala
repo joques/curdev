@@ -43,7 +43,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
         recordTopic match {
             case "find-users-req" => findUser(message)
-            case "create-users-req" => createUser(record)
+            case "create-users-req" => createUser(message)
             case _ => println("unknown topic...")
         }
     }

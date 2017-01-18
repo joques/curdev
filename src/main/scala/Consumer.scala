@@ -48,7 +48,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
-    def findUSer(message: SimpleRequestMessage): Unit = {
+    def findUser(message: SimpleRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")
     }

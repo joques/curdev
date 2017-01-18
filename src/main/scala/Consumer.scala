@@ -65,6 +65,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     println(message)
 
                     println("printing details about the new record -- end")
+                    println("")
                 }
 
                 println("yester consumer loop -- end")

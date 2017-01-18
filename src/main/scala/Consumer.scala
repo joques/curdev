@@ -34,7 +34,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println(s"value = $record.value")
         println(s"offset = $record.offset()")
 
-        val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
+        val message = Json.parse(record.value()).as[SimpleRequestMessage]
         println("printing message")
         println(message)
 

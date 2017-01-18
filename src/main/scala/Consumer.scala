@@ -40,6 +40,21 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
         println("printing details about the new record -- end")
         println("")
+
+        recordTopic match {
+            case "find-users-req" => findUser(message)
+            case "create-users-req" => createUser(record)
+            case _ => println("unknown topic...")
+        }
+    }
+
+    def findUSer(message: SimpleRequestMessage): Unit = {
+        val userName = message.content
+        println(s"finding user $userName")
+    }
+
+    def createUser(message: SimpleRequestMessage): Unit = {
+        println("creating new user")
     }
 
     def run() : Unit = {

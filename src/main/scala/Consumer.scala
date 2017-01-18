@@ -24,7 +24,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         shutDownAndAwaitTermination(pool)
     }
 
-    def handleRecord: (record: ConsumerRecord[String,String]): Unit = {
+    def handleRecord(record: ConsumerRecord[String,String]): Unit = {
         val recordTopic = record.topic()
 
         println("printing details about the new record -- begin")

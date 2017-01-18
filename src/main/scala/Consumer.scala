@@ -24,6 +24,24 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         shutDownAndAwaitTermination(pool)
     }
 
+    def handleRecord: (record: ConsumerRecord[String,String]): Unit = {
+        val recordTopic = record.topic()
+
+        println("printing details about the new record -- begin")
+
+        println(s"topic = $record.topic()")
+        println(s"key = $record.key()")
+        println(s"value = $record.value")
+        println(s"offset = $record.offset()")
+
+        val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
+        println("printing message")
+        println(message)
+
+        println("printing details about the new record -- end")
+        println("")
+    }
+
     def run() : Unit = {
         try{
             val props = new Properties()
@@ -51,21 +69,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
                 while(itRec.hasNext()) {
                     val record: ConsumerRecord[String,String] = itRec.next()
-                    val recordTopic = record.topic()
-
-                    println("printing details about the new record -- begin")
-
-                    println(s"topic = $record.topic()")
-                    println(s"key = $record.key()")
-                    println(s"value = $record.value")
-                    println(s"offset = $record.offset()")
-
-                    val message = Some(Json.parse(record.value()).as[SimpleRequestMessage])
-                    println("printing message")
-                    println(message)
-
-                    println("printing details about the new record -- end")
-                    println("")
+                    handleRecord(record)
                 }
 
                 println("yester consumer loop -- end")

@@ -5,7 +5,7 @@ scalaVersion := "2.11.0"
 autoScalaLibrary := false
 scalacOptions := Seq("-unchecked", "-deprecation")
 
-resolvers ++= Seq("RethinkScala Repository" at "https://github.com/kclay/rethink-scala")
+resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
 
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.0",
@@ -17,5 +17,5 @@ libraryDependencies ++= Seq(
     exclude("com.sun.jmx", "jmxri"),
     "com.typesafe" % "config" % "1.2.1",
     "com.typesafe.play" % "play-json_2.11" % "2.4.0-M2",
-    "com.rethinkscala" % "core" % "0.4.10-SNAPSHOT"
+    "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3"
 )

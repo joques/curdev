@@ -4,9 +4,9 @@ organization := "NUST - Programme Development Unit & FCI"
 scalaVersion := "2.11.0"
 autoScalaLibrary := false
 scalacOptions := Seq("-unchecked", "-deprecation")
-resolvers ++= Seq(
-    "RethinkScala Repository" at "http://kclay.github.io/releases"
-)
+
+resolvers ++= Seq("RethinkScala Repository" at "http://kclay.github.io/releases")
+
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.0",
     "io.reactivex" % "rxscala_2.11" % "0.26.0",

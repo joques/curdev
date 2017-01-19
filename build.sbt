@@ -5,7 +5,7 @@ scalaVersion := "2.11.0"
 autoScalaLibrary := false
 scalacOptions := Seq("-unchecked", "-deprecation")
 
-resolvers ++= Seq("RethinkScala Repository" at "http://kclay.github.io/releases")
+resolvers ++= Seq("RethinkScala Repository" at "https://github.com/kclay/rethink-scala")
 
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.0",

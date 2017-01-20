@@ -1,29 +1,19 @@
 import java.util.{Properties, UUID}
 import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.common.serialization.StringDeserializer
 
-class YesterProducer () {
+class YesterProducer() {
     val props = new Properties()
-    val compressionCodec = NoCompressionCodec.codec
-    props.put("compression.codec", compressionCodec.toString)
-    props.put("producer.type", "sync")
-    props.put("metadata.broker.list", "127.0.0.1:8092")
-    props.put("batch.num.messages", 200.toString)
-    props.put("message.send.max.retries", 3.toString)
-    props.put("request.required.acks", (-1).toString)
-    props.put("client.id", UUID.randomUUID().toString)
+    props.put("bootstrap.servers", "localhost:9092")
+    props.put("acks", "all")
+    props.put("retries", "0")
+    props.put("batch.size", "16384")
+    props.put("auto.commit.interval.ms", "1000")
+    props.put("linger.ms", "0")
+    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put("block.on.buffer.full", "true")
 
-    protected val config = new ProducerConfig(props)
-    private lazy val producer = new KafkaProducer[A, A](config)
-
-    def send(topic: String, message: A) = sendMessage(producer, keyedMessage(topic, message))
-
-    def sendStream(topic: String, stream: Stream[A]) = {
-        val iter = stream.iterator
-        while(iter.hasNext) {
-            send(topic, iter.next())
-        }
-    }
-
-    private def keyedMessage(topic: String, message: A): KeyedMessage[A, A] = new KeyedMessage[A, A](topic, message)
-    private def sendMessage(producer: KafkaProducer[A, A], message: KeyedMessage[A, A]) = producer.send(message)
+    private val producer: KafkaProducer[String,String] = new KafkaProducer[String,String](props)
+    def getProducer(): KafkaProducer[String,String] = producer
 }

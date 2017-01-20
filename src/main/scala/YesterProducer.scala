@@ -10,8 +10,8 @@ class YesterProducer() {
     props.put("batch.size", "16384")
     props.put("auto.commit.interval.ms", "1000")
     props.put("linger.ms", "0")
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put("key.serializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put("value.serializer", "org.apache.kafka.common.serialization.StringDeserializer")
     props.put("block.on.buffer.full", "true")
 
     private val producer: KafkaProducer[String,String] = new KafkaProducer[String,String](props)

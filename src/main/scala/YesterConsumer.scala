@@ -24,7 +24,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         shutDownAndAwaitTermination(pool)
     }
 
-    def handleRecord(record: ConsumerRecord[String,String]): Unit = {
+    def handleRecord(record: ConsumerRecord[String,String], producer: YesterProducer): Unit = {
         val recordTopic = record.topic()
 
         println("printing details about the new record -- begin")
@@ -42,22 +42,22 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println("")
 
         recordTopic match {
-            case "find-users-req" => findUser(message)
-            case "create-users-req" => createUser(message)
+            case "find-users-req" => findUser(message, producer)
+            case "create-users-req" => createUser(message, producer)
             case _ => println("unknown topic...")
         }
     }
 
-    def findUser(message: SimpleRequestMessage): Unit = {
+    def findUser(message: SimpleRequestMessage, producer: YesterProducer): Unit = {
         val userName = message.content
         println(s"finding user $userName")
     }
 
-    def createUser(message: SimpleRequestMessage): Unit = {
+    def createUser(message: SimpleRequestMessage, producer: YesterProducer): Unit = {
         println("creating new user")
     }
 
-    def run() : Unit = {
+    def run(producer: YesterProducer) : Unit = {
         try{
             val props = new Properties()
             val groupIDSuffix: String = UUID.randomUUID().toString
@@ -84,7 +84,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
                 while(itRec.hasNext()) {
                     val record: ConsumerRecord[String,String] = itRec.next()
-                    handleRecord(record)
+                    handleRecord(record, producer)
                 }
 
                 println("yester consumer loop -- end")

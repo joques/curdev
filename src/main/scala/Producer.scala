@@ -1,8 +1,7 @@
 import java.util.{Properties, UUID}
-import kafka.producer.{KeyedMessage, ProducerConfig, Producer => KafkaProducer}
-import kafka.message.NoCompressionCodec
+import org.apache.kafka.clients.producer.KafkaProducer
 
-case class Producer[A] () {
+class YesterProducer () {
     val props = new Properties()
     val compressionCodec = NoCompressionCodec.codec
     props.put("compression.codec", compressionCodec.toString)

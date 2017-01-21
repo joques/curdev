@@ -1,1 +1,1 @@
-abstract class ResponseMessage[T](messageId: String, operationError: String, operationResult: T) {}
+abstract class ResponseMessage[T](messageId: String, operationError: Option[String], operationResult: Option[T]) {}

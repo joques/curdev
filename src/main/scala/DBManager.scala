@@ -1,3 +1,4 @@
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.ReactiveCouchbaseDriver
 import scala.concurrent.Future
 import play.api.libs.json._

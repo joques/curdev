@@ -27,27 +27,34 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     }
 
     def handleRecord(record: ConsumerRecord[String,String]): Unit = {
-        val recordTopic = record.topic()
+
 
         println("printing details about the new record -- begin")
 
-        println(s"topic = $(record.topic())")
-        println(s"key = $(record.key())")
-        println(s"value = $(record.value)")
-        println(s"offset = $(record.offset())")
+        val recordTopic = record.topic()
+        val recordKey = record.key()
+        val recordValue = record.value()
+        val recordOffset = record.offset()
 
-        val message = Json.parse(record.value()).as[SimpleRequestMessage]
-        println("printing message")
-        println(message)
+        println(s"topic = $recordTopic")
+        println(s"key = $recordKey")
+        println(s"value = $recordValue")
+        println(s"offset = $recordOffset")
 
         println("printing details about the new record -- end")
         println("")
+
+        println("delving into the message -- begin")
+        val message = Json.parse(recordValue).as[SimpleRequestMessage]
+        println(message)
 
         recordTopic match {
             case "find-users-req" => findUser(message)
             case "create-users-req" => createUser(message)
             case _ => println("unknown topic...")
         }
+
+        println("delving into the message -- end")
     }
 
     def findUser(message: SimpleRequestMessage): Unit = {

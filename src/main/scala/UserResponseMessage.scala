@@ -3,7 +3,7 @@ import play.api.libs.json.{Reads, Json, Format}
 case class UserResponseMessage(messageId: String, operationError: String, operationResult: User) extends ResponseMessage[User](messageId, operationError, operationResult)
 
 object UserResponseMessageJsonImplicits {
-    implicit val userFormat: Format[User] =  SimpleRequestMessageJsonImplicits.simpleRequestMessageFmt
+    implicit val userFormat: Format[User] =  UserJsonImplicits.userFmt
 
     implicit val userResponseMessageFmt = Json.format[UserResponseMessage]
     implicit val userResponseMessageWrites = Json.writes[UserResponseMessage]

@@ -16,7 +16,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
     var messenger: YesterProducer = null
-    implicit val reader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
+    implicit val userRreader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
+    implicit  val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
 
     def startConsuming(producer: YesterProducer) : Unit = {
         messenger = producer

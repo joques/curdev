@@ -73,7 +73,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             }
             case Failure(userErr) => {
                 userErr.printStackTrace
-                val userErrorRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, userErr.getMessage, None)
+                val userErrorRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, Option(userErr.getMessage), None)
                 val errMsgStr = Json.toJson(userErrorRespMsg).toString()
                 println(s"the error message to be sent it $errMsgStr")
             }

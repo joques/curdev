@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.{KafkaConsumer, ConsumerRecords, Consum
 import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConversions._
 import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
 import rx.lang.scala.Observable
 import java.util.Properties
 import java.util.UUID

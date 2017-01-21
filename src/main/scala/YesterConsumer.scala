@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import rx.lang.scala.Observable
 import java.util.Properties
 import java.util.UUID
-import play.api.libs.json.{Reads, Json}
+import play.api.libs.json.{Reads, Json, Writes}
 
 
 case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {

@@ -4,7 +4,7 @@
 object Yester {
     def main(args: Array[String]) {
         println("welcome to Yester... The resource management micro service...")
-        val topicList = List("find-users-req","create-users-req")
+        val topicList = List("find-users-req","create-users-req", "summary-req")
         val yProducer = new YesterProducer()
         val yConsumer = new YesterConsumer(topicList)
 

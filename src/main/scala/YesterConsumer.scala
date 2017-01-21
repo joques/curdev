@@ -3,6 +3,7 @@ import java.util.concurrent.{TimeUnit, Executors, ExecutorService}
 import org.apache.kafka.clients.consumer.{KafkaConsumer, ConsumerRecords, ConsumerRecord}
 import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConversions._
+import scala.util.{Failure, Success}
 import rx.lang.scala.Observable
 import java.util.Properties
 import java.util.UUID
@@ -60,8 +61,11 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     def findUser(message: SimpleRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")
-        val newUser = DBManager.findUser("kunta")
-        println(newUser)
+        val userResult = DBManager.findUser("kunta")
+        userResult.onComplete {
+            case Success(userVal) => println(s"We got user $userVal")
+            case Failure(userErr) => userErr.printStackTrace
+        }
     }
 
     def createUser(message: SimpleRequestMessage): Unit = {

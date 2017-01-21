@@ -65,7 +65,12 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println(s"finding user $userName")
         val userResult = DBManager.findUser("kunta")
         userResult.onComplete {
-            case Success(userVal) => println(s"We got user $userVal")
+            case Success(userVal) => {
+                println(s"We got user $userVal")
+                val userRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, null, userVal)
+                val msgStr = Json.toJson(userRespMsg).toString()
+                println(s"the message to be sent is $msgStr")
+            }
             case Failure(userErr) => userErr.printStackTrace
         }
     }

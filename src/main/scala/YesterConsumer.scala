@@ -52,16 +52,16 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println(message)
 
         recordTopic match {
-            case "find-users-req" => findUser(recordTopic, message)
-            case "create-users-req" => createUser(recordTopic, message)
-            case "summary-req" => getSummary(recordTopic, message)
+            case "find-users-req" => findUser(message)
+            case "create-users-req" => createUser(message)
+            case "summary-req" => getSummary(message)
             case _ => println("unknown topic...")
         }
 
         println("delving into the message -- end")
     }
 
-    def findUser(topic: String, message: SimpleRequestMessage): Unit = {
+    def findUser(message: SimpleRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")
         val userResult = DBManager.findUser(userName)
@@ -71,34 +71,34 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, None, userVal)
                 val succMsgStr = Json.toJson(userSuccessRespMsg).toString()
                 println(s"the success message to be sent is $succMsgStr")
-                messenger.getProducer().send(new ProducerRecord[String,String](topic, succMsgStr))
+                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
             }
             case Failure(userErr) => {
                 userErr.printStackTrace
                 val userErrorRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, Option(userErr.getMessage), None)
                 val errMsgStr = Json.toJson(userErrorRespMsg).toString()
                 println(s"the error message to be sent it $errMsgStr")
-                messenger.getProducer().send(new ProducerRecord[String,String](topic, errMsgStr))
+                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr))
             }
         }
     }
 
-    def createUser(topic: String, message: SimpleRequestMessage): Unit = {
+    def createUser(message: SimpleRequestMessage): Unit = {
         println("creating new user")
     }
 
-    def getSummary(topic: String, message: SimpleRequestMessage): Unit = {
+    def getSummary(message: SimpleRequestMessage): Unit = {
         println("getting summary...")
         val summaryType = message.content
 
         summaryType match {
-            case "short-summary" => getShortSummary(topic, message.messageId)
-            case "full-summary" => getFullSummary(topic, message.messageId)
+            case "short-summary" => getShortSummary(message.messageId)
+            case "full-summary" => getFullSummary(message.messageId)
             case _ => println("unknown command...")
         }
     }
 
-    def getShortSummary(topic: String, messageId: String): Unit = {
+    def getShortSummary(messageId: String): Unit = {
         val inProgressProgs = List(new Programme("fci", "cs", "7a88de"), new Programme("fci", "cs", "7sa32re"))
         val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873"), new Programme("eng", "elec", "6203947"))
         val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres"))
@@ -108,7 +108,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
         val summaryRespMsgStr = Json.toJson(userSuccessRespMsg).toString()
         println(s"the  message to be sent is $summaryRespMsgStr")
-        messenger.getProducer().send(new ProducerRecord[String,String](topic, summaryRespMsgStr))
+        messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", summaryRespMsgStr))
     }
 
     def run() : Unit = {

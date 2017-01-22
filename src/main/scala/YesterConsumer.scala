@@ -17,8 +17,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
     var messenger: YesterProducer = null
-    implicit val userRreader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
-    implicit  val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
+    implicit val reqRreader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
+    implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
+    implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
 
     def startConsuming(producer: YesterProducer) : Unit = {
         messenger = producer
@@ -31,8 +32,6 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     }
 
     def handleRecord(record: ConsumerRecord[String,String]): Unit = {
-
-
         println("printing details about the new record -- begin")
 
         val recordTopic = record.topic()
@@ -91,7 +90,25 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     def getSummary(topic: String, message: SimpleRequestMessage): Unit = {
         println("getting summary...")
         val summaryType = message.content
-        
+
+        summaryType match {
+            case "short-summary" => getShortSummary(topic, message.messageId)
+            case "full-summary" => getFullSummary(topic, message.messageId)
+            case _ => println("unknown command...")
+        }
+    }
+
+    def getShortSummary(topic: String, messageId: String): Unit = {
+        val inProgressProgs = List(new Programme("fci", "cs", "7a88de"), new Programme("fci", "cs", "7sa32re"))
+        val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873"), new Programme("eng", "elec", "6203947"))
+        val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres"))
+
+        val summary = new Summary(Option(inProgressProgs), Option(dueForReviewProgs), Option(recentlyApprovedProgs))
+        val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, summary)
+
+        val summaryRespMsgStr = Json.toJson(userSuccessRespMsg).toString()
+        println(s"the  message to be sent is $summaryRespMsgStr")
+        messenger.getProducer().send(new ProducerRecord[String,String](topic, summaryRespMsgStr))
     }
 
     def run() : Unit = {

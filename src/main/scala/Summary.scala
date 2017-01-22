@@ -1,4 +1,4 @@
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Format}
 
 case class Summary(inProgress: Option[List[Programme]], dueForReview: Option[List[Programme]], recentlyApproved: Option[List[Programme]])
 

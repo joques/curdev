@@ -11,4 +11,9 @@ object DBManager {
       val userBucket = driver.bucket("yester-users")
       userBucket.get[User](username)
   }
+
+  def findAllProgrammes(): Future[List[Programme]] = {
+      val programmeBucket = driver.bucket("yester-programmes")
+      programmeBucket.find[Programme]
+  }
 }

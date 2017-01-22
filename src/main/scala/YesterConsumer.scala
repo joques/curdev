@@ -104,11 +104,15 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres"))
 
         val summary = new Summary(Option(inProgressProgs), Option(dueForReviewProgs), Option(recentlyApprovedProgs))
-        val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, summary)
+        val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, Option(summary))
 
-        val summaryRespMsgStr = Json.toJson(userSuccessRespMsg).toString()
+        val summaryRespMsgStr = Json.toJson(summaryRespMsg).toString()
         println(s"the  message to be sent is $summaryRespMsgStr")
         messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", summaryRespMsgStr))
+    }
+
+    def getFullSummary(messageId: String): Unit = {
+        println("printing full summary...")
     }
 
     def run() : Unit = {

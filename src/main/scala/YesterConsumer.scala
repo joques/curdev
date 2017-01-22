@@ -55,6 +55,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         recordTopic match {
             case "find-users-req" => findUser(recordTopic, message)
             case "create-users-req" => createUser(recordTopic, message)
+            case "summary-req" => getSummary(recordTopic, message)
             case _ => println("unknown topic...")
         }
 
@@ -85,6 +86,12 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
     def createUser(topic: String, message: SimpleRequestMessage): Unit = {
         println("creating new user")
+    }
+
+    def getSummary(topic: String, message: SimpleRequestMessage): Unit = {
+        println("getting summary...")
+        val summaryType = message.content
+        
     }
 
     def run() : Unit = {

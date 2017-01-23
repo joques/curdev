@@ -1,6 +1,7 @@
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.ReactiveCouchbaseDriver
 import scala.concurrent.Future
+import com.couchbase.client.protocol.views.{Stale, Query}
 import play.api.libs.json.{Json, Format}
 
 object DBManager {

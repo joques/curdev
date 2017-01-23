@@ -1,7 +1,7 @@
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.ReactiveCouchbaseDriver
 import scala.concurrent.Future
-import play.api.libs.json._
+import play.api.libs.json.{Json, Format}
 
 object DBManager {
   val driver = ReactiveCouchbaseDriver()
@@ -14,7 +14,7 @@ object DBManager {
 
   def findUser(username: String): Future[Option[User]] = findById[User](username, "yester-users")
 
-  def findById[T](docKey: String, bucketName: String, implicit valFormat: Format[T]): Future[Option[T]] = {
+  def findById[T](docKey: String, bucketName: String)(implicit valFormat: Format[T]): Future[Option[T]] = {
       val curBucket = driver.bucket(bucketName)
       curBucket.get[T](docKey)
   }

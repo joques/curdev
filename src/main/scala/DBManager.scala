@@ -11,7 +11,7 @@ object DBManager {
 
   def findUser(username: String): Future[Option[User]] = findById[User](username, "yester-users")
 
-  def findAllProgrammes(designDoc: String, viewName: String): Future[Option[List[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "progr")
+  def findAllProgrammes(designDoc: String, viewName: String): Future[List[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "progr")
 
   def findById[T](docKey: String, bucketName: String)(implicit valFormat: Format[T]): Future[Option[T]] = {
       val curBucket = driver.bucket(bucketName)

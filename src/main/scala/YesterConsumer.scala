@@ -105,6 +105,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         allProgs.onComplete {
             case (Success(progList)) => {
                 println(s"the list is: $progList")
+                val inProgress: progList.filter((prg) => prg.status == "in-progress").take(5)
+                println(s"the in progress list is $inProgress")
             }
             case (Failure(progErr)) => {
                 progErr.printStackTrace

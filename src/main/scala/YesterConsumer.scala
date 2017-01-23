@@ -100,7 +100,20 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
     def getShortSummary(messageId: String): Unit = {
         println("processing short summary...")
-        
+
+        val allProgs = DBManager.findAllProgrammes()
+        allProgs.onComplete {
+            case (Success(progList)) => {
+                println(s"the list is: $progList")
+            }
+            case (Failure(progErr)) => {
+                progErr.printStackTrace
+                val progErrorRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, Option(progErr.getMessage), None)
+                val errMsgStr = Json.toJson(progErrorRespMsg).toString
+                println(s"the error message to be sent for all progs is $errMsgStr")
+            }
+        }
+
         val inProgressProgs = List(new Programme("fci", "cs", "7a88de"), new Programme("fci", "cs", "7sa32re"))
         val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873"), new Programme("eng", "elec", "6203947"))
         val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres"))

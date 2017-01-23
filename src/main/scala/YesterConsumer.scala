@@ -114,9 +114,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             }
         }
 
-        val inProgressProgs = List(new Programme("fci", "cs", "7a88de"), new Programme("fci", "cs", "7sa32re"))
-        val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873"), new Programme("eng", "elec", "6203947"))
-        val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres"))
+        val inProgressProgs = List(new Programme("fci", "cs", "7a88de", "in-progress", "", "", Nil), new Programme("fci", "cs", "7sa32re", "in-progress", "", "", Nil))
+        val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873", "approved", "2014-10-10", "2017-10-10", List("2014-10-10")), new Programme("eng", "elec", "6203947", "approved", "2015-10-10", "2017-10-10", List("2015-10-10")))
+        val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres", "approved", "2017-01-10", "2022-10-10", List("2017-01-10")))
 
         val summary = new Summary(Option(inProgressProgs), Option(dueForReviewProgs), Option(recentlyApprovedProgs))
         val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, Option(summary))

@@ -1,6 +1,6 @@
 import play.api.libs.json.Json
 
-case class Programme(faculty: String, department: String, programme: String)
+case class Programme(faculty: String, department: String, title: String, status: String, approved-on: String, next-review: String, history: List[String])
 
 object ProgrammeJsonImplicits {
     implicit val prgFmt = Json.format[Programme]

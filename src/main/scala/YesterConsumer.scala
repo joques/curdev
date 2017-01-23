@@ -99,6 +99,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     }
 
     def getShortSummary(messageId: String): Unit = {
+        println("processing short summary...")
+        
         val inProgressProgs = List(new Programme("fci", "cs", "7a88de"), new Programme("fci", "cs", "7sa32re"))
         val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873"), new Programme("eng", "elec", "6203947"))
         val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres"))
@@ -129,7 +131,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             props.put("session.timeout.ms", "10000")
             props.put("fetch.min.bytes", "50000")
             props.put("max.partition.fetch.bytes", "2097152")
-            props.put("auto.offset.reset", "earliest")
+            props.put("auto.offset.reset", "latest")
 
             consumer = new KafkaConsumer[String,String](props)
             consumer.subscribe(topics)

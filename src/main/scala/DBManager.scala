@@ -7,7 +7,7 @@ object DBManager {
   val driver = ReactiveCouchbaseDriver()
   implicit val userFormat: Format[User] = UserJsonImplicits.userFmt
 
-  def findId(key: String, bucketName: String): Future[Option[T]] = {
+  def findId[T](key: String, bucketName: String): Future[Option[T]] = {
       val bucket = driver.bucket(bucketName)
       bucket.get[T](key)
   }

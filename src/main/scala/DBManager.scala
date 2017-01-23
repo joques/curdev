@@ -7,6 +7,7 @@ import play.api.libs.json.{Json, Format}
 object DBManager {
   val driver = ReactiveCouchbaseDriver()
   implicit val userFormat: Format[User] = UserJsonImplicits.userFmt
+  implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
 
   def findUser(username: String): Future[Option[User]] = findById[User](username, "yester-users")
 

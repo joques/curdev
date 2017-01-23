@@ -18,7 +18,7 @@ object DBManager {
       curBucket.get[T](docKey)
   }
 
-  def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: Format[T]): Future[Option[List[T]]] = {
+  def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: Format[T]): Future[List[T]] = {
       val curBucket = driver.bucket(bucketName)
       curBucket.find[T](designDoc, viewName)(new Query().setIncludeDocs(true).setStale(Stale.FALSE))
   }

@@ -121,7 +121,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
                 val recentlyApproved: List[Programme] = for {
                     curProg1 <- progList
-                    if ((curProg.status == "approved") && (threeMonthsAgo <= Date(curProg.approvedOn)))
+                    if ((curProg1.status == "approved") && (threeMonthsAgo <= Date(curProg1.approvedOn)))
                 } yield curProg1
                 println(s"recently approved list $recentlyApproved")
             }

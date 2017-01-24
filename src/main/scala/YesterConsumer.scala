@@ -6,6 +6,7 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConversions._
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
+import io.lamma._
 import rx.lang.scala.Observable
 import java.util.Properties
 import java.util.UUID
@@ -107,6 +108,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 println(s"the list is: $progList")
                 val inProgress: List[Programme] = progList.filter((prg: Programme) => prg.status == "in-progress").take(5)
                 println(s"the in progress list is $inProgress")
+                val now = Date.today()
+                println(s"the time now is $now")
             }
             case (Failure(progErr)) => {
                 progErr.printStackTrace

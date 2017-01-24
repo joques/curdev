@@ -109,7 +109,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 val inProgress: List[Programme] = progList.filter((prg: Programme) => prg.status == "in-progress").take(5)
                 println(s"the in progress list is $inProgress")
                 val now = Date.today()
-                println(s"the time now is $now")
+                val inSixMonth = now + (6 months)
+                println(s"the time now is $now and in six months is $inSixMonth")
             }
             case (Failure(progErr)) => {
                 progErr.printStackTrace

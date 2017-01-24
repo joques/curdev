@@ -106,7 +106,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         allProgs.onComplete {
             case (Success(progList)) => {
                 println(s"the list is: $progList")
+
                 val inProgress: List[Programme] = progList.filter((prg: Programme) => prg.status == "in-progress").take(5)
+
                 println(s"the in progress list is $inProgress")
                 val now = Date.today()
                 val inSixMonth = now + (6 months)
@@ -124,6 +126,13 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     if ((curProg1.status == "approved") && (threeMonthsAgo <= Date(curProg1.approvedOn)))
                 } yield curProg1
                 println(s"recently approved list $recentlyApproved")
+
+                val summary = new Summary(Option(inProgress), Option(durForReview), Option(recentlyApproved))
+                val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, Option(summary))
+
+                val summaryRespMsgStr = Json.toJson(summaryRespMsg).toString()
+                println(s"the  message to be sent is $summaryRespMsgStr")
+                messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", summaryRespMsgStr))
             }
             case (Failure(progErr)) => {
                 progErr.printStackTrace
@@ -133,16 +142,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             }
         }
 
-        val inProgressProgs = List(new Programme("fci", "cs", "7a88de", "in-progress", "", "", Nil), new Programme("fci", "cs", "7sa32re", "in-progress", "", "", Nil))
-        val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873", "approved", "2014-10-10", "2017-10-10", List("2014-10-10")), new Programme("eng", "elec", "6203947", "approved", "2015-10-10", "2017-10-10", List("2015-10-10")))
-        val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres", "approved", "2017-01-10", "2022-10-10", List("2017-01-10")))
-
-        val summary = new Summary(Option(inProgressProgs), Option(dueForReviewProgs), Option(recentlyApprovedProgs))
-        val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, Option(summary))
-
-        val summaryRespMsgStr = Json.toJson(summaryRespMsg).toString()
-        println(s"the  message to be sent is $summaryRespMsgStr")
-        messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", summaryRespMsgStr))
+        // val inProgressProgs = List(new Programme("fci", "cs", "7a88de", "in-progress", "", "", Nil), new Programme("fci", "cs", "7sa32re", "in-progress", "", "", Nil))
+        // val dueForReviewProgs = List(new Programme("hum", "lit", "bb452873", "approved", "2014-10-10", "2017-10-10", List("2014-10-10")), new Programme("eng", "elec", "6203947", "approved", "2015-10-10", "2017-10-10", List("2015-10-10")))
+        // val recentlyApprovedProgs = List(new Programme("eco", "mkt", "32fdres", "approved", "2017-01-10", "2022-10-10", List("2017-01-10")))
     }
 
     def getFullSummary(messageId: String): Unit = {

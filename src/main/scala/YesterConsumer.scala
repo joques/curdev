@@ -111,6 +111,11 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 val now = Date.today()
                 val inSixMonth = now + (6 months)
                 println(s"the time now is $now and in six months is $inSixMonth")
+                val durForReview: List[Programme] = for {
+                    curProg <- progList
+                    if ((curProg.status == "approved") && (Date(curProg.nextReview) < inSixMonth))
+                } yield curProg
+                println(s"due for review list $durForReview")
             }
             case (Failure(progErr)) => {
                 progErr.printStackTrace

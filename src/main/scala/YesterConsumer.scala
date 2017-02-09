@@ -56,6 +56,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             case "find-users-req" => findUser(message)
             case "create-users-req" => createUser(message)
             case "summary-req" => getSummary(message)
+            case "need-analysis-start-req" => createPreProgramme(message)
             case _ => println("unknown topic...")
         }
 
@@ -87,6 +88,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     def createUser(message: SimpleRequestMessage): Unit = {
         println("creating new user")
     }
+
+    def createPreProgramme(message: SimpleRequestMessage): Unit = {}
 
     def getSummary(message: SimpleRequestMessage): Unit = {
         println("getting summary...")

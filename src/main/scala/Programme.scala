@@ -1,6 +1,6 @@
 import play.api.libs.json.Json
 
-case class Programme(faculty: Int, department: Int, title: String, lvel: Int, isPreProgramme: Boolean, progComponent: Option[ProgrammeComponent], preProgComponent: Option[PreProgrammeComponent])
+case class Programme(faculty: Int, department: Int, name: String, level: Int, isPreProgramme: Boolean, progComponent: Option[ProgrammeComponent], preProgComponent: Option[PreProgrammeComponent])
 
 object ProgrammeJsonImplicits {
     implicit val preProgrammeComponentFormat: Format[PreProgrammeComponent] =  PreProgrammeComponentJsonImplicits.preProgCompFmt

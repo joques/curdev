@@ -53,11 +53,23 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println(message)
 
         recordTopic match {
-            case "find-users-req" => findUser(message)
-            case "create-users-req" => createUser(message)
-            case "summary-req" => getSummary(message)
-            case "need-analysis-start-req" => createPreProgramme(message)
-            case _ => println("unknown topic...")
+            case "find-users-req" => {
+                val findUserMessage = Json.parse(recordValue).as[SimpleRequestMessage]
+                findUser(findUserMessage)
+            }
+            case "create-users-req" => {
+                val createUserMessage = Json.parse(recordValue).as[SimpleRequestMessage]
+                createUser(createUserMessage)
+            }
+            case "summary-req" => {
+                val summaryMessage = Json.parse(recordValue).as[SimpleRequestMessage]
+                getSummary(summaryMessage)
+            }
+            case "need-analysis-start-req" => {
+                val needAnalysisStartMessage = Json.parse(recordValue).as[ProgrammeRequestMessage]
+                createPreProgramme(needAnalysisStartMessage)
+            }
+            case _ => println("unknown topic ...")
         }
 
         println("delving into the message -- end")
@@ -89,7 +101,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println("creating new user")
     }
 
-    def createPreProgramme(message: SimpleRequestMessage): Unit = {}
+    def createPreProgramme(message: ProgrammeRequestMessage): Unit = {}
 
     def getSummary(message: SimpleRequestMessage): Unit = {
         println("getting summary...")

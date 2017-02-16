@@ -18,7 +18,7 @@ object DBManager {
 
 
 
-  def findById[T](bucketName: String, docKey: String,)(implicit valFormat: Format[T]): Future[Option[T]] = {
+  def findById[T](bucketName: String, docKey: String)(implicit valFormat: Format[T]): Future[Option[T]] = {
       val curBucket = driver.bucket(bucketName)
       curBucket.get[T](docKey)
   }

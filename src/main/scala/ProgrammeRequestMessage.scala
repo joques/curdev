@@ -5,7 +5,7 @@ case class ProgrammeRequestMessage(messageId: String, content: Programme) extend
 object ProgrammeRequestMessageJsonImplicits {
     implicit val programmeFormat: Format[Programme] =  ProgrammeJsonImplicits.prgFmt
 
-    implicit val programmeRequestMessageFmt = Json.format[Programme]
-    implicit val programmeRequestMessageeWrites = Json.writes[Programme]
-    implicit val programmeRequestMessageReads = Json.reads[Programme]
+    implicit val programmeRequestMessageFmt = Json.format[ProgrammeRequestMessage]
+    implicit val programmeRequestMessageeWrites = Json.writes[ProgrammeRequestMessage]
+    implicit val programmeRequestMessageReads = Json.reads[ProgrammeRequestMessage]
 }

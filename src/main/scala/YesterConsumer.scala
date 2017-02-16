@@ -21,6 +21,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     implicit val reqRreader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
     implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
+    implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
 
     def startConsuming(producer: YesterProducer) : Unit = {
         messenger = producer
@@ -98,10 +99,21 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     }
 
     def createUser(message: SimpleRequestMessage): Unit = {
-        println("creating new user")
+        println("creating new user...")
     }
 
-    def createPreProgramme(message: ProgrammeRequestMessage): Unit = {}
+    def createPreProgramme(message: ProgrammeRequestMessage): Unit = {
+        println("creating a new programme object ...")
+
+        val progObj = message.content
+        val createProgOpRes = DBManager.createProgramme(progObj)
+        createProgOpRes.onComplete {
+            case Success(succOpStatus) => {
+
+            }
+            case Failure(failOpStatus) => {}
+        }
+    }
 
     def getSummary(message: SimpleRequestMessage): Unit = {
         println("getting summary...")

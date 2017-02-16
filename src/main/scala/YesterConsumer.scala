@@ -143,9 +143,10 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             case (Success(progList)) => {
                 println(s"the list is: $progList")
 
-                val inProgress: List[Programme] = progList.filter((prg: Programme) => prg.status == "in-progress").take(5)
-
+                val inProgress: List[Programme] = progList.filter((prg: Programme) => prg.isPreProgramme).take(5)
                 println(s"the in progress list is $inProgress")
+
+
                 val now = Date.today()
                 val inSixMonth = now + (6 months)
                 val threeMonthsAgo = now - (3 months)
@@ -153,13 +154,13 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
                 val durForReview: List[Programme] = for {
                     curProg <- progList
-                    if ((curProg.status == "approved") && (Date(curProg.nextReview) <= inSixMonth))
+                    if ((!curProg.isPreProgramme) && (Date(curProg.progComponent.nextReview) <= inSixMonth))
                 } yield curProg
                 println(s"due for review list $durForReview")
 
                 val recentlyApproved: List[Programme] = for {
                     curProg1 <- progList
-                    if ((curProg1.status == "approved") && (threeMonthsAgo <= Date(curProg1.approvedOn)))
+                    if ((!curProg.isPreProgramme) && (threeMonthsAgo <= Date(curProg1.progComponent.approvedOn)))
                 } yield curProg1
                 println(s"recently approved list $recentlyApproved")
 

@@ -109,7 +109,10 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         val createProgOpRes = DBManager.createProgramme(progObj)
         createProgOpRes.onComplete {
             case Success(succOpStatus) => {
-
+                val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, succOpStatus.getMessage())
+                val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+                println(s"the success message to be sent is $succMsgStr")
+                messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", succMsgStr))
             }
             case Failure(failOpStatus) => {}
         }

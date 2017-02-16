@@ -10,13 +10,15 @@ object DBManager {
   implicit val userFormat: Format[User] = UserJsonImplicits.userFmt
   implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
 
-  def findUser(username: String): Future[Option[User]] = findById[User](username, "yester-users")
+  def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
 
   def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 
   def createProgramme(progData: Programme): Future[OperationStatus] = save[Programme]("yester-programmes", progData)
 
-  def findById[T](docKey: String, bucketName: String)(implicit valFormat: Format[T]): Future[Option[T]] = {
+
+
+  def findById[T](bucketName: String, docKey: String,)(implicit valFormat: Format[T]): Future[Option[T]] = {
       val curBucket = driver.bucket(bucketName)
       curBucket.get[T](docKey)
   }

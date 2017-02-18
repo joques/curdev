@@ -30,6 +30,6 @@ object DBManager {
 
   def save[T](bucketName: String, key: String, data: T)(implicit valFormat: Format[T]): Future[OperationStatus] = {
       val curBucket = driver.bucket(bucketName)
-      curBucket.set[T](key, data)
+      curBucket.set(key, data, valFormat)
   }
 }

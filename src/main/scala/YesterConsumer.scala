@@ -107,7 +107,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println("creating a new programme object ...")
 
         val progObj = message.content
-        val createProgOpRes = DBManager.createProgramme(progObj)
+        val progKey = UUID.randomUUID().toString()
+        val createProgOpRes = DBManager.createProgramme(progKey, progObj)
         createProgOpRes.onComplete {
             case Success(succOpStatus) => {
                 val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Option(succOpStatus.getMessage()))

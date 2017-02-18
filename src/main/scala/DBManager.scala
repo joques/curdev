@@ -14,7 +14,7 @@ object DBManager {
 
   def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 
-  def createProgramme(progData: Programme): Future[OperationStatus] = save[Programme]("yester-programmes", progData)
+  def createProgramme(progKey: String, progData: Programme): Future[OperationStatus] = save[Programme]("yester-programmes", progKey, progData)
 
 
 
@@ -28,8 +28,8 @@ object DBManager {
       curBucket.find[T](designDoc, viewName)(new Query().setIncludeDocs(true).setStale(Stale.FALSE))
   }
 
-  def save[T](bucketName: String, data: T)(implicit valFormat: Format[T]): Future[OperationStatus] = {
+  def save[T](bucketName: String, key: String, data: T)(implicit valFormat: Format[T]): Future[OperationStatus] = {
       val curBucket = driver.bucket(bucketName)
-      curBucket.set[T](data)
+      curBucket.set[T](key, data)
   }
 }

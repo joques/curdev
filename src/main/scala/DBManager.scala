@@ -1,14 +1,17 @@
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.ReactiveCouchbaseDriver
 import scala.concurrent.Future
+import org.reactivecouchbase.client.{OpResult, Constants}
 import com.couchbase.client.protocol.views.{Stale, Query}
 import play.api.libs.json.{Json, Format}
-import net.spy.memcached.ops.OperationStatus
+import net.spy.memcached.{PersistTo, ReplicateTo}
+// import net.spy.memcached.ops.OperationStatus
 
 object DBManager {
   val driver = ReactiveCouchbaseDriver()
   implicit val userFormat: Format[User] = UserJsonImplicits.userFmt
   implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
+  implicit vak progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
 
   def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
 
@@ -28,8 +31,8 @@ object DBManager {
       curBucket.find[T](designDoc, viewName)(new Query().setIncludeDocs(true).setStale(Stale.FALSE))
   }
 
-  def save[T](bucketName: String, key: String, data: T)(implicit valFormat: Format[T]): Future[OperationStatus] = {
+  def save[T](bucketName: String, key: String, data: T)(implicit valFormat: Format[T]): Future[OpResult] = {
       val curBucket = driver.bucket(bucketName)
-      curBucket.set(key, data, valFormat)
+      curBucket.set(key, data, Constants.expiration, PersistTo.ZERO, ReplicateTo.ZERO)
   }
 }

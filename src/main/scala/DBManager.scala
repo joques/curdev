@@ -3,7 +3,7 @@ import org.reactivecouchbase.ReactiveCouchbaseDriver
 import scala.concurrent.Future
 import org.reactivecouchbase.client.{OpResult, Constants}
 import com.couchbase.client.protocol.views.{Stale, Query}
-import play.api.libs.json.{Json, Format}
+import play.api.libs.json.{Json, Format, Writes}
 import net.spy.memcached.{PersistTo, ReplicateTo}
 // import net.spy.memcached.ops.OperationStatus
 
@@ -17,7 +17,7 @@ object DBManager {
 
   def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 
-  def createProgramme(progKey: String, progData: Programme): Future[OperationStatus] = save[Programme]("yester-programmes", progKey, progData)
+  def createProgramme(progKey: String, progData: Programme): Future[OpResult] = save[Programme]("yester-programmes", progKey, progData)
 
 
 

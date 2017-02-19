@@ -11,7 +11,7 @@ object DBManager {
   val driver = ReactiveCouchbaseDriver()
   implicit val userFormat: Format[User] = UserJsonImplicits.userFmt
   implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
-  implicit vak progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
+  implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
 
   def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
 

@@ -72,7 +72,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 createPreProgramme(needAnalysisStartMessage)
             }
             case "need-analysis-consult-req" => {
-                println("dealing with consultation")
+                val needAnalysisConsultMessage = Json.parse(recordValue).as[NeedAnalysisConsultationRequestMessage]
+                addNeedAnalysisConsultation(needAnalysisConsultMessage)
             }
             case _ => println("unknown topic ...")
         }
@@ -113,9 +114,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         val progKey = UUID.randomUUID().toString()
         val createProgOpRes = DBManager.createProgramme(progKey, progObj)
         createProgOpRes.onComplete {
-            case Success(succOpRes) => {
-                if (succOpRes.isSuccess) {
-                    val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Option(succOpRes.getMessage))
+            case Success(createPreProgSuccOpRes) => {
+                if (createPreProgSuccOpRes.isSuccess) {
+                    val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Option(createPreProgSuccOpRes.getMessage))
                     val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
                     println(s"the success message to be sent is $succMsgStr")
                     messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", succMsgStr))
@@ -127,11 +128,43 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", errMsgStr1))
                 }
             }
-            case Failure(failOpRes) => {
-                val simpleErrorRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(failOpRes.getMessage()), None)
+            case Failure(createPreProgFailOpRes) => {
+                val simpleErrorRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(createPreProgFailOpRes.getMessage), None)
                 val errMsgStr = Json.toJson(simpleErrorRespMsg).toString()
                 println(s"the error message to be sent out is $errMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", errMsgStr))
+            }
+        }
+    }
+
+    def addNeedAnalysisConsultation(message: NeedAnalysisConsultationRequestMessage): Unit = {
+        println("adding consultation record for need analysis")
+
+        val consultationObj = message.content
+        val consulationKey = UUID.randomUUID().toString()
+
+        val addConsultationOpRes = DBManager.addNeedAnalysisConsultation(consulationKey, consultationObj)
+
+        addConsultationOpRes.onComplete {
+            case Success(addConsultationSuccOpRes) => {
+                if (addConsultationOpRes.isSuccess) {
+                    val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Option(addConsultationOpRes.getMessage))
+                    val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+                    println(s"the success message to be sent is $succMsgStr")
+                    messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-consult-res", succMsgStr))
+                }
+                else {
+                    val simpleErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(addConsultationOpRes.getMessage), None)
+                    val errMsgStr1 = Json.toJson(simpleErrorRespMsg1).toString()
+                    println(s"the error message to be sent out is $errMsgStr1")
+                    messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-consult-res", errMsgStr1))
+                }
+            }
+            case Failure(addConsultationFailOpRes) => {
+                val simpleErrorRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(addConsultationFailOpRes.getMessage), None)
+                val errMsgStr = Json.toJson(simpleErrorRespMsg).toString()
+                println(s"the error message to be sent out is $errMsgStr")
+                messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-consult-res", errMsgStr))
             }
         }
     }

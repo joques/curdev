@@ -124,7 +124,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", succMsgStr))
                 }
                 else {
-                    val simpleErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(succOpRes.getMessage), None)
+                    val simpleErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(createPreProgSuccOpRes.getMessage), None)
                     val errMsgStr1 = Json.toJson(simpleErrorRespMsg1).toString()
                     println(s"the error message to be sent out is $errMsgStr1")
                     messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", errMsgStr1))

@@ -128,14 +128,14 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     case Success(progList) => {
                         val preProgrammeList: List[Programme] = progList.filter((prg: Programme) => prg.isPreProgramme)
                         var preProgCodes: List[String] = for (prg1 <- preProgrammeList if prg1.preProgComponent.get.initiator == "userName") yield prg1.preProgComponent.get.devCode
-                        var userWPrePrg: UserWithPreProgramme
+                        var userWPrePrg: Option[UserWithPreProgramme] = None
                         if (preProgCodes.isEmpty) {
-                            userWPrePrg = new UserWithPreProgramme(userVal, None)
+                            userWPrePrg = Some(new UserWithPreProgramme(userVal, None))
                         }
                         else {
-                            userWPrePrg = new UserWithPreProgramme(userVal, Option(preProgCodes))
+                            userWPrePrg = Some(new UserWithPreProgramme(userVal, Option(preProgCodes)))
                         }
-                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, None, userWPrePrg)
+                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, None, userWPrePrg.get)
                         val succMsgStr = Json.toJson(succRespMsg).toString()
                         println(s"the success message to be sent is $succMsgStr")
                         messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))

@@ -2,7 +2,7 @@ import play.api.libs.json.{Reads, Json, Format}
 
 case class UserWithPreProgrammeResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[UserWithPreProgramme]) extends ResponseMessage[UserWithPreProgramme](messageId, operationError, operationResult)
 
-object UserResponseMessageJsonImplicits {
+object UserWithPreProgrammeResponseMessageJsonImplicits {
     implicit val uwPPFmt: Format[UserWithPreProgramme] =  UserWithPreProgrammeJsonImplicits.uwPPFmt
 
     implicit val uwPPResponseMessageFmt = Json.format[UserWithPreProgrammeResponseMessage]

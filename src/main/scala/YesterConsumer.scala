@@ -23,7 +23,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
     implicit val nacReqReader: Reads[NeedAnalysisConsultationRequestMessage] = NeedAnalysisConsultationRequestMessageJsonImplicits.needAnaConsRequestMessageReads
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
-    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserResponseMessageJsonImplicits.uwPPResponseMessageWrites
+    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites
     implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
     implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
 
@@ -91,7 +91,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         userResult.onComplete {
             case Success(userVal) => {
                 println(s"We got user $userVal")
-                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, None, userVal.get)
+                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, None, userVal)
                 val succMsgStr = Json.toJson(userSuccessRespMsg).toString()
                 println(s"the success message to be sent is $succMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))

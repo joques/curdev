@@ -6,6 +6,7 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConversions._
 import scala.util.{Failure, Success}
 import org.reactivecouchbase.client.OpResult
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.lamma._
 import rx.lang.scala.Observable
@@ -159,7 +160,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
-    def handleInsertionResultWithSimpleResponse(result: OpResult, messageId: String, responseTopic: String): Unit = {
+    def handleInsertionResultWithSimpleResponse(result: Future[OpResult], messageId: String, responseTopic: String): Unit = {
         result.onComplete {
             case Success(succOpRes) => {
                 if (succOpRes.isSuccess) {

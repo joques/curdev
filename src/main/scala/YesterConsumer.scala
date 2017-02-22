@@ -5,6 +5,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConversions._
 import scala.util.{Failure, Success}
+import org.reactivecouchbase.client.OpResult
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.lamma._
 import rx.lang.scala.Observable
@@ -158,6 +159,31 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
+    def handleInsertionResultWithSimpleResponse(result: OpResult, messageId: String, responseTopic: String): Unit = {
+        result.onComplete {
+            case Success(succOpRes) => {
+                if (succOpRes.isSuccess) {
+                    val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messageId, None, Option(succOpRes.getMessage))
+                    val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+                    println(s"the success message to be sent is $succMsgStr")
+                    messenger.getProducer().send(new ProducerRecord[String,String](responseTopic, succMsgStr))
+                }
+                else {
+                    val simpleErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(messageId, Option(succOpRes.getMessage), None)
+                    val errMsgStr1 = Json.toJson(simpleErrorRespMsg1).toString()
+                    println(s"the error message to be sent out is $errMsgStr1")
+                    messenger.getProducer().send(new ProducerRecord[String,String](responseTopic, errMsgStr1))
+                }
+            }
+            case Failure(failOpRes) => {
+                val simpleErrorRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messageId, Option(failOpRes.getMessage), None)
+                val errMsgStr = Json.toJson(simpleErrorRespMsg).toString()
+                println(s"the error message to be sent out is $errMsgStr")
+                messenger.getProducer().send(new ProducerRecord[String,String](responseTopic, errMsgStr))
+            }
+        }
+    }
+
     def createUser(message: SimpleRequestMessage): Unit = {
         println("creating new user...")
     }
@@ -192,6 +218,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", errMsgStr))
             }
         }
+
+        // end
     }
 
     def startCurriculumReview(message: CurriculumReviewRequestMessage): Unit = {
@@ -223,7 +251,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                     val reviewKey = UUID.randomUUID().toString()
                     val createProgOpRes = DBManager.createProgramme(reviewKey, newReviewProg)
 
-                    // need to refactor this method
+                    // need to refactor this method -- begin
                     createProgOpRes.onComplete {
                         case Success(createPreProgSuccOpRes) => {
                             if (createPreProgSuccOpRes.isSuccess) {
@@ -246,6 +274,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                             messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr))
                         }
                     }
+
+                    // end
                 }
             }
         }

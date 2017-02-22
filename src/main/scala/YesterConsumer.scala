@@ -212,7 +212,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 if (toBeReviewedProgs.isEmpty) {
                     val progErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(s"No exisiting programme with code $reviewObj.code"), None)
                     val errMsgStr1 = Json.toJson(progErrorRespMsg1).toString
-                    println(s"the error message to be sent for all progs is $errMsgStrs1")
+                    println(s"the error message to be sent for all progs is $errMsgStr1")
                     messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr1))
                 }
                 else {

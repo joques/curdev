@@ -1,6 +1,6 @@
 import play.api.libs.json.{Reads, Json, Format}
 
-case class CurriculumReviewRequestMessage(messageId: String, content: Programme) extends ComplexRequestMessage[Programme](messageId, content)
+case class CurriculumReviewRequestMessage(messageId: String, content: CurriculumReview) extends ComplexRequestMessage[CurriculumReview](messageId, content)
 
 object CurriculumReviewRequestMessageJsonImplicits {
     implicit val crvFormat: Format[CurriculumReview] =  CurriculumReviewJsonImplicits.crvFmt

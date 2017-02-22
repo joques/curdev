@@ -105,6 +105,52 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
+    def findUserWithPreProgramme(message: SimpleRequestMessage): Unit = {
+        val userName = message.content
+        println(s"finding user $userName")
+        val userResult = DBManager.findUser(userName)
+        userResult.onComplete {
+            case Success(userVal) => {
+                println(s"We got user $userVal")
+
+                println("Will now look for pre programmes")
+
+                val allProgs = DBManager.findAllProgrammes()
+
+                allProgs.onComplete {
+                    case Failure(progError) => {
+                        val progListErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, Option(progError.getMessage), None)
+                        val errMsgStr1 = Json.toJson(progListErrorRespMsg).toString()
+                        println(s"the error message to be sent is $errMsgStr1")
+                        messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr1))
+                    }
+                    case Success(progList) => {
+                        val preProgrammeList: List[Programme] = progList.filter((prg: Programme) => prg.isPreProgramme)
+                        var preProgCodes: List[String] = for (prg1 <- preProgrammeList if prg1.preProgComponent.get.initiator == "userName") yield prg1.preProgComponent.get.devCode
+                        var userWPrePrg: UserWithPreProgramme
+                        if (preProgCodes.isEmpty) {
+                            userWPrePrg = new UserWithPreProgramme(userVal, None)
+                        }
+                        else {
+                            userWPrePrg = new UserWithPreProgramme(userVal, Option(preProgCodes))
+                        }
+                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, None, userWPrePrg)
+                        val succMsgStr = Json.toJson(succRespMsg).toString()
+                        println(s"the success message to be sent is $succMsgStr")
+                        messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
+                    }
+                }
+            }
+            case Failure(userErr) => {
+                userErr.printStackTrace
+                val userErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, Option(userErr.getMessage), None)
+                val errMsgStr = Json.toJson(userErrorRespMsg).toString()
+                println(s"the error message to be sent it $errMsgStr")
+                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr))
+            }
+        }
+    }
+
     def createUser(message: SimpleRequestMessage): Unit = {
         println("creating new user...")
     }

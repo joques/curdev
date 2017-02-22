@@ -1,6 +1,6 @@
 import play.api.libs.json.Json
 
-case class CurriculumReview(devCode: String, code: String)
+case class CurriculumReview(devCode: String, code: String, initiator: String)
 
 object CurriculumReviewJsonImplicits {
     implicit val crvFmt = Json.format[CurriculumReview]

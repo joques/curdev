@@ -22,10 +22,12 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     implicit val reqReader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
     implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
     implicit val nacReqReader: Reads[NeedAnalysisConsultationRequestMessage] = NeedAnalysisConsultationRequestMessageJsonImplicits.needAnaConsRequestMessageReads
+    implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
     implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites
     implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
     implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
+
 
     def startConsuming(producer: YesterProducer) : Unit = {
         messenger = producer
@@ -79,7 +81,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 addNeedAnalysisConsultation(needAnalysisConsultMessage)
             }
             case "curriculum-review-req" => {
-                println("will handle the curriculum review...")
+                val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]
+                startCurriculumReview(curriculumReviewMessage)
             }
             case _ => println("unknown topic ...")
         }
@@ -165,6 +168,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         val progObj = message.content
         val progKey = UUID.randomUUID().toString()
         val createProgOpRes = DBManager.createProgramme(progKey, progObj)
+
+        // will refactor this
         createProgOpRes.onComplete {
             case Success(createPreProgSuccOpRes) => {
                 if (createPreProgSuccOpRes.isSuccess) {
@@ -185,6 +190,64 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 val errMsgStr = Json.toJson(simpleErrorRespMsg).toString()
                 println(s"the error message to be sent out is $errMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-start-res", errMsgStr))
+            }
+        }
+    }
+
+    def startCurriculumReview(message: CurriculumReviewRequestMessage): Unit = {
+        println("starting a programme review ...")
+
+        val reviewObj = message.content
+
+        val allProgs = DBManager.findAllProgrammes()
+        allProgs.onComplete {
+            case Failure(allProgsError) => {
+                val progErrorRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messageId, Option(allProgsError.getMessage), None)
+                val errMsgStr = Json.toJson(progErrorRespMsg).toString
+                println(s"the error message to be sent for all progs is $errMsgStr")
+                messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr))
+            }
+            case Success(progList) => {
+                val toBeReviewedProgs: List[Programme] = progList.filter((prg: Programme) => ((! prg.isPreProgramme) && (prg.progComponent.get.code == reviewObj.code)))
+                if (toBeReviewedProgs.isEmpty) {
+                    val progErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(messageId, Option(s"No exisiting programme with code $reviewObj.code"), None)
+                    val errMsgStr1 = Json.toJson(progErrorRespMsg1).toString
+                    println(s"the error message to be sent for all progs is $errMsgStrs")
+                    messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr1))
+                }
+                else {
+                    val beingReviewed: Programme = toBeReviewedProgs.head
+                    val currentPreProgCom: Option[PreProgrammeComponent] = Some(new PreProgrammeComponent(reviewObj.devCode, reviewObj.initiator))
+                    val newReviewProg: Programme = new Programme(beingReviewed.faculty, beingReviewed.department, beingReviewed.name, beingReviewed.level, false, None, currentPreProgCom)
+
+                    val reviewKey = UUID.randomUUID().toString()
+                    val createProgOpRes = DBManager.createProgramme(reviewKey, newReviewProg)
+
+                    // need to refactor this method
+
+                    createProgOpRes.onComplete {
+                        case Success(createPreProgSuccOpRes) => {
+                            if (createPreProgSuccOpRes.isSuccess) {
+                                val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Option(createPreProgSuccOpRes.getMessage))
+                                val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+                                println(s"the success message to be sent is $succMsgStr")
+                                messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", succMsgStr))
+                            }
+                            else {
+                                val simpleErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(createPreProgSuccOpRes.getMessage), None)
+                                val errMsgStr1 = Json.toJson(simpleErrorRespMsg1).toString()
+                                println(s"the error message to be sent out is $errMsgStr1")
+                                messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr1))
+                            }
+                        }
+                        case Failure(createPreProgFailOpRes) => {
+                            val simpleErrorRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(createPreProgFailOpRes.getMessage), None)
+                            val errMsgStr = Json.toJson(simpleErrorRespMsg).toString()
+                            println(s"the error message to be sent out is $errMsgStr")
+                            messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr))
+                        }
+                    }
+                }
             }
         }
     }

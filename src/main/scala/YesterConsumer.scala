@@ -91,7 +91,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         userResult.onComplete {
             case Success(userVal) => {
                 println(s"We got user $userVal")
-                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, None, userVal)
+                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, None, userVal.get)
                 val succMsgStr = Json.toJson(userSuccessRespMsg).toString()
                 println(s"the success message to be sent is $succMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
@@ -130,12 +130,12 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                         var preProgCodes: List[String] = for (prg1 <- preProgrammeList if prg1.preProgComponent.get.initiator == "userName") yield prg1.preProgComponent.get.devCode
                         var userWPrePrg: Option[UserWithPreProgramme] = None
                         if (preProgCodes.isEmpty) {
-                            userWPrePrg = Some(new UserWithPreProgramme(userVal, None))
+                            userWPrePrg = Some(new UserWithPreProgramme(userVal.get, None))
                         }
                         else {
-                            userWPrePrg = Some(new UserWithPreProgramme(userVal, Option(preProgCodes)))
+                            userWPrePrg = Some(new UserWithPreProgramme(userVal.get, Option(preProgCodes)))
                         }
-                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, None, userWPrePrg.get)
+                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, None, userWPrePrg)
                         val succMsgStr = Json.toJson(succRespMsg).toString()
                         println(s"the success message to be sent is $succMsgStr")
                         messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))

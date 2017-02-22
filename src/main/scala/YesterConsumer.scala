@@ -78,6 +78,9 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                 val needAnalysisConsultMessage = Json.parse(recordValue).as[NeedAnalysisConsultationRequestMessage]
                 addNeedAnalysisConsultation(needAnalysisConsultMessage)
             }
+            case "curriculum-review-req" => {
+                println("will handle the curriculum review...")
+            }
             case _ => println("unknown topic ...")
         }
 

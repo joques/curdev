@@ -20,3 +20,5 @@ libraryDependencies ++= Seq(
     "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3",
     "io.lamma" %% "lamma" % "2.2.2"
 )
+
+mainClass in Compile := Some("Yester.Class")

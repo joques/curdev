@@ -1,11 +1,10 @@
-lazy val root = (project in file(".")).
-settings(
-    name := "yester"
-    version := "0.1.0"
-    organization := "NUST - Programme Development Unit & FCI"
-    scalaVersion := "2.11.0"
-    autoScalaLibrary := false
-    scalacOptions := Seq("-unchecked", "-deprecation")
+lazy val root = (project in file(".")).settings(
+    name := "yester",
+    version := "0.1.0",
+    organization := "NUST - Programme Development Unit & FCI",
+    scalaVersion := "2.11.0",
+    autoScalaLibrary := false,
+    scalacOptions := Seq("-unchecked", "-deprecation"),
     mainClass in Compile := Some("Yester")
 )
 

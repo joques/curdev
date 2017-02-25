@@ -1,5 +1,7 @@
 import akka.actor._
 import org.reactivecouchbase.client.OpResult
+import scala.util.{Failure, Success}
+import scala.concurrent.Future
 import play.api.libs.json.{Reads, Json, Writes}
 
 abstract class MessageProcessor(messenger: YesterProducer) extends Actor {

@@ -21,4 +21,9 @@ libraryDependencies ++= Seq(
     "io.lamma" %% "lamma" % "2.2.2"
 )
 
+assemblyMergeStrategy  in assembly := {
+    case PathList("lo4j.Properties") => MergeStrategy.last
+    case x -> MergeStrategy.first
+}
+
 mainClass in Compile := Some("Yester")

@@ -309,7 +309,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
-    // will be deleted 
+    // will be deleted
     def getFullSummary(messageId: String): Unit = {
         println("printing full summary...")
     }

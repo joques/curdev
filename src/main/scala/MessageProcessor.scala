@@ -1,5 +1,3 @@
 import akka.actor._
 
-abstract class MessageProcessor extends Actor {
-    var messenger: YesterProducer = null
-}
+abstract class MessageProcessor(messenger: YesterProducer) extends Actor {}

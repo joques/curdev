@@ -1,8 +1,8 @@
 import akka.actor._
 
-class NeedAnalysisMessageProcessor extends MessageProcessor {
+case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
-        case YesterProducer(yProd) =>
-            messenger = yProd
+        case "need-analysis-start-req" =>
+            println("received need-analysis-start-req message")
     }
 }

@@ -19,12 +19,15 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     var consumer: KafkaConsumer[String, String] = null
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
+    // will be removed
     var messenger: YesterProducer = null
 
     implicit val reqReader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
     implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
     implicit val nacReqReader: Reads[NeedAnalysisConsultationRequestMessage] = NeedAnalysisConsultationRequestMessageJsonImplicits.needAnaConsRequestMessageReads
     implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
+    implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
+    implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
 
     // will be removed from here
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
@@ -65,11 +68,11 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
         recordTopic match {
             case "find-users-req" => {
-                val findUserMessage = Json.parse(recordValue).as[SimpleRequestMessage]
+                val findUserMessage = Json.parse(recordValue).as[FindUserRequestMessage]
                 findUser(findUserMessage)
             }
             case "create-users-req" => {
-                val createUserMessage = Json.parse(recordValue).as[SimpleRequestMessage]
+                val createUserMessage = Json.parse(recordValue).as[CreateUserRequestMessage]
                 createUser(createUserMessage)
             }
             case "summary-req" => {
@@ -94,6 +97,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println("delving into the message -- end")
     }
 
+    // will be deleted
     def findUser(message: SimpleRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")
@@ -116,6 +120,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
+    // will be deleted
     def findUserWithPreProgramme(message: SimpleRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")

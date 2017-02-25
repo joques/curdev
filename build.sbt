@@ -1,9 +1,13 @@
-name := "yester"
-version := "0.1.0"
-organization := "NUST - Programme Development Unit & FCI"
-scalaVersion := "2.11.0"
-autoScalaLibrary := false
-scalacOptions := Seq("-unchecked", "-deprecation")
+lazy val root = (project in file(".")).
+settings(
+    name := "yester"
+    version := "0.1.0"
+    organization := "NUST - Programme Development Unit & FCI"
+    scalaVersion := "2.11.0"
+    autoScalaLibrary := false
+    scalacOptions := Seq("-unchecked", "-deprecation")
+    mainClass in Compile := Some("Yester")
+)
 
 resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
 
@@ -22,8 +26,7 @@ libraryDependencies ++= Seq(
 )
 
 assemblyMergeStrategy  in assembly := {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
     case PathList("lo4j.Properties") => MergeStrategy.last
     case x => MergeStrategy.first
 }
-
-mainClass in Compile := Some("Yester")

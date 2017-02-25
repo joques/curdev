@@ -8,9 +8,9 @@ import java.util.UUID
 case class UsertMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
 
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
-    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrite
+    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageReads
 
-    
+
     def receive = {
         case fUserReqMsg: FindUserRequestMessage =>
             println("received find-users-req message ...")

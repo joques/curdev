@@ -189,6 +189,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         println("creating new user...")
     }
 
+    // will be removed by the refactoring
     def createPreProgramme(message: ProgrammeRequestMessage): Unit = {
         println("creating a new programme object ...")
 
@@ -234,6 +235,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
+    // will be removed by the refactoring
     def addNeedAnalysisConsultation(message: NeedAnalysisConsultationRequestMessage): Unit = {
         println("adding consultation record for need analysis")
 

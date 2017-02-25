@@ -4,12 +4,12 @@ import java.util.UUID
 
 case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
-        case "need-analysis-start-req" =>
-            println("received need-analysis-start-req message")
-            val needAnalysisStartMessage = Json.parse(recordValue).as[ProgrammeRequestMessage]
-            createPreProgramme(needAnalysisStartMessage)
-        case "need-analysis-consult-req" =>
-            println("received need-analysis-consult-req message")
+        case prgReqMsg: ProgrammeRequestMessage =>
+            println("received need-analysis-start-req message ...")
+            createPreProgramme(prgReqMsg)
+        case naConsReqMsg: NeedAnalysisConsultationRequestMessage =>
+            println("received need-analysis-consult-req message ...")
+            addNeedAnalysisConsultation(naConsReqMsg)
     }
 
     def createPreProgramme(message: ProgrammeRequestMessage): Unit = {
@@ -20,5 +20,16 @@ case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends Messa
         val createProgOpRes = DBManager.createProgramme(progKey, progObj)
 
         handleInsertionResultWithSimpleResponse(createProgOpRes, message.messageId, "need-analysis-start-res")
+    }
+
+    def addNeedAnalysisConsultation(message: NeedAnalysisConsultationRequestMessage): Unit = {
+        println("adding consultation record for need analysis")
+
+        val consultationObj = message.content
+        val consulationKey = UUID.randomUUID().toString()
+
+        val addConsultationOpRes = DBManager.addNeedAnalysisConsultation(consulationKey, consultationObj)
+
+        handleInsertionResultWithSimpleResponse(addConsultationOpRes, message.messageId, "need-analysis-consult-res")
     }
 }

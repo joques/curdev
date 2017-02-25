@@ -5,7 +5,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 
-case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
+case class UsertMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
+
+    implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
+    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrite
+
+    
     def receive = {
         case fUserReqMsg: FindUserRequestMessage =>
             println("received find-users-req message ...")

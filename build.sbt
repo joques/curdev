@@ -23,7 +23,7 @@ libraryDependencies ++= Seq(
 
 assemblyMergeStrategy  in assembly := {
     case PathList("lo4j.Properties") => MergeStrategy.last
-    case x -> MergeStrategy.first
+    case x => MergeStrategy.first
 }
 
 mainClass in Compile := Some("Yester")

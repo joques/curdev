@@ -1,6 +1,6 @@
 import play.api.libs.json.Json
 
-case class CreateUserRequestMessage (messageId: String, content: String) extends SimpleRequestMessage(messageId, content)
+class CreateUserRequestMessage (messageId: String, content: String) extends SimpleRequestMessage(messageId, content)
 
 object CreateUserRequestMessageJsonImplicits {
     implicit val cuRequestMessageFmt = Json.format[FindUserRequestMessage]

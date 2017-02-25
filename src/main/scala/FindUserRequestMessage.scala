@@ -1,6 +1,6 @@
 import play.api.libs.json.Json
 
-case class FindUserRequestMessage (messageId: String, content: String) extends SimpleRequestMessage(messageId, content)
+class FindUserRequestMessage (messageId: String, content: String) extends SimpleRequestMessage(messageId, content)
 
 object FindUserRequestMessageJsonImplicits {
     implicit val fuRequestMessageFmt = Json.format[FindUserRequestMessage]

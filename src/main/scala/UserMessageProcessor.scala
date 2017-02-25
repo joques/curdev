@@ -11,7 +11,8 @@ case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) exte
             println("received find-users-req message ...")
             findUserWithPreProgramme(fUserReqMsg)
         case cUserReqMsg: CreateUserRequestMessage =>
-            println("received ...")
+            println("received create-users-req message ...")
+            createUser(cUserReqMsg)
         case _ =>
             println("unknown message type ...")
     }
@@ -84,5 +85,9 @@ case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) exte
                 messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr))
             }
         }
+    }
+
+    def createUser(message: CreateUserRequestMessage): Unit = {
+        println("creating new user...")
     }
 }

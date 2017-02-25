@@ -121,7 +121,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     }
 
     // will be deleted
-    def findUserWithPreProgramme(message: SimpleRequestMessage): Unit = {
+    def findUserWithPreProgramme(message: FindUserRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")
         val userResult = DBManager.findUser(userName)
@@ -193,7 +193,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
-    def createUser(message: SimpleRequestMessage): Unit = {
+    def createUser(message: CreateUserRequestMessage): Unit = {
         println("creating new user...")
     }
 

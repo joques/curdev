@@ -44,4 +44,5 @@ case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) exte
                 }
             }
         }
+    }
 }

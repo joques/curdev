@@ -1,4 +1,7 @@
 import akka.actor._
+import org.apache.kafka.clients.producer.ProducerRecord
+import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 

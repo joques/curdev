@@ -21,4 +21,4 @@ libraryDependencies ++= Seq(
     "io.lamma" %% "lamma" % "2.2.2"
 )
 
-mainClass in Compile := Some("./target/scala-2.11/classes/Yester")
+mainClass in {compile,run} := Some("./target/scala-2.11/classes/Yester")

@@ -8,7 +8,7 @@ import java.util.UUID
 case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
         case curDevReqMsg: CurriculumReviewRequestMessage =>
-            println("received need-analysis-start-req message ...")
+            println("received curriculum-review message ...")
             startCurriculumReview(curDevReqMsg)
         case _ =>
             println("unknown message type ...")

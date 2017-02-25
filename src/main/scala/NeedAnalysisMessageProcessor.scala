@@ -10,6 +10,8 @@ case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends Messa
         case naConsReqMsg: NeedAnalysisConsultationRequestMessage =>
             println("received need-analysis-consult-req message ...")
             addNeedAnalysisConsultation(naConsReqMsg)
+        case _ =>
+            println("unknown message ...")
     }
 
     def createPreProgramme(message: ProgrammeRequestMessage): Unit = {

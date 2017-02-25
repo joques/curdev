@@ -162,6 +162,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
+    // will be deleted
     def handleInsertionResultWithSimpleResponse(result: Future[OpResult], messageId: String, responseTopic: String): Unit = {
         result.onComplete {
             case Success(succOpRes) => {
@@ -202,6 +203,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         handleInsertionResultWithSimpleResponse(createProgOpRes, message.messageId, "need-analysis-start-res")
     }
 
+    // will be deleted
     def startCurriculumReview(message: CurriculumReviewRequestMessage): Unit = {
         println("starting a programme review ...")
 
@@ -249,6 +251,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         handleInsertionResultWithSimpleResponse(addConsultationOpRes, message.messageId, "need-analysis-consult-res")
     }
 
+    // will be deleted
     def getSummary(message: SimpleRequestMessage): Unit = {
         println("getting summary...")
         val summaryType = message.content
@@ -260,6 +263,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
+    // will be deleted
     def getShortSummary(messageId: String): Unit = {
         println("processing short summary...")
 
@@ -305,6 +309,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
         }
     }
 
+    // will be deleted 
     def getFullSummary(messageId: String): Unit = {
         println("printing full summary...")
     }

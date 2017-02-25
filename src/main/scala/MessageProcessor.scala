@@ -1,7 +1,9 @@
 import akka.actor._
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.reactivecouchbase.client.OpResult
 import scala.util.{Failure, Success}
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 
 abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
@@ -11,7 +13,7 @@ abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
     implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
     implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
 
-    
+
     def handleInsertionResultWithSimpleResponse(result: Future[OpResult], messageId: String, responseTopic: String): Unit = {
         result.onComplete {
             case Success(succOpRes) => {

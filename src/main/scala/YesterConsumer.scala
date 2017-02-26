@@ -1,3 +1,4 @@
+import akka.actor._
 import java.io.Closeable
 import java.util.concurrent.{TimeUnit, Executors, ExecutorService}
 import org.apache.kafka.clients.consumer.{KafkaConsumer, ConsumerRecords, ConsumerRecord}
@@ -19,6 +20,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     var consumer: KafkaConsumer[String, String] = null
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
+    var actorMap: Map[String, ActorRef]
     // will be removed
     var messenger: YesterProducer = null
 
@@ -36,8 +38,8 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
 
 
-    def startConsuming(producer: YesterProducer) : Unit = {
-        messenger = producer
+    def startConsuming(actors: Map[String, ActorRef]) : Unit = {
+        actorMap = actors
         pool.execute(this)
     }
 

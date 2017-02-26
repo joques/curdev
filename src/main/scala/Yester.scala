@@ -11,13 +11,16 @@ object Yester {
 
         val actorSystem = ActorSystem("yester")
         val naMsgProc = actorSystem.actorOf(Props(new NeedAnalysisMessageProcessor(yProducer)), "need-analysis")
+        val cdMsgProc = actorSystem.actorOf(Props(new CurriculumDevelopmentMessageProcessor(yProducer)), "curriculum-development")
+        val sumMsgProc = actorSystem.actorOf(Props(new SummaryMessageProcessor(yProducer)), "summary")
+        val userMsgProc = actorSystem.actorOf(Props(new UsertMessageProcessor(yProducer)), "user")
 
-        // val actorMap = Map()
+        val actorMap = Map("need-analysis" -> naMsgProc, "curriculum-development" -> cdMsgProc, "summary" -> sumMsgProc, "user" -> userMsgProc)
 
         println("displaying consumer and producer...")
         println(yConsumer.toString)
         println("calling read() from yester...")
 
-        yConsumer.startConsuming(yProducer)
+        yConsumer.startConsuming(actorMap)
     }
 }

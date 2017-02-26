@@ -8,7 +8,7 @@ import java.util.UUID
 case class UsertMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
 
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
-    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageReads
+    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites
 
 
     def receive = {

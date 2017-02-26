@@ -68,11 +68,13 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
         recordTopic match {
             case "find-users-req" => {
-                val findUserMessage = Json.parse(recordValue).as[FindUserRequestMessage]
+                val smpMsg = Json.parse(recordValue).as[SimpleRequestMessage]
+                val findUserMessage = new FindUserRequestMessage(smpMsg)
                 findUser(findUserMessage)
             }
             case "create-users-req" => {
-                val createUserMessage = Json.parse(recordValue).as[CreateUserRequestMessage]
+                val smpMsg1 = Json.parse(recordValue).as[SimpleRequestMessage]
+                val createUserMessage = new CreateUserRequestMessage(smpMsg1)
                 createUser(createUserMessage)
             }
             case "summary-req" => {

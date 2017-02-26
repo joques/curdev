@@ -8,7 +8,7 @@ import play.api.libs.json.{Reads, Json, Writes}
 
 abstract class MessageProcessor extends Actor {
 
-    var messenger
+    vvar messenger: YesterProducer = null
 
     implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
     implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites

@@ -20,7 +20,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     var consumer: KafkaConsumer[String, String] = null
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
-    var actorMap: Map[String, ActorRef]
+    var actorMap: Map[String, ActorRef] = null
     // will be removed
     var messenger: YesterProducer = null
 

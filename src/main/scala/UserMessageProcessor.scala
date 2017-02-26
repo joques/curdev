@@ -24,20 +24,20 @@ case class UsertMessageProcessor(messenger: YesterProducer) extends MessageProce
 
     // will be deleted
     def findUser(message: FindUserRequestMessage): Unit = {
-        val userName = message.content
+        val userName = message.simpleMsg.content
         println(s"finding user $userName")
         val userResult = DBManager.findUser(userName)
         userResult.onComplete {
             case Success(userVal) => {
                 println(s"We got user $userVal")
-                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, None, userVal)
+                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.simpleMsg.messageId, None, userVal)
                 val succMsgStr = Json.toJson(userSuccessRespMsg).toString()
                 println(s"the success message to be sent is $succMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
             }
             case Failure(userErr) => {
                 userErr.printStackTrace
-                val userErrorRespMsg: UserResponseMessage = new UserResponseMessage(message.messageId, Option(userErr.getMessage), None)
+                val userErrorRespMsg: UserResponseMessage = new UserResponseMessage(message.simpleMsg.messageId, Option(userErr.getMessage), None)
                 val errMsgStr = Json.toJson(userErrorRespMsg).toString()
                 println(s"the error message to be sent it $errMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr))

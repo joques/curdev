@@ -100,7 +100,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     }
 
     // will be deleted
-    def findUser(message: SimpleRequestMessage): Unit = {
+    def findUser(message: FindUserRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")
         val userResult = DBManager.findUser(userName)
@@ -124,7 +124,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
     // will be deleted
     def findUserWithPreProgramme(message: FindUserRequestMessage): Unit = {
-        val userName = message.content
+        val userName = message.simpleMsg.content
         println(s"finding user $userName")
         val userResult = DBManager.findUser(userName)
         userResult.onComplete {
@@ -137,7 +137,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
 
                 allProgs.onComplete {
                     case Failure(progError) => {
-                        val progListErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, Option(progError.getMessage), None)
+                        val progListErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(progError.getMessage), None)
                         val errMsgStr1 = Json.toJson(progListErrorRespMsg).toString()
                         println(s"the error message to be sent is $errMsgStr1")
                         messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr1))
@@ -152,7 +152,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
                         else {
                             userWPrePrg = Some(new UserWithPreProgramme(userVal.get, Option(preProgCodes)))
                         }
-                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, None, userWPrePrg)
+                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, None, userWPrePrg)
                         val succMsgStr = Json.toJson(succRespMsg).toString()
                         println(s"the success message to be sent is $succMsgStr")
                         messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
@@ -161,7 +161,7 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             }
             case Failure(userErr) => {
                 userErr.printStackTrace
-                val userErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, Option(userErr.getMessage), None)
+                val userErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(userErr.getMessage), None)
                 val errMsgStr = Json.toJson(userErrorRespMsg).toString()
                 println(s"the error message to be sent it $errMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr))

@@ -5,7 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 
-class UsertMessageProcessor extends MessageProcessor {
+class UsertMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
 
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
     implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites

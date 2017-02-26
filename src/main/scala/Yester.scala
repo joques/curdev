@@ -9,10 +9,8 @@ object Yester {
         val yConsumer = new YesterConsumer(topicList)
         val yProducer = new YesterProducer()
 
-        // val actorSystem = ActorSystem("yester")
-        val naMsgProc:NeedAnalysisMessageProcessor = context.actorOf(Props[NeedAnalysisMessageProcessor], "need-analysis")
-        naMsgProc.addMessenger(yProducer)
-
+        val actorSystem = ActorSystem("yester")
+        val naMsgProc = actorSystem.actorOf(Props(new NeedAnalysisMessageProcessor(yProducer)), "need-analysis")
 
         // val actorMap = Map()
 

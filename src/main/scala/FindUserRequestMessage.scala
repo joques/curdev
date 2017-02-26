@@ -1,4 +1,4 @@
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Format}
 
 case class FindUserRequestMessage (simpleMsg: SimpleRequestMessage){}
 

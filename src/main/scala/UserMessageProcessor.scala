@@ -23,7 +23,7 @@ case class UsertMessageProcessor(messenger: YesterProducer) extends MessageProce
     }
 
     // will be deleted
-    def findUser(message: SimpleRequestMessage): Unit = {
+    def findUser(message: FindUserRequestMessage): Unit = {
         val userName = message.content
         println(s"finding user $userName")
         val userResult = DBManager.findUser(userName)

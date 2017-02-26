@@ -21,8 +21,6 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     val pool: ExecutorService = Executors.newFixedThreadPool(1)
     var shouldRun: Boolean = true
     var actorMap: Map[String, ActorRef] = null
-    // will be removed
-    var messenger: YesterProducer = null
 
     implicit val reqReader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
     implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
@@ -30,13 +28,6 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
     implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
     implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
     implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
-
-    // will be removed from here
-    implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
-    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites
-    implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
-    implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
-
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -72,28 +63,34 @@ case class YesterConsumer (topics: List[String]) extends Closeable with Runnable
             case "find-users-req" => {
                 val smpMsg = Json.parse(recordValue).as[SimpleRequestMessage]
                 val findUserMessage = new FindUserRequestMessage(smpMsg)
-                findUser(findUserMessage)
+                actorMap("user") ! findUserMessage
+                // findUser(findUserMessage)
             }
             case "create-users-req" => {
                 val smpMsg1 = Json.parse(recordValue).as[SimpleRequestMessage]
                 val createUserMessage = new CreateUserRequestMessage(smpMsg1)
-                createUser(createUserMessage)
+                actorMap("user") ! createUserMessage
+                // createUser(createUserMessage)
             }
             case "summary-req" => {
                 val summaryMessage = Json.parse(recordValue).as[SimpleRequestMessage]
-                getSummary(summaryMessage)
+                // getSummary(summaryMessage)
+                actorMap("summary") ! summaryMessage
             }
             case "need-analysis-start-req" => {
                 val needAnalysisStartMessage = Json.parse(recordValue).as[ProgrammeRequestMessage]
-                createPreProgramme(needAnalysisStartMessage)
+                actorMap("need-analysis") ! needAnalysisStartMessage
+                // createPreProgramme(needAnalysisStartMessage)
             }
             case "need-analysis-consult-req" => {
                 val needAnalysisConsultMessage = Json.parse(recordValue).as[NeedAnalysisConsultationRequestMessage]
-                addNeedAnalysisConsultation(needAnalysisConsultMessage)
+                actorMap("need-analysis") ! needAnalysisConsultMessage
+                // addNeedAnalysisConsultation(needAnalysisConsultMessage)
             }
             case "curriculum-review-req" => {
                 val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]
-                startCurriculumReview(curriculumReviewMessage)
+                actorMap("curriculum-development") ! curriculumReviewMessage
+                // startCurriculumReview(curriculumReviewMessage)
             }
             case _ => println("unknown topic ...")
         }

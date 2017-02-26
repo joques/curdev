@@ -2,7 +2,7 @@ import akka.actor._
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 
-case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
+class NeedAnalysisMessageProcessor extends MessageProcessor {
     def receive = {
         case prgReqMsg: ProgrammeRequestMessage =>
             println("received need-analysis-start-req message ...")

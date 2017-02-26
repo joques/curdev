@@ -9,6 +9,8 @@ object Yester {
         val yConsumer = new YesterConsumer(topicList)
         val yProducer = new YesterProducer()
 
+        // val actorMap = Map()
+
         println("displaying consumer and producer...")
         println(yConsumer.toString)
         println("calling read() from yester...")

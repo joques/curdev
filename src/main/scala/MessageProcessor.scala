@@ -6,10 +6,10 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 
-abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
+abstract class MessageProcessor extends Actor {
 
-    // implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
-    // implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites
+    var messenger
+
     implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
     implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
 
@@ -37,5 +37,9 @@ abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
                 messenger.getProducer().send(new ProducerRecord[String,String](responseTopic, errMsgStr))
             }
         }
+    }
+
+    def addMessenger(myMessenger: YesterProducer) = {
+        messenger = myMessenger
     }
 }

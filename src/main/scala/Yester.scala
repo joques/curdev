@@ -1,5 +1,4 @@
-// import org.apache.kafka.clients.consumer.{ ConsumerRecords, ConsumerRecord }
-// import scala.collection.JavaConversions._
+import akka.actor._
 
 object Yester {
     def main(args: Array[String]) {
@@ -8,6 +7,11 @@ object Yester {
 
         val yConsumer = new YesterConsumer(topicList)
         val yProducer = new YesterProducer()
+
+        val actorSystem = ActorSystem("yester")
+        val naMsgProc = actorSystem.actorOf(Props[NeedAnalysisMessageProcessor], "need-analysis")
+        naMsgProc.addMessenger(yProducer)
+
 
         // val actorMap = Map()
 

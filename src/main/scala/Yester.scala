@@ -1,4 +1,5 @@
 import akka.actor._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Yester {
     def main(args: Array[String]) {
@@ -8,8 +9,8 @@ object Yester {
         val yConsumer = new YesterConsumer(topicList)
         val yProducer = new YesterProducer()
 
-        val actorSystem = ActorSystem("yester")
-        val naMsgProc:NeedAnalysisMessageProcessor = actorSystem.actorOf(Props[NeedAnalysisMessageProcessor], "need-analysis")
+        // val actorSystem = ActorSystem("yester")
+        val naMsgProc:NeedAnalysisMessageProcessor = context.actorOf(Props[NeedAnalysisMessageProcessor], "need-analysis")
         naMsgProc.addMessenger(yProducer)
 
 

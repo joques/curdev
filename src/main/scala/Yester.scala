@@ -9,7 +9,7 @@ object Yester {
         val yProducer = new YesterProducer()
 
         val actorSystem = ActorSystem("yester")
-        val naMsgProc = actorSystem.actorOf(Props[NeedAnalysisMessageProcessor], "need-analysis")
+        val naMsgProc:NeedAnalysisMessageProcessor = actorSystem.actorOf(Props[NeedAnalysisMessageProcessor], "need-analysis")
         naMsgProc.addMessenger(yProducer)
 
 

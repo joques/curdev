@@ -7,6 +7,7 @@ import org.reactivecouchbase.client.{OpResult, Constants}
 import com.couchbase.client.protocol.views.{Stale, Query}
 import play.api.libs.json.{Json, Format, Writes}
 import net.spy.memcached.{PersistTo, ReplicateTo}
+import yester.lib._
 // import net.spy.memcached.ops.OperationStatus
 
 object DBManager {

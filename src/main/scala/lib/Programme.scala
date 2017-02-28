@@ -1,3 +1,5 @@
+package yester.lib
+
 import play.api.libs.json.{Json, Format}
 
 final case class Programme(faculty: Int, department: Int, name: String, level: Int, isPreProgramme: Boolean, progComponent: Option[ProgrammeComponent], preProgComponent: Option[PreProgrammeComponent])

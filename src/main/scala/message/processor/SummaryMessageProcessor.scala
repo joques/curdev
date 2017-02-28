@@ -15,7 +15,6 @@ import yester.message.response.{SummaryResponseMessage, SummaryResponseMessageJs
 import yester.lib.{Programme, Summary}
 
 final case class SummaryMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
-    implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
 
     def receive = {
         case sumReqMsg: SimpleRequestMessage =>

@@ -6,7 +6,7 @@ import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 import io.lamma._
 
-class SummaryMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
+final case class SummaryMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
         case sumReqMsg: SimpleRequestMessage =>
             println("received summary-req message ...")

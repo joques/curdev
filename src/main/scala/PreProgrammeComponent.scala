@@ -1,6 +1,6 @@
 import play.api.libs.json.Json
 
-case class PreProgrammeComponent(devCode: String, initiator: String)
+final case class PreProgrammeComponent(devCode: String, initiator: String)
 
 object PreProgrammeComponentJsonImplicits {
     implicit val preProgCompFmt = Json.format[PreProgrammeComponent]

@@ -1,6 +1,6 @@
 import play.api.libs.json.{Reads, Json, Format}
 
-case class UserResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[User]) extends ResponseMessage[User](messageId, operationError, operationResult)
+final case class UserResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[User]) extends ResponseMessage[User](messageId, operationError, operationResult)
 
 object UserResponseMessageJsonImplicits {
     implicit val userFormat: Format[User] =  UserJsonImplicits.userFmt

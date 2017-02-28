@@ -1,6 +1,6 @@
 import play.api.libs.json.{Json, Format}
 
-case class UserWithPreProgramme(userDetails: User, preProgrammeCodes: Option[List[String]])
+final case class UserWithPreProgramme(userDetails: User, preProgrammeCodes: Option[List[String]])
 
 object UserWithPreProgrammeJsonImplicits {
     implicit val userFormat: Format[User] =  UserJsonImplicits.userFmt

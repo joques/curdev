@@ -1,6 +1,6 @@
 import play.api.libs.json.{Reads, Json, Format}
 
-case class NeedAnalysisConsultationRequestMessage(messageId: String, content: NeedAnalysisConsultation) extends ComplexRequestMessage[NeedAnalysisConsultation](messageId, content)
+final case class NeedAnalysisConsultationRequestMessage(messageId: String, content: NeedAnalysisConsultation) extends ComplexRequestMessage[NeedAnalysisConsultation](messageId, content)
 
 object NeedAnalysisConsultationRequestMessageJsonImplicits {
     implicit val needAnaConsFormat: Format[NeedAnalysisConsultation] =  NeedAnalysisConsultationJsonImplicits.needAnaConsFmt

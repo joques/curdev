@@ -1,6 +1,6 @@
 import play.api.libs.json.{Reads, Json, Format}
 
-case class SummaryResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[Summary]) extends ResponseMessage[Summary](messageId, operationError, operationResult)
+final case class SummaryResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[Summary]) extends ResponseMessage[Summary](messageId, operationError, operationResult)
 
 object SummaryResponseMessageJsonImplicits {
     implicit val summaryFormat: Format[Summary] =  SummaryJsonImplicits.summaryFmt

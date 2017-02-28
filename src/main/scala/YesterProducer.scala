@@ -1,7 +1,7 @@
 import java.util.{Properties, UUID}
 import org.apache.kafka.clients.producer.KafkaProducer
 
-class YesterProducer() {
+final case class YesterProducer() {
     val props = new Properties()
     props.put("bootstrap.servers", "localhost:9092")
     props.put("acks", "all")

@@ -1,6 +1,6 @@
 import play.api.libs.json.{Reads, Json, Format}
 
-case class ProgrammeRequestMessage(messageId: String, content: Programme) extends ComplexRequestMessage[Programme](messageId, content)
+final case class ProgrammeRequestMessage(messageId: String, content: Programme) extends ComplexRequestMessage[Programme](messageId, content)
 
 object ProgrammeRequestMessageJsonImplicits {
     implicit val programmeFormat: Format[Programme] =  ProgrammeJsonImplicits.prgFmt

@@ -5,7 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 
-case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
+final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
         case curDevReqMsg: CurriculumReviewRequestMessage =>
             println("received curriculum-review message ...")

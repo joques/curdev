@@ -10,12 +10,13 @@ import io.lamma._
 
 import yester.YesterProducer
 import yester.util.DBManager
-import yester.lib.{PreProgrammeComponent, Programme}
 import yester.message.request.SimpleRequestMessage
-import yester.message.response.SummaryResponseMessage
-import yester.message.lib.{Programme, Summary}
+import yester.message.response.{SummaryResponseMessage, SummaryResponseMessageJsonImplicits}
+import yester.lib.{Programme, Summary}
 
 final case class SummaryMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
+    implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
+
     def receive = {
         case sumReqMsg: SimpleRequestMessage =>
             println("received summary-req message ...")

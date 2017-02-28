@@ -10,7 +10,7 @@ import play.api.libs.json.{Reads, Json, Writes}
 
 import yester.YesterProducer
 import yester.lib.{PreProgrammeComponent, Programme}
-import yester.message.response.{SimpleResponseMessage, SummaryResponseMessageJsonImplicits, SimpleResponseMessageJsonImplicits}
+import yester.message.response.{SimpleResponseMessage, SummaryResponseMessage, SummaryResponseMessageJsonImplicits, SimpleResponseMessageJsonImplicits}
 
 abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
 

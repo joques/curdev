@@ -1,4 +1,4 @@
-pacakge yester.message.request
+package yester.message.request
 
 import play.api.libs.json.{Reads, Json, Format}
 

@@ -1,3 +1,5 @@
+package yester.message.request
+
 import play.api.libs.json.Json
 
 final case class SimpleRequestMessage (messageId: String, content: String)

@@ -1,4 +1,8 @@
+pacakge yester.message.request
+
 import play.api.libs.json.{Reads, Json, Format}
+
+import yester.lib.{NeedAnalysisConsultation,NeedAnalysisConsultationJsonImplicits}
 
 final case class NeedAnalysisConsultationRequestMessage(messageId: String, content: NeedAnalysisConsultation) extends ComplexRequestMessage[NeedAnalysisConsultation](messageId, content)
 

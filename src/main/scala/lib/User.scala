@@ -1,4 +1,4 @@
-package yester.util
+package yester.lib
 
 import play.api.libs.json.Json
 

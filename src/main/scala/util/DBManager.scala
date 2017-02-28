@@ -7,16 +7,13 @@ import org.reactivecouchbase.client.{OpResult, Constants}
 import com.couchbase.client.protocol.views.{Stale, Query}
 import play.api.libs.json.{Json, Format, Writes}
 import net.spy.memcached.{PersistTo, ReplicateTo}
-import yester.lib._
-// import net.spy.memcached.ops.OperationStatus
+import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysisConsultation, NeedAnalysisConsultationJsonImplicits}
 
 object DBManager {
   val driver = ReactiveCouchbaseDriver()
   implicit val userFormat: Format[User] = UserJsonImplicits.userFmt
-
   implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
   implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
-
   implicit val naConsFormat: Format[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsFmt
   implicit val naConsWriter: Writes[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsWrites
 

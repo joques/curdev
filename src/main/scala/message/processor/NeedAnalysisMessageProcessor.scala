@@ -1,7 +1,12 @@
+package yester.message.processor
+
 import akka.actor._
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
-import yester.util._
+
+import yester.util.DBManager
+import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage}
+import yester.YesterProducer
 
 final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {

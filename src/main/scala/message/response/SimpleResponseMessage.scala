@@ -1,3 +1,5 @@
+package yester.message.response
+
 import play.api.libs.json.{Reads, Json, Format}
 
 final case class SimpleResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[String]) extends ResponseMessage[String](messageId, operationError, operationResult)

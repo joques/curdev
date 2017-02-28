@@ -1,3 +1,5 @@
+package yester.message.processor
+
 import akka.actor._
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.reactivecouchbase.client.OpResult
@@ -5,6 +7,10 @@ import scala.util.{Failure, Success}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
+
+import yester.YesterProducer
+import yester.lib.{PreProgrammeComponent, Programme}
+import yester.message.response.{SimpleResponseMessage, SummaryResponseMessageJsonImplicits, SimpleResponseMessageJsonImplicits}
 
 abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
 

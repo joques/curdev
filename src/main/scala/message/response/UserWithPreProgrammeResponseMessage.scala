@@ -1,4 +1,7 @@
+package yester.message.response
+
 import play.api.libs.json.{Reads, Json, Format}
+import yester.lib.{UserWithPreProgramme, UserWithPreProgrammeJsonImplicits}
 
 final case class UserWithPreProgrammeResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[UserWithPreProgramme]) extends ResponseMessage[UserWithPreProgramme](messageId, operationError, operationResult)
 

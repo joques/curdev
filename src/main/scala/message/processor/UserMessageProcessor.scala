@@ -1,10 +1,17 @@
+package yester.message.processor
+
 import akka.actor._
 import org.apache.kafka.clients.producer.ProducerRecord
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
-import yester.util._
+import yester.YesterProducer
+import yester.util.DBManager
+import yester.lib.{UserWithPreProgramme, Programme}
+import yester.message.request.{FindUserRequestMessage, CreateUserRequestMessage}
+import yester.message.response.{UserResponseMessage, UserWithPreProgrammeResponseMessage, UserResponseMessageJsonImplicits, UserWithPreProgrammeResponseMessageJsonImplicits}
+
 
 final case class UsertMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
 

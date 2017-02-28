@@ -1,3 +1,5 @@
+package yester.lib
+
 import play.api.libs.json.{Json, Format}
 
 final case class UserWithPreProgramme(userDetails: User, preProgrammeCodes: Option[List[String]])

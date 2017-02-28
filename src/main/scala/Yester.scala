@@ -1,5 +1,8 @@
+package yester
+
 import akka.actor._
 import scala.concurrent.ExecutionContext.Implicits.global
+import yester.message.processor.{NeedAnalysisMessageProcessor, CurriculumDevelopmentMessageProcessor, SummaryMessageProcessor, UsertMessageProcessor}
 
 object Yester {
     def main(args: Array[String]) {

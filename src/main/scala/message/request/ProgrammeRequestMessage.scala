@@ -1,4 +1,7 @@
+package yester.message.request
+
 import play.api.libs.json.{Reads, Json, Format}
+import yester.lib.{Programme, ProgrammeJsonImplicits}
 
 final case class ProgrammeRequestMessage(messageId: String, content: Programme) extends ComplexRequestMessage[Programme](messageId, content)
 

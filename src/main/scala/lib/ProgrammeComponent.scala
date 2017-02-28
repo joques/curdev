@@ -1,3 +1,5 @@
+package yester.lib
+
 import play.api.libs.json.Json
 
 final case class ProgrammeComponent(approvedOn: String, nextReview: String, history: List[String], code: Option[String])

@@ -1,3 +1,5 @@
+package yester
+
 import akka.actor._
 import java.io.Closeable
 import java.util.concurrent.{TimeUnit, Executors, ExecutorService}
@@ -14,6 +16,9 @@ import rx.lang.scala.Observable
 import java.util.Properties
 import java.util.UUID
 import play.api.libs.json.{Reads, Json, Writes}
+import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImplicits, ProgrammeRequestMessage, ProgrammeRequestMessageJsonImplicits, NeedAnalysisConsultationRequestMessage,
+    NeedAnalysisConsultationRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits, FindUserRequestMessage,
+    FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits}
 
 
 final case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {

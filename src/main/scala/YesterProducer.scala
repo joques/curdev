@@ -1,3 +1,5 @@
+package yester
+
 import java.util.{Properties, UUID}
 import org.apache.kafka.clients.producer.KafkaProducer
 

@@ -1,4 +1,7 @@
+package yester.message.response
+
 import play.api.libs.json.{Reads, Json, Format}
+import yester.lib.{Summary, SummaryJsonImplicits}
 
 final case class SummaryResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[Summary]) extends ResponseMessage[Summary](messageId, operationError, operationResult)
 

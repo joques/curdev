@@ -1,3 +1,5 @@
+package yester.lib
+
 import play.api.libs.json.Json
 
 final case class PreProgrammeComponent(devCode: String, initiator: String)

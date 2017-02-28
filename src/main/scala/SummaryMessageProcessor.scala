@@ -5,6 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 import io.lamma._
+import yester.util._
 
 final case class SummaryMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {

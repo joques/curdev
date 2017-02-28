@@ -1,3 +1,5 @@
+package yester.util
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.ReactiveCouchbaseDriver
 import scala.concurrent.Future

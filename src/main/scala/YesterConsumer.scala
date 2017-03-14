@@ -69,33 +69,27 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 val smpMsg = Json.parse(recordValue).as[SimpleRequestMessage]
                 val findUserMessage = new FindUserRequestMessage(smpMsg)
                 actorMap("user") ! findUserMessage
-                // findUser(findUserMessage)
             }
             case "create-users-req" => {
                 val smpMsg1 = Json.parse(recordValue).as[SimpleRequestMessage]
                 val createUserMessage = new CreateUserRequestMessage(smpMsg1)
                 actorMap("user") ! createUserMessage
-                // createUser(createUserMessage)
             }
             case "summary-req" => {
                 val summaryMessage = Json.parse(recordValue).as[SimpleRequestMessage]
-                // getSummary(summaryMessage)
                 actorMap("summary") ! summaryMessage
             }
             case "need-analysis-start-req" => {
                 val needAnalysisStartMessage = Json.parse(recordValue).as[ProgrammeRequestMessage]
                 actorMap("need-analysis") ! needAnalysisStartMessage
-                // createPreProgramme(needAnalysisStartMessage)
             }
             case "need-analysis-consult-req" => {
                 val needAnalysisConsultMessage = Json.parse(recordValue).as[NeedAnalysisConsultationRequestMessage]
                 actorMap("need-analysis") ! needAnalysisConsultMessage
-                // addNeedAnalysisConsultation(needAnalysisConsultMessage)
             }
             case "curriculum-review-req" => {
                 val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]
                 actorMap("curriculum-development") ! curriculumReviewMessage
-                // startCurriculumReview(curriculumReviewMessage)
             }
             case _ => println("unknown topic ...")
         }

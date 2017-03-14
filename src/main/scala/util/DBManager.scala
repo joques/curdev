@@ -27,7 +27,7 @@ object DBManager {
 
   def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[OpResult] = save[NeedAnalysisConsultation]("yester-consultations", consulationKey, consultationData)
 
-  def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[OpResult] = save[NeedAnalysisConsultation]("yester-na-surveys", surveyKey, surveyObj)
+  def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[OpResult] = save[NeedAnalysisSurvey]("yester-na-surveys", surveyKey, surveyObj)
 
 
 

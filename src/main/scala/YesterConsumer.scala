@@ -17,7 +17,7 @@ import java.util.Properties
 import java.util.UUID
 import play.api.libs.json.{Reads, Json, Writes}
 import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImplicits, ProgrammeRequestMessage, ProgrammeRequestMessageJsonImplicits, NeedAnalysisConsultationRequestMessage,
-    NeedAnalysisConsultationRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits, FindUserRequestMessage,
+    NeedAnalysisConsultationRequestMessageJsonImplicits, NeedAnalysisSurveyRequestMessage, NeedAnalysisSurveyRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits, FindUserRequestMessage,
     FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits}
 
 
@@ -30,6 +30,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val reqReader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
     implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
     implicit val nacReqReader: Reads[NeedAnalysisConsultationRequestMessage] = NeedAnalysisConsultationRequestMessageJsonImplicits.needAnaConsRequestMessageReads
+    implicit val nasReqReader: Reads[NeedAnalysisSurveyRequestMessage] = NeedAnalysisSurveyRequestMessageJsonImplicits.needAnaSurvRequestMessageReads
     implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
     implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
     implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads

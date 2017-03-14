@@ -5,7 +5,7 @@ import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 
 import yester.util.DBManager
-import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage}
+import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage}
 import yester.YesterProducer
 
 final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {

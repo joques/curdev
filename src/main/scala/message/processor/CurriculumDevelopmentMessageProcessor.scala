@@ -18,7 +18,7 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
             println("received curriculum-review message ...")
             startCurriculumReview(curDevReqMsg)
         case cdaReqMsg: CurriculumDevelopmentAuthorizationRequestMessage =>
-            println "received Bos or senate submission msg ..."
+            println("received Bos or senate submission msg ...")
             handleSubmissionToSenateOrBos(cdaReqMsg)
         case _ =>
             println("unknown message type ...")

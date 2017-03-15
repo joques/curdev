@@ -18,7 +18,8 @@ import java.util.UUID
 import play.api.libs.json.{Reads, Json, Writes}
 import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImplicits, ProgrammeRequestMessage, ProgrammeRequestMessageJsonImplicits, NeedAnalysisConsultationRequestMessage,
     NeedAnalysisConsultationRequestMessageJsonImplicits, NeedAnalysisSurveyRequestMessage, NeedAnalysisSurveyRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits, FindUserRequestMessage,
-    FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage, CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits}
+    FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage, CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits,
+    CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits}
 
 
 final case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {
@@ -35,6 +36,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
     implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
     implicit val cdaReqReader: Reads[CurriculumDevelopmentAuthorizationRequestMessage] = CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits.cdaRequestMessageReads
+    implicit val cmtMemReqReader: Reads[CommitteeMembersRequestMessage] = CommitteeMembersJsonImplicitsRequestMessageJsonImplicits.cmtMembersRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -120,6 +122,14 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "cur-dev-authorize-from-bos-req" => {
                 val authorizeFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
                 actorMap("curriculum-development") ! authorizeFromSenateReqMsg
+            }
+            case "cur-dev-appoint-cdc-req" => {
+                val cdcMembersReqMsg = Json.parse(recordValue).as[CommitteeMembersRequestMessage]
+                actorMap("curriculum-development") ! cdcMembersReqMsg
+            }
+            case "cur-dev-appoint-pac-req" => {
+                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! pacMembersReqMsg
             }
             case _ => println("unknown topic ...")
         }

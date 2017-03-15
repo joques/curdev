@@ -9,7 +9,7 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{PreProgrammeComponent, Programme}
-import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAuthorizationRequestMessage}
+import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAuthorizationRequestMessage, CommitteeMembersRequestMessage}
 import yester.message.response.SimpleResponseMessage
 
 final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
@@ -20,6 +20,9 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         case cdaReqMsg: CurriculumDevelopmentAuthorizationRequestMessage =>
             println("received Bos or senate submission msg ...")
             handleSubmissionToSenateOrBos(cdaReqMsg)
+        case cmtMembers: CommitteeMembersRequestMessage =>
+            println("received Bos or senate submission msg ...")
+            handleCommitteeMemberAppointment(cmtMembers)
         case _ =>
             println("unknown message type ...")
     }
@@ -68,6 +71,14 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
             case "senate-submit" => provideResposeToSubmission("ok", message.messageId, "cur-dev-submit-to-senate-req")
             case "senate-amend" => provideResposeToSubmission("ok", message.messageId, "cur-dev-amendment-from-senate-req")
             case "senate-authorize" => provideResposeToSubmission("ok", message.messageId, "cur-dev-authorize-from-senate-req")
+        }
+    }
+
+    def handleCommitteeMemberAppointment(message: CommitteeMembersRequestMessage): Unit = {
+        val msgAction = message.content.action
+        msgAction match {
+            case "cdc" => provideResposeToSubmission("ok", message.messageId, "cur-dev-appoint-cdc-res")
+            case "pac" => provideResposeToSubmission("ok", message.messageId, "cur-dev-appoint-pac-res")
         }
     }
 }

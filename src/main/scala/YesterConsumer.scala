@@ -101,6 +101,26 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 val submitToBosReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
                 actorMap("curriculum-development") ! submitToBosReqMsg
             }
+            case "cur-dev-amendment-from-bos-req" => {
+                val amendmentFromBosReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! amendmentFromBosReqMsg
+            }
+            case "cur-dev-authorize-from-bos-req" => {
+                val authorizeFromBosReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! authorizeFromBosReqMsg
+            }
+            case "cur-dev-submit-to-senate-req" => {
+                val submitToSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! submitToBosReqMsg
+            }
+            case "cur-dev-amendment-from-bos-req" => {
+                val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! amendmentFromSenateReqMsg
+            }
+            case "cur-dev-authorize-from-bos-req" => {
+                val authorizeFroSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! authorizeFroSenateReqMsg
+            }
             case _ => println("unknown topic ...")
         }
 

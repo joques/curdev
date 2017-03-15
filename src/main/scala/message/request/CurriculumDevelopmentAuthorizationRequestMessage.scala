@@ -7,7 +7,7 @@ import yester.lib.{CurriculumDevelopmentAuthorization, CurriculumDevelopmentAuth
 final case class CurriculumDevelopmentAuthorizationRequestMessage(messageId: String, content: CurriculumDevelopmentAuthorization) extends ComplexRequestMessage[CurriculumDevelopmentAuthorization](messageId, content)
 
 object CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits {
-    implicit val cdaFormat: Format[NeedAnalysisSurvey] =  CurriculumDevelopmentAuthorizationJsonImplicits.cdaFmt
+    implicit val cdaFormat: Format[CurriculumDevelopmentAuthorization] =  CurriculumDevelopmentAuthorizationJsonImplicits.cdaFmt
 
     implicit val cdaRequestMessageFmt = Json.format[CurriculumDevelopmentAuthorizationRequestMessage]
     implicit val cdaRequestMessageeWrites = Json.writes[CurriculumDevelopmentAuthorizationRequestMessage]

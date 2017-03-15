@@ -111,15 +111,15 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             }
             case "cur-dev-submit-to-senate-req" => {
                 val submitToSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
-                actorMap("curriculum-development") ! submitToBosReqMsg
+                actorMap("curriculum-development") ! submitToSenateReqMsg
             }
             case "cur-dev-amendment-from-bos-req" => {
                 val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
                 actorMap("curriculum-development") ! amendmentFromSenateReqMsg
             }
             case "cur-dev-authorize-from-bos-req" => {
-                val authorizeFroSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
-                actorMap("curriculum-development") ! authorizeFroSenateReqMsg
+                val authorizeFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! authorizeFromSenateReqMsg
             }
             case _ => println("unknown topic ...")
         }

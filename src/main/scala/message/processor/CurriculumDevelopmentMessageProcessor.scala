@@ -60,7 +60,7 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
     }
 
     def handleSubmissionToSenateOrBos(message: CurriculumDevelopmentAuthorizationRequestMessage): Unit = {
-        val msgAction = message.action
+        val msgAction = message.content.action
         msgAction match {
             case "bos-submit" => provideResposeToSubmission("ok", message.messageId, "cur-dev-submit-to-bos-req")
             case "bos-amend" => provideResposeToSubmission("ok", message.messageId, "cur-dev-amendment-from-bos-req")

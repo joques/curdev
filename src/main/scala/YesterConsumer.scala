@@ -69,6 +69,22 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
         println(message)
 
         recordTopic match {
+            case "cur-dev-amendment-from-bos-req" => {
+                val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! amendmentFromSenateReqMsg
+            }
+            case "cur-dev-authorize-from-bos-req" => {
+                val authorizeFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! authorizeFromSenateReqMsg
+            }
+            case "cur-dev-appoint-cdc-req" => {
+                val cdcMembersReqMsg = Json.parse(recordValue).as[CommitteeMembersRequestMessage]
+                actorMap("curriculum-development") ! cdcMembersReqMsg
+            }
+            case "cur-dev-appoint-pac-req" => {
+                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! pacMembersReqMsg
+            }
             case "find-users-req" => {
                 val smpMsg = Json.parse(recordValue).as[SimpleRequestMessage]
                 val findUserMessage = new FindUserRequestMessage(smpMsg)
@@ -115,22 +131,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 val submitToSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
                 actorMap("curriculum-development") ! submitToSenateReqMsg
             }
-            case "cur-dev-amendment-from-bos-req" => {
-                val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
-                actorMap("curriculum-development") ! amendmentFromSenateReqMsg
-            }
-            case "cur-dev-authorize-from-bos-req" => {
-                val authorizeFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
-                actorMap("curriculum-development") ! authorizeFromSenateReqMsg
-            }
-            case "cur-dev-appoint-cdc-req" => {
-                val cdcMembersReqMsg = Json.parse(recordValue).as[CommitteeMembersRequestMessage]
-                actorMap("curriculum-development") ! cdcMembersReqMsg
-            }
-            case "cur-dev-appoint-pac-req" => {
-                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
-                actorMap("curriculum-development") ! pacMembersReqMsg
-            }
+
             case _ => println("unknown topic ...")
         }
 

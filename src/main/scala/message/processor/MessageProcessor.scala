@@ -42,4 +42,11 @@ abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
             }
         }
     }
+
+    def provideResposeToSubmission(resp: String, messageId: String, responseTopic: String): Unit = {
+        val simpleRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messageId, None, Option(resp))
+        val msgStr = Json.toJson(simpleRespMsg).toString()
+        println(s"the message to be sent is $msgStr")
+        messenger.getProducer().send(new ProducerRecord[String,String](responseTopic, msgStr))
+    }
 }

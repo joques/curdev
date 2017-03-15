@@ -9,7 +9,7 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{PreProgrammeComponent, Programme}
-import yester.message.request.CurriculumReviewRequestMessage
+import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAuthorizationRequestMessage}
 import yester.message.response.SimpleResponseMessage
 
 final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
@@ -17,6 +17,9 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         case curDevReqMsg: CurriculumReviewRequestMessage =>
             println("received curriculum-review message ...")
             startCurriculumReview(curDevReqMsg)
+        case cdaReqMsg: CurriculumDevelopmentAuthorizationRequestMessage =>
+            println "received Bos or senate submission msg ..."
+            handleSubmissionToSenateOrBos(cdaReqMsg)
         case _ =>
             println("unknown message type ...")
     }
@@ -54,5 +57,9 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 }
             }
         }
+    }
+
+    def handleSubmissionToSenateOrBos(message: CurriculumDevelopmentAuthorizationRequestMessage): Unit = {
+        provideResposeToSubmission("ok", message.messageId, "cur-dev-submit-to-bos-req")
     }
 }

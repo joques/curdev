@@ -3,7 +3,7 @@ package yester.lib
 import play.api.libs.json.{Json, Format}
 import UserProfile._
 
-final case class User(username: String, password: String, profile: UserProfile, firstname: String, lastname: String, unit: UserUnit)
+final case class User(username: String, password: String, profile: UserProfile, firstname: String, lastname: String, unit: UserUnit, emailAddress: String)
 
 object UserJsonImplicits {
     implicit val userUnitFormat: Format[UserUnit] =  UserUnit.userUnitFmt

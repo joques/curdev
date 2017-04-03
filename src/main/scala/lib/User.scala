@@ -9,7 +9,7 @@ object UserJsonImplicits {
     implicit val academicUnitFormat: Format[AcademicUnit] =  AcademicUnitJsonImplicits.acaUnitFmt
     implicit val administrativeUnitFormat: Format[AdministrativeUnit] =  AdministrativeUnitJsonImplicits.adUnitFmt
     implicit val userUnitFormat: Format[UserUnit] =  UserUnitJsonImplicits.userUnitFmt
-    implicit val userProfileFormat: Format[UserProfile] =  UserProfileJsonImplicits.userPFmt
+    // implicit val userProfileFormat: Format[UserProfile] =  UserProfileJsonImplicits.userPFmt
 
     implicit val userFmt = Json.format[User]
     implicit val userWrites = Json.writes[User]

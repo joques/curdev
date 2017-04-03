@@ -9,8 +9,6 @@ case class AdministrativeUnit(office: Int, section: Int) extends UserUnit
 
 object UserUnitJsonImplicits {
     implicit val userUnitFmt = Json.format[UserUnit]
-    implicit val userUnitWrites = Json.writes[UserUnit]
-    implicit val userUnitReads = Json.reads[UserUnit]
 }
 
 object AcademicUnitJsonImplicits {

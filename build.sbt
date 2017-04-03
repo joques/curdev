@@ -8,8 +8,7 @@ lazy val root = (project in file(".")).settings(
     mainClass in Compile := Some("Yester")
 )
 
-resolvers ++= Seq("julienrf.github.com" at "http://julienrf.github.com/repo-snapshots/",
-    "ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
+resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
 
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.0",
@@ -24,7 +23,7 @@ libraryDependencies ++= Seq(
     "com.typesafe.play" % "play-json_2.11" % "2.4.0-M2",
     "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3",
     "io.lamma" %% "lamma" % "2.2.2",
-    "com.github.julienrf" %% "play-json-derived-codecs" % "3.3"
+    "org.julienrf" %% "play-json-derived-codecs" % "3.3"
 )
 
 assemblyMergeStrategy  in assembly := {

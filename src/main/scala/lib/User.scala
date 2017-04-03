@@ -1,6 +1,6 @@
 package yester.lib
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Format}
 import UserProfile._
 
 final case class User(username: String, password: String, profile: UserProfile, firstname: String, lastname: String, unit: UserUnit)

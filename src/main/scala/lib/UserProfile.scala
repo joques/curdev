@@ -20,7 +20,7 @@ object EnumUtils {
     }
 
     implicit def enumFormat[E <: Enumeration](enum: E): Format[E#Value] = {
-        Format(EnumUtils.enumReads(enum), EnumWriter.enumWrites)
+        Format(EnumUtils.enumReads(enum), EnumUtils.enumWrites)
     }
 }
 

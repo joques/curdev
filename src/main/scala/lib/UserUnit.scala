@@ -1,7 +1,7 @@
 package yester.lib
 
 // import play.api.libs.json.{Format}
-import julienrf.variants.Variants
+import julienrf.json.derived._
 
 sealed trait UserUnit
 
@@ -9,7 +9,7 @@ case class AcademicUnit(faculty: Int, department: Int) extends UserUnit
 case class AdministrativeUnit(office: Int, section: Int) extends UserUnit
 
 object UserUnitJsonImplicits {
-    implicit val userUnitFmt: Format[UserUnit] = Variants.format[UserUnit]
+    implicit lazy val userUnitFmt: OFormat[UserUnit] = flat.oformat((__ \ "type").format[String])
 }
 
 // object AcademicUnitJsonImplicits {

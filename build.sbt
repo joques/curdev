@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
     "com.typesafe" % "config" % "1.2.1",
     "com.typesafe.akka" % "akka-actor_2.11" % "2.3.3",
     "com.typesafe.play" % "play-json_2.11" % "2.4.0-M2",
-    "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3",
+    "org.reactivecouchbase" %% "reactivecouchbase-core" % "2.0.0-SNAPSHOT",
     "io.lamma" %% "lamma" % "2.2.2",
     "org.julienrf" %% "play-json-derived-codecs" % "3.3"
 )

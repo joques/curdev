@@ -64,7 +64,6 @@ object DBManager {
     def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes")
 
     def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData)
-
     def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[NeedAnalysisConsultation] = save[NeedAnalysisConsultation]("yester-consultations", consulationKey, consultationData)
     def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[NeedAnalysisSurvey] = save[NeedAnalysisSurvey]("yester-na-surveys", surveyKey, surveyObj)
 }

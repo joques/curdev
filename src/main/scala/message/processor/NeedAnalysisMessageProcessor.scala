@@ -28,9 +28,9 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
 
         val progObj = message.content
         val progKey = UUID.randomUUID().toString()
-        val createProgOpRes = DBManager.createProgramme(progKey, progObj)
+        val createProgRes: Future[Programme] = DBManager.createProgramme(progKey, progObj)
 
-        handleInsertionResultWithSimpleResponse(createProgOpRes, message.messageId, "need-analysis-start-res")
+        handleInsertionResultWithSimpleResponse[Programme](createProgRes, message.messageId, "need-analysis-start-res")
     }
 
     def addNeedAnalysisConsultation(message: NeedAnalysisConsultationRequestMessage): Unit = {
@@ -39,9 +39,9 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         val consultationObj = message.content
         val consulationKey = UUID.randomUUID().toString()
 
-        val addConsultationOpRes = DBManager.addNeedAnalysisConsultation(consulationKey, consultationObj)
+        val addConsultationRes: Future[NeedAnalysisConsultation] = DBManager.addNeedAnalysisConsultation(consulationKey, consultationObj)
 
-        handleInsertionResultWithSimpleResponse(addConsultationOpRes, message.messageId, "need-analysis-consult-res")
+        handleInsertionResultWithSimpleResponse[NeedAnalysisConsultation](addConsultationRes, message.messageId, "need-analysis-consult-res")
     }
 
     def addNeedAnalysisSurveyData(message: NeedAnalysisSurveyRequestMessage): Unit = {
@@ -50,6 +50,7 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         var surveyObj = message.content
         val surveyKey = UUID.randomUUID().toString()
 
-        val addSurveyOpRes = DBManager.addNeedAnalysisSurvey(surveyKey, surveyObj)
+        val addSurveyRes: Future[NeedAnalysisSurvey] = DBManager.addNeedAnalysisSurvey(surveyKey, surveyObj)
+        handleInsertionResultWithSimpleResponse[NeedAnalysisSurvey](addSurveyRes, message.messageId, "need-analysis-conclude-res")
     }
 }

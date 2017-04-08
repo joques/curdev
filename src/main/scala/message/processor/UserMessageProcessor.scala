@@ -73,9 +73,9 @@ final case class UsertMessageProcessor(messenger: YesterProducer) extends Messag
                         println(s"the error message to be sent is $errMsgStr1")
                         messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr1))
                     }
-                    case Success(progList) => {
-                        val preProgrammeList: List[Programme] = progList.filter((prg: Programme) => prg.isPreProgramme)
-                        var preProgCodes: List[String] = for (prg1 <- preProgrammeList if prg1.preProgComponent.get.initiator == "userName") yield prg1.preProgComponent.get.devCode
+                    case Success(progs) => {
+                        val preProgrammes: Seq[Programme] = progs.filter((prg: Programme) => prg.isPreProgramme)
+                        var preProgCodes: List[String] = for (prg1 <- preProgrammes if prg1.preProgComponent.get.initiator == "userName") yield prg1.preProgComponent.get.devCode
                         var userWPrePrg: Option[UserWithPreProgramme] = None
                         if (preProgCodes.isEmpty) {
                             userWPrePrg = Some(new UserWithPreProgramme(userVal.get, None))

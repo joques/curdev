@@ -18,7 +18,7 @@ object DBManager {
     implicit val userReader: Reads[User] = UserJsonImplicits.userReads
     implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
     implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
-    implicit val profReader: Reads[Programme] = ProgrammeJsonImplicits.prgReads
+    implicit val progReader: Reads[Programme] = ProgrammeJsonImplicits.prgReads
     implicit val naConsFormat: Format[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsFmt
     implicit val naConsWriter: Writes[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsWrites
     implicit val naSurvFormat: Format[NeedAnalysisSurvey] = NeedAnalysisSurveyJsonImplicits.needAnaSurvFmt
@@ -56,7 +56,7 @@ object DBManager {
         curBucket.get[T](docKey, objReader)
     }
 
-    def findAll[T](bucketName: String, objReader: Reads[T]): Future[List[T]] = {
+    def findAll[T](bucketName: String, objReader: Reads[T]): Future[Seq[T]] = {
         val curBucket = driver.bucket(bucketName)
         val query = s"select * from $bucketName"
         curBucket.search(N1qlQuery(query), objReader).asSeq
@@ -64,7 +64,7 @@ object DBManager {
 
     def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username, userReader)
 
-    def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes")
+    def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes", progReader)
 
     def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData, progFormat)
     def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[NeedAnalysisConsultation] = save[NeedAnalysisConsultation]("yester-consultations", consulationKey, consultationData, naConsFormat)

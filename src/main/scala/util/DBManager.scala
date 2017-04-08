@@ -56,10 +56,10 @@ object DBManager {
         curBucket.get[T](docKey, objReader)
     }
 
-    def findAll[T](bucketName: String, objReader: Reads[T]): Future[List[T]] = {
+    def findAll[T](bucketName: String, objReader: Reads[T]): Future[Seq[T]] = {
         val curBucket = driver.bucket(bucketName)
         val query = s"select * from $bucketName"
-        curBucket.search(N1qlQuery(query), objReader).asList
+        curBucket.search(N1qlQuery(query), objReader).asSeq
     }
 
     def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username, userReader)

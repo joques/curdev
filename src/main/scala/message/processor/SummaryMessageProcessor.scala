@@ -40,10 +40,10 @@ final case class SummaryMessageProcessor(messenger: YesterProducer) extends Mess
 
         val allProgs = DBManager.findAllProgrammes()
         allProgs.onComplete {
-            case (Success(progList)) => {
+            case (Success(progs)) => {
                 println(s"the list is: $progList")
 
-                val inProgress: List[Programme] = progList.filter((prg: Programme) => prg.isPreProgramme).take(5)
+                val inProgress: Seq[Programme] = progs.filter((prg: Programme) => prg.isPreProgramme).take(5)
                 println(s"the in progress list is $inProgress")
 
 
@@ -52,14 +52,14 @@ final case class SummaryMessageProcessor(messenger: YesterProducer) extends Mess
                 val threeMonthsAgo = now - (3 months)
                 println(s"the time now is $now and in six months is $inSixMonth")
 
-                val durForReview: List[Programme] = for {
-                    curProg <- progList
+                val durForReview: Seq[Programme] = for {
+                    curProg <- progs
                     if ((!curProg.isPreProgramme) && (Date(curProg.progComponent.get.nextReview) <= inSixMonth))
                 } yield curProg
                 println(s"due for review list $durForReview")
 
-                val recentlyApproved: List[Programme] = for {
-                    curProg1 <- progList
+                val recentlyApproved: Seq[Programme] = for {
+                    curProg1 <- progs
                     if ((!curProg1.isPreProgramme) && (threeMonthsAgo <= Date(curProg1.progComponent.get.approvedOn)))
                 } yield curProg1
                 println(s"recently approved list $recentlyApproved")

@@ -75,7 +75,7 @@ final case class UsertMessageProcessor(messenger: YesterProducer) extends Messag
                     }
                     case Success(progs) => {
                         val preProgrammes: Seq[Programme] = progs.filter((prg: Programme) => prg.isPreProgramme)
-                        var preProgCodes: List[String] = for (prg1 <- preProgrammes if prg1.preProgComponent.get.initiator == "userName") yield prg1.preProgComponent.get.devCode
+                        var preProgCodes: Seq[String] = for (prg1 <- preProgrammes if prg1.preProgComponent.get.initiator == "userName") yield prg1.preProgComponent.get.devCode
                         var userWPrePrg: Option[UserWithPreProgramme] = None
                         if (preProgCodes.isEmpty) {
                             userWPrePrg = Some(new UserWithPreProgramme(userVal.get, None))

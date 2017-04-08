@@ -3,9 +3,11 @@ package yester.message.processor
 import akka.actor._
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
+import scala.concurrent.Future
 
 import yester.util.DBManager
 import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage}
+import yester.lib.{Programme, ProgrammeJsonImplicits, NeedAnalysisConsultation, NeedAnalysisConsultationJsonImplicits, NeedAnalysisSurvey, NeedAnalysisSurveyJsonImplicits}
 import yester.YesterProducer
 
 final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {

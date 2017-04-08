@@ -21,14 +21,14 @@ abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
     def handleInsertionResultWithSimpleResponse[T](result: Future[T], messageId: String, responseTopic: String): Unit = {
         result.onComplete {
             case Success(resultData) => {
-                val opSucMsg: Option[String] = "Object creation successful!"
+                val opSucMsg: Option[String] = Option("Object creation successful!")
                 val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messageId, None, opSucMsg)
                 val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
                 println(s"the success message to be sent is $succMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String](responseTopic, succMsgStr))
             }
             case Failure(failOpRes) => {
-                val opErrMsg: Option[String] = "Object creation failed!"
+                val opErrMsg: Option[String] = Option("Object creation failed!")
                 val simpleErrorRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messageId, opErrMsg, None)
                 val errMsgStr = Json.toJson(simpleErrorRespMsg).toString()
                 println(s"the error message to be sent out is $errMsgStr")

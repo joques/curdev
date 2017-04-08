@@ -4,18 +4,21 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
-import org.reactivecouchbase.scaladsl.{N1qlQuery, ReactiveCouchbase}
+import org.reactivecouchbase.scaladsl.{N1qlQuery, ReactiveCouchbase, WriteSettings}
 import scala.concurrent.Future
-import play.api.libs.json.{Json, Format, Writes}
+import play.api.libs.json.{Json, Format, Writes, Reads}
 import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysisConsultation, NeedAnalysisConsultationJsonImplicits, NeedAnalysisSurvey, NeedAnalysisSurveyJsonImplicits}
 
 object DBManager {
+    val settings: WriteSettings = WriteSettings()
     val system  = ActorSystem("DBManagerCouchBase")
-    implicit val materializer = ActorMaterializer(system)
+    implicit val materializer = ActorMaterializer.create(system)
     implicit val ec = system.dispatcher
     implicit val userFormat: Format[User] = UserJsonImplicits.userFmt
+    implicit val userReader: Reads[User] = UserJsonImplicits.userReads
     implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
     implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
+    implicit val profReader: Reads[Programme] = ProgrammeJsonImplicits.prgReads
     implicit val naConsFormat: Format[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsFmt
     implicit val naConsWriter: Writes[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsWrites
     implicit val naSurvFormat: Format[NeedAnalysisSurvey] = NeedAnalysisSurveyJsonImplicits.needAnaSurvFmt
@@ -43,27 +46,27 @@ object DBManager {
         }
         """.stripMargin), system)
 
-    def save[T](bucketName: String, docKey: String, data: T): Future[T] = {
+    def save[T](bucketName: String, docKey: String, data: T, objFormat: Format[T]): Future[T] = {
         val curBucket = driver.bucket(bucketName)
-        curBucket.insert(docKey, data)
+        curBucket.insert(docKey, data, settings, objFormat)
     }
 
-    def findById[T](bucketName: String, docKey: String): Future[Option[T]] = {
+    def findById[T](bucketName: String, docKey: String, objReader: Reads[T]): Future[Option[T]] = {
         val curBucket = driver.bucket(bucketName)
-        curBucket.get[T](docKey)
+        curBucket.get[T](docKey, objReader)
     }
 
-    def findAll[T](bucketName: String): Future[List[T]] = {
+    def findAll[T](bucketName: String, objReader: Reads[T]): Future[List[T]] = {
         val curBucket = driver.bucket(bucketName)
         val query = s"select * from $bucketName"
-        curBucket.search(N1qlQuery(query)).asSeq
+        curBucket.search(N1qlQuery(query), objReader).asSeq
     }
 
-    def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
+    def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username, userReader)
 
     def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes")
 
-    def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData)
-    def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[NeedAnalysisConsultation] = save[NeedAnalysisConsultation]("yester-consultations", consulationKey, consultationData)
-    def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[NeedAnalysisSurvey] = save[NeedAnalysisSurvey]("yester-na-surveys", surveyKey, surveyObj)
+    def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData, progFormat)
+    def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[NeedAnalysisConsultation] = save[NeedAnalysisConsultation]("yester-consultations", consulationKey, consultationData, naConsFormat)
+    def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[NeedAnalysisSurvey] = save[NeedAnalysisSurvey]("yester-na-surveys", surveyKey, surveyObj, naSurvFormat)
 }

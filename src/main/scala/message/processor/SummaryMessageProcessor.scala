@@ -41,7 +41,7 @@ final case class SummaryMessageProcessor(messenger: YesterProducer) extends Mess
         val allProgs = DBManager.findAllProgrammes()
         allProgs.onComplete {
             case (Success(progs)) => {
-                println(s"the list is: $progList")
+                println(s"the list is: $progs")
 
                 val inProgress: Seq[Programme] = progs.filter((prg: Programme) => prg.isPreProgramme).take(5)
                 println(s"the in progress list is $inProgress")

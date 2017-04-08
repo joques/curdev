@@ -40,8 +40,8 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 println(s"the error message to be sent for all progs is $errMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr))
             }
-            case Success(progSeq) => {
-                val toBeReviewedProgs: Seq[Programme] = progSeq.filter((prg: Programme) => ((! prg.isPreProgramme) && (prg.progComponent.get.code == reviewObj.code)))
+            case Success(progList) => {
+                val toBeReviewedProgs: List[Programme] = progList.filter((prg: Programme) => ((! prg.isPreProgramme) && (prg.progComponent.get.code == reviewObj.code)))
                 if (toBeReviewedProgs.isEmpty) {
                     val progErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(s"No exisiting programme with code $reviewObj.code"), None)
                     val errMsgStr1 = Json.toJson(progErrorRespMsg1).toString

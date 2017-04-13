@@ -5,7 +5,7 @@ lazy val root = (project in file(".")).settings(
     scalaVersion := "2.11.0",
     autoScalaLibrary := false,
     scalacOptions := Seq("-unchecked", "-deprecation"),
-    mainClass in (Compile, packageBin, run) := Some("yester.Yester")
+    mainClass in (Compile) := Some("yester.Yester")
 )
 
 // resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")

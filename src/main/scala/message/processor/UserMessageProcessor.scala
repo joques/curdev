@@ -53,7 +53,7 @@ final case class UsertMessageProcessor(messenger: YesterProducer) extends Messag
         }
     }
 
-    // will be deleted
+
     def findUserWithPreProgramme(message: FindUserRequestMessage): Unit = {
         val userName = message.simpleMsg.content
         println(s"finding user $userName")

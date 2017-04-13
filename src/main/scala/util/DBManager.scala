@@ -26,24 +26,24 @@ object DBManager {
 
     val driver = ReactiveCouchbase(ConfigFactory.parseString(
         """
-        buckets {
-            bkt1 {
-                name = "yester-users"
-                hosts = ["10.100.253.150"]
+            |buckets {
+                bkt1 {
+                    name = "yester-users"
+                    hosts = ["10.100.253.150"]
+                }
+                bkt2 {
+                    name = "yester-programmes"
+                    hosts = ["10.100.253.150"]
+                }
+                bkt3 {
+                    name = "yester-consultations"
+                    hosts = ["10.100.253.150"]
+                }
+                bkt4 {
+                    name = "yester-na-surveys"
+                    hosts = ["10.100.253.150"]
+                }
             }
-            bkt2 {
-                name = "yester-programmes"
-                hosts = ["10.100.253.150"]
-            }
-            bkt3 {
-                name = "yester-consultations"
-                hosts = ["10.100.253.150"]
-            }
-            bkt4 {
-                name = "yester-na-surveys"
-                hosts = ["10.100.253.150"]
-            }
-        }
         """.stripMargin), system)
 
     def save[T](bucketName: String, docKey: String, data: T, objFormat: Format[T]): Future[T] = {

@@ -56,16 +56,16 @@ object DBManager {
         curBucket.get[T](docKey, objReader)
     }
 
-    def findAll[T](bucketName: String, objReader: Reads[T]): Future[Seq[T]] = {
+    def findAll[T](bucketCode: String, bucketName: String, objReader: Reads[T]): Future[Seq[T]] = {
         println(s"inside findAll with bucketName $bucketName")
-        val curBucket = driver.bucket(bucketName)
+        val curBucket = driver.bucket(bucketCode)
         val query = s"select * from $bucketName"
         curBucket.search(N1qlQuery(query), objReader).asSeq
     }
 
     def findUser(username: String): Future[Option[User]] = findById[User]("bkt1", username, userReader)
 
-    def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("bkt2", progReader)
+    def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("bkt2", "yester-programmes", progReader)
 
     def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("bkt2", progKey, progData, progFormat)
     def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[NeedAnalysisConsultation] = save[NeedAnalysisConsultation]("bkt3", consulationKey, consultationData, naConsFormat)

@@ -62,11 +62,11 @@ object DBManager {
         curBucket.search(N1qlQuery(query), objReader).asSeq
     }
 
-    def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username, userReader)
+    def findUser(username: String): Future[Option[User]] = findById[User]("bkt1", username, userReader)
 
     def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("bkt2", progReader)
 
-    def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData, progFormat)
-    def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[NeedAnalysisConsultation] = save[NeedAnalysisConsultation]("yester-consultations", consulationKey, consultationData, naConsFormat)
-    def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[NeedAnalysisSurvey] = save[NeedAnalysisSurvey]("yester-na-surveys", surveyKey, surveyObj, naSurvFormat)
+    def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("bkt2", progKey, progData, progFormat)
+    def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[NeedAnalysisConsultation] = save[NeedAnalysisConsultation]("bkt3", consulationKey, consultationData, naConsFormat)
+    def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[NeedAnalysisSurvey] = save[NeedAnalysisSurvey]("bkt4", surveyKey, surveyObj, naSurvFormat)
 }

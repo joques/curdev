@@ -26,7 +26,7 @@ object DBManager {
 
     val driver = ReactiveCouchbase(ConfigFactory.parseString(
         """
-            |buckets {
+            buckets {
                 bkt1 {
                     name = "yester-users"
                     hosts = ["10.100.253.150"]
@@ -58,7 +58,7 @@ object DBManager {
 
     def findAll[T](bucketCode: String, bucketName: String, objReader: Reads[T]): Future[Seq[T]] = {
         println(s"inside findAll with bucketName $bucketName")
-        val theBucketName = driver.bucket(bucketCode).name
+        // val theBucketName = driver.bucket(bucketCode).name
         println(s"inside findAll with bucketName $theBucketName")
         val curBucket = driver.bucket(bucketCode)
         val query = s"select * from $bucketName"

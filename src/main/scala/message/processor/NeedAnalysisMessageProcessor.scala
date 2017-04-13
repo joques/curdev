@@ -3,11 +3,9 @@ package yester.message.processor
 import akka.actor._
 import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
-import scala.concurrent.Future
 
 import yester.util.DBManager
-import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage}
-import yester.lib.{Programme, ProgrammeJsonImplicits, NeedAnalysisConsultation, NeedAnalysisConsultationJsonImplicits, NeedAnalysisSurvey, NeedAnalysisSurveyJsonImplicits}
+import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage}
 import yester.YesterProducer
 
 final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
@@ -18,9 +16,6 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         case naConsReqMsg: NeedAnalysisConsultationRequestMessage =>
             println("received need-analysis-consult-req message ...")
             addNeedAnalysisConsultation(naConsReqMsg)
-        case naSurvReqMsg: NeedAnalysisSurveyRequestMessage =>
-            println("received need-analysis-conclude-req message ...")
-            addNeedAnalysisSurveyData(naSurvReqMsg)
         case _ =>
             println("unknown message ...")
     }
@@ -30,9 +25,9 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
 
         val progObj = message.content
         val progKey = UUID.randomUUID().toString()
-        val createProgRes: Future[Programme] = DBManager.createProgramme(progKey, progObj)
+        val createProgOpRes = DBManager.createProgramme(progKey, progObj)
 
-        handleInsertionResultWithSimpleResponse[Programme](createProgRes, message.messageId, "need-analysis-start-res")
+        handleInsertionResultWithSimpleResponse(createProgOpRes, message.messageId, "need-analysis-start-res")
     }
 
     def addNeedAnalysisConsultation(message: NeedAnalysisConsultationRequestMessage): Unit = {
@@ -41,18 +36,8 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         val consultationObj = message.content
         val consulationKey = UUID.randomUUID().toString()
 
-        val addConsultationRes: Future[NeedAnalysisConsultation] = DBManager.addNeedAnalysisConsultation(consulationKey, consultationObj)
+        val addConsultationOpRes = DBManager.addNeedAnalysisConsultation(consulationKey, consultationObj)
 
-        handleInsertionResultWithSimpleResponse[NeedAnalysisConsultation](addConsultationRes, message.messageId, "need-analysis-consult-res")
-    }
-
-    def addNeedAnalysisSurveyData(message: NeedAnalysisSurveyRequestMessage): Unit = {
-        println("adding survey data for need analysis")
-
-        var surveyObj = message.content
-        val surveyKey = UUID.randomUUID().toString()
-
-        val addSurveyRes: Future[NeedAnalysisSurvey] = DBManager.addNeedAnalysisSurvey(surveyKey, surveyObj)
-        handleInsertionResultWithSimpleResponse[NeedAnalysisSurvey](addSurveyRes, message.messageId, "need-analysis-conclude-res")
+        handleInsertionResultWithSimpleResponse(addConsultationOpRes, message.messageId, "need-analysis-consult-res")
     }
 }

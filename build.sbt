@@ -8,7 +8,7 @@ lazy val root = (project in file(".")).settings(
     mainClass in Compile := Some("Yester")
 )
 
-resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
+// resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
 
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.0",

@@ -59,7 +59,7 @@ object DBManager {
     def findAll[T](bucketCode: String, bucketName: String, objReader: Reads[T]): Future[Seq[T]] = {
         println(s"inside findAll with bucketName $bucketName")
         // val theBucketName = driver.bucket(bucketCode).name
-        println(s"inside findAll with bucketName $theBucketName")
+        // println(s"inside findAll with bucketName $theBucketName")
         val curBucket = driver.bucket(bucketCode)
         val query = s"select * from $bucketName"
         curBucket.search(N1qlQuery(query), objReader).asSeq

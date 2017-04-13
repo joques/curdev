@@ -23,7 +23,7 @@ libraryDependencies ++= Seq(
     "com.typesafe.play" % "play-json_2.11" % "2.4.0-M2",
     "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3",
     "io.lamma" %% "lamma" % "2.2.2",
-    "org.julienrf" %% "play-json-derived-codecs" % "3.3"
+    "io.leonard" %% "play-json-traits" % "1.2.1"
 )
 
 assemblyMergeStrategy  in assembly := {

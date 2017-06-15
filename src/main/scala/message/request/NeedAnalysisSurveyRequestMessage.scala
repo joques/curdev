@@ -2,7 +2,7 @@ package yester.message.request
 
 import play.api.libs.json.{Reads, Json, Format}
 
-import yester.lib.{NeedAnalysisSurvey,NeedAnalysisSurveyJsonImplicits}
+import yester.lib.{NeedAnalysisSurvey, NeedAnalysisSurveyJsonImplicits}
 
 final case class NeedAnalysisSurveyRequestMessage(messageId: String, content: NeedAnalysisSurvey) extends ComplexRequestMessage[NeedAnalysisSurvey](messageId, content)
 

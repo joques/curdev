@@ -2,7 +2,7 @@ package yester.lib
 
 import play.api.libs.json.{Json, Format}
 
-final case class Summary(inProgress: Option[List[Programme]], dueForReview: Option[List[Programme]], recentlyApproved: Option[List[Programme]])
+final case class Summary(inProgress: Option[Seq[Programme]], dueForReview: Option[Seq[Programme]], recentlyApproved: Option[Seq[Programme]])
 
 object SummaryJsonImplicits {
     implicit val prgFormat: Format[Programme] =  ProgrammeJsonImplicits.prgFmt

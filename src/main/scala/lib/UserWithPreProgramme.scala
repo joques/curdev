@@ -2,7 +2,7 @@ package yester.lib
 
 import play.api.libs.json.{Json, Format}
 
-final case class UserWithPreProgramme(userDetails: User, preProgrammeCodes: Option[List[String]])
+final case class UserWithPreProgramme(userDetails: User, preProgrammeCodes: Option[Seq[String]])
 
 object UserWithPreProgrammeJsonImplicits {
     implicit val userFormat: Format[User] =  UserJsonImplicits.userFmt

@@ -5,7 +5,7 @@ lazy val root = (project in file(".")).settings(
     scalaVersion := "2.11.0",
     autoScalaLibrary := false,
     scalacOptions := Seq("-unchecked", "-deprecation"),
-    mainClass in Compile := Some("Yester")
+    mainClass in (Compile) := Some("yester.Yester")
 )
 
 resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
@@ -22,7 +22,8 @@ libraryDependencies ++= Seq(
     "com.typesafe.akka" % "akka-actor_2.11" % "2.3.3",
     "com.typesafe.play" % "play-json_2.11" % "2.4.0-M2",
     "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3",
-    "io.lamma" %% "lamma" % "2.2.2"
+    "io.lamma" %% "lamma" % "2.2.2",
+    "io.leonard" %% "play-json-traits" % "1.2.1"
 )
 
 assemblyMergeStrategy  in assembly := {

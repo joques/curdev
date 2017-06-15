@@ -8,7 +8,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConversions._
 import scala.util.{Failure, Success}
-import org.reactivecouchbase.client.OpResult
+// import org.reactivecouchbase.client.OpResult
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.lamma._
@@ -17,8 +17,9 @@ import java.util.Properties
 import java.util.UUID
 import play.api.libs.json.{Reads, Json, Writes}
 import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImplicits, ProgrammeRequestMessage, ProgrammeRequestMessageJsonImplicits, NeedAnalysisConsultationRequestMessage,
-    NeedAnalysisConsultationRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits, FindUserRequestMessage,
-    FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits}
+    NeedAnalysisConsultationRequestMessageJsonImplicits, NeedAnalysisSurveyRequestMessage, NeedAnalysisSurveyRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits, FindUserRequestMessage,
+    FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage, CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits,
+    CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits}
 
 
 final case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {
@@ -30,9 +31,12 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val reqReader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
     implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
     implicit val nacReqReader: Reads[NeedAnalysisConsultationRequestMessage] = NeedAnalysisConsultationRequestMessageJsonImplicits.needAnaConsRequestMessageReads
+    implicit val nasReqReader: Reads[NeedAnalysisSurveyRequestMessage] = NeedAnalysisSurveyRequestMessageJsonImplicits.needAnaSurvRequestMessageReads
     implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
     implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
     implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
+    implicit val cdaReqReader: Reads[CurriculumDevelopmentAuthorizationRequestMessage] = CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits.cdaRequestMessageReads
+    implicit val cmtMemReqReader: Reads[CommitteeMembersRequestMessage] = CommitteeMembersJsonImplicitsRequestMessageJsonImplicits.cmtMembersRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -65,32 +69,47 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
         println(message)
 
         recordTopic match {
+            case "cur-dev-amendment-from-senate-req" => {
+                val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! amendmentFromSenateReqMsg
+            }
+            case "cur-dev-authorize-from-senate-req" => {
+                val authorizeFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! authorizeFromSenateReqMsg
+            }
+            case "cur-dev-appoint-cdc-req" => {
+                val cdcMembersReqMsg = Json.parse(recordValue).as[CommitteeMembersRequestMessage]
+                actorMap("curriculum-development") ! cdcMembersReqMsg
+            }
+            case "cur-dev-appoint-pac-req" => {
+                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! pacMembersReqMsg
+            }
             case "find-users-req" => {
                 val smpMsg = Json.parse(recordValue).as[SimpleRequestMessage]
                 val findUserMessage = new FindUserRequestMessage(smpMsg)
                 actorMap("user") ! findUserMessage
-                // findUser(findUserMessage)
             }
             case "create-users-req" => {
                 val smpMsg1 = Json.parse(recordValue).as[SimpleRequestMessage]
                 val createUserMessage = new CreateUserRequestMessage(smpMsg1)
                 actorMap("user") ! createUserMessage
-                // createUser(createUserMessage)
             }
             case "summary-req" => {
                 val summaryMessage = Json.parse(recordValue).as[SimpleRequestMessage]
-                // getSummary(summaryMessage)
                 actorMap("summary") ! summaryMessage
             }
             case "need-analysis-start-req" => {
                 val needAnalysisStartMessage = Json.parse(recordValue).as[ProgrammeRequestMessage]
                 actorMap("need-analysis") ! needAnalysisStartMessage
-                // createPreProgramme(needAnalysisStartMessage)
             }
             case "need-analysis-consult-req" => {
                 val needAnalysisConsultMessage = Json.parse(recordValue).as[NeedAnalysisConsultationRequestMessage]
                 actorMap("need-analysis") ! needAnalysisConsultMessage
-                // addNeedAnalysisConsultation(needAnalysisConsultMessage)
+            }
+            case "need-analysis-conclude-req" => {
+                val needAnalysisSurveyMessage = Json.parse(recordValue).as[NeedAnalysisSurveyRequestMessage]
+                actorMap("need-analysis") ! needAnalysisSurveyMessage
             }
             case "need-analysis-survey-req" => {
                 println("coming soon...")
@@ -101,8 +120,24 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "curriculum-review-req" => {
                 val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]
                 actorMap("curriculum-development") ! curriculumReviewMessage
-                // startCurriculumReview(curriculumReviewMessage)
             }
+            case "cur-dev-submit-to-bos-req" => {
+                val submitToBosReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! submitToBosReqMsg
+            }
+            case "cur-dev-amendment-from-bos-req" => {
+                val amendmentFromBosReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! amendmentFromBosReqMsg
+            }
+            case "cur-dev-authorize-from-bos-req" => {
+                val authorizeFromBosReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! authorizeFromBosReqMsg
+            }
+            case "cur-dev-submit-to-senate-req" => {
+                val submitToSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! submitToSenateReqMsg
+            }
+
             case _ => println("unknown topic ...")
         }
 

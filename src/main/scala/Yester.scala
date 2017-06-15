@@ -7,7 +7,7 @@ import yester.message.processor.{NeedAnalysisMessageProcessor, CurriculumDevelop
 object Yester {
     def main(args: Array[String]) {
         println("welcome to Yester... The resource management micro service...")
-        val topicList = List("find-users-req","create-users-req", "summary-req", "need-analysis-start-req")
+        val topicList = List("find-users-req","create-users-req", "summary-req", "need-analysis-start-req", "need-analysis-consult-req", "need-analysis-survey-req", "need-analysis-conclude-req")
 
         val yConsumer = new YesterConsumer(topicList)
         val yProducer = new YesterProducer()

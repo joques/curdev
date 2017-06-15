@@ -92,6 +92,12 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 actorMap("need-analysis") ! needAnalysisConsultMessage
                 // addNeedAnalysisConsultation(needAnalysisConsultMessage)
             }
+            case "need-analysis-survey-req" => {
+                println("coming soon...")
+            }
+            case "need-analysis-conclude-req" => {
+                println("coming soon...")
+            }
             case "curriculum-review-req" => {
                 val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]
                 actorMap("curriculum-development") ! curriculumReviewMessage

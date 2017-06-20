@@ -16,12 +16,15 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         case naConsReqMsg: NeedAnalysisConsultationRequestMessage =>
             println("received need-analysis-consult-req message ...")
             addNeedAnalysisConsultation(naConsReqMsg)
+        case naSurvReqMsg: NeedAnalysisSurveyRequestMessage =>
+            println("received need-analysis-survey-req message ...")
+            addNeedAnalysisSurvey(naSurvReqMsg)
         case _ =>
             println("unknown message ...")
     }
 
     def createPreProgramme(message: ProgrammeRequestMessage): Unit = {
-        println("creating a new programme object ...")
+        println("creating a new programme object...")
 
         val progObj = message.content
         val progKey = UUID.randomUUID().toString()
@@ -31,7 +34,7 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
     }
 
     def addNeedAnalysisConsultation(message: NeedAnalysisConsultationRequestMessage): Unit = {
-        println("adding consultation record for need analysis")
+        println("adding consultation record for need analysis...")
 
         val consultationObj = message.content
         val consulationKey = UUID.randomUUID().toString()
@@ -39,5 +42,16 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         val addConsultationOpRes = DBManager.addNeedAnalysisConsultation(consulationKey, consultationObj)
 
         handleInsertionResultWithSimpleResponse(addConsultationOpRes, message.messageId, "need-analysis-consult-res")
+    }
+
+    def addNeedAnalysisSurvey(message: NeedAnalysisSurveyRequestMessage): Unit = {
+        println("adding survey record for need analysis...")
+
+        val surveyObj = message.content
+        val surveyKey = UUID.randomUUID().toString()
+
+        val addSurveyOpRes = DBManager.addNeedAnalysisConsultation(surveyKey, surveyObj)
+
+        handleInsertionResultWithSimpleResponse(addSurveyOpRes, message.messageId, "need-analysis-survey-res")
     }
 }

@@ -19,6 +19,9 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         case naSurvReqMsg: NeedAnalysisSurveyRequestMessage =>
             println("received need-analysis-survey-req message ...")
             addNeedAnalysisSurvey(naSurvReqMsg)
+        case naConclReqMsg: NeedAnalysisConcludeRequestMessage =>
+            println("received need-analysis-conclude-req message...")
+            addNeedAnalysisConclusion(naConclReqMsg)
         case _ =>
             println("unknown message ...")
     }
@@ -53,5 +56,16 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         val addSurveyOpRes = DBManager.addNeedAnalysisConsultation(surveyKey, surveyObj)
 
         handleInsertionResultWithSimpleResponse(addSurveyOpRes, message.messageId, "need-analysis-survey-res")
+    }
+
+    def addNeedAnalysisConclusion(message: NeedAnalysisConcludeRequestMessage): Unit = {
+        println("adding conclusion record for need analysis...")
+
+        val conclusionObj = message.content
+        val conclusionKey = UUID.randomUUID().toString()
+
+        val addConclusionOpRes = DBManager.addNeedAnalysisConclusion(conclusionKey, conclusionObj)
+
+        handleInsertionResultWithSimpleResponse(addConclusionOpRes, message.messageId, "need-analysis-conclude-res")
     }
 }

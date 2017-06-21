@@ -31,11 +31,16 @@ object DBManager {
 
   def createProgramme(progKey: String, progData: Programme): Future[OpResult] = save[Programme]("yester-programmes", progKey, progData)
 
-  def addNeedAnalysisConsultation(consulationKey: String, consultationData: NeedAnalysisConsultation): Future[OpResult] = save[NeedAnalysisConsultation]("yester-consultations", consulationKey, consultationData)
+  def addNeedAnalysisConsultation(key: String, consultationData: NeedAnalysisConsultation): Future[OpResult] = {
+    //   coming soon...
+    val needAnalysisObj: 
+  }
 
-  def addNeedAnalysisSurvey(surveyKey: String, surveyObj: NeedAnalysisSurvey): Future[OpResult] = save[NeedAnalysisSurvey]("yester-na-surveys", surveyKey, surveyObj)
+  def addNeedAnalysisConsultation(key: String, consultationData: NeedAnalysisConsultation): Future[OpResult] = save[NeedAnalysisConsultation]("yester-need-analyses", key, consultationData)
 
-  def addNeedAnalysisConclusion(conclusionKey: String, conclusionObj: NeedAnalysisConclude): Future[OpResult] = save[NeedAnalysisConclude]("yester-na-conclusions", conclusionKey, conclusionObj)
+  def addNeedAnalysisSurvey(key: String, surveyObj: NeedAnalysisSurvey): Future[OpResult] = save[NeedAnalysisSurvey]("yester-na-surveys", key, surveyObj)
+
+  def addNeedAnalysisConclusion(key: String, conclusionObj: NeedAnalysisConclude): Future[OpResult] = save[NeedAnalysisConclude]("yester-na-conclusions", key, conclusionObj)
 
   def findById[T](bucketName: String, docKey: String)(implicit valFormat: Format[T]): Future[Option[T]] = {
       val curBucket = driver.bucket(bucketName)

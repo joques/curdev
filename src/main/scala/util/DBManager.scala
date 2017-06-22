@@ -7,7 +7,7 @@ import org.reactivecouchbase.client.{OpResult, Constants}
 import com.couchbase.client.protocol.views.{Stale, Query}
 import play.api.libs.json.{Json, Format, Writes}
 import net.spy.memcached.{PersistTo, ReplicateTo}
-import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysisConsultation, NeedAnalysisConsultationJsonImplicits, NeedAnalysisSurvey, NeedAnalysisSurveyJsonImplicits, NeedAnalysisConclude, NeedAnalysisConcludeJsonImplicits}
+import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysisConsultation, NeedAnalysisConsultationJsonImplicits, NeedAnalysisSurvey, NeedAnalysisSurveyJsonImplicits, NeedAnalysisConclude, NeedAnalysisConcludeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, NAConsultationComponent, NAConsultationComponentJsonImplicits}
 
 object DBManager {
   val driver = ReactiveCouchbaseDriver()
@@ -25,22 +25,17 @@ object DBManager {
   implicit val naConclFormat: Format[NeedAnalysisConclude] = NeedAnalysisConcludeJsonImplicits.needAnaConclFmt
   implicit val naConclWriter: Writes[NeedAnalysisConclude] = NeedAnalysisConcludeJsonImplicits.needAnaConclWrites
 
+  implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt
+  implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites
+
   def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
+  def findNeedAnalysisObject(naCode: Stringh): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
 
   def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 
   def createProgramme(progKey: String, progData: Programme): Future[OpResult] = save[Programme]("yester-programmes", progKey, progData)
 
-  def addNeedAnalysisConsultation(key: String, consultationData: NeedAnalysisConsultation): Future[OpResult] = {
-    //   coming soon...
-    val needAnalysisObj: 
-  }
-
-  def addNeedAnalysisConsultation(key: String, consultationData: NeedAnalysisConsultation): Future[OpResult] = save[NeedAnalysisConsultation]("yester-need-analyses", key, consultationData)
-
-  def addNeedAnalysisSurvey(key: String, surveyObj: NeedAnalysisSurvey): Future[OpResult] = save[NeedAnalysisSurvey]("yester-na-surveys", key, surveyObj)
-
-  def addNeedAnalysisConclusion(key: String, conclusionObj: NeedAnalysisConclude): Future[OpResult] = save[NeedAnalysisConclude]("yester-na-conclusions", key, conclusionObj)
+  def addOrUpdateNeedAnalysis(key: String, naData: NeedAnalysis): Future[OpResult] = save[NeedAnalysis]("yester-need-analyses", key, naData)
 
   def findById[T](bucketName: String, docKey: String)(implicit valFormat: Format[T]): Future[Option[T]] = {
       val curBucket = driver.bucket(bucketName)

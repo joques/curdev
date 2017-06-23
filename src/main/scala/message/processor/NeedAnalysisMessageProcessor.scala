@@ -5,7 +5,7 @@ import play.api.libs.json.{Reads, Format, Json, Writes}
 import java.util.UUID
 
 import yester.util.DBManager
-import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage, NeedAnalysisConcludeRequestMessage, NeedAnalysisBosStartRequestMessage}
+import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage, NeedAnalysisConcludeRequestMessage, NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage}
 import yester.message.response.SimpleResponseMessage
 import yester.YesterProducer
 import yester.lib.{NeedAnalysis, NeedAnalysisJsonImplicits, NAConsultationComponent, NAConsultationComponentJsonImplicits, NASurveyComponent, NASurveyComponentJsonImplicits, NAConclusionComponent, NAConclusionComponentJsonImplicits}
@@ -43,6 +43,9 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         case naBSReqMsg: NeedAnalysisBosStartRequestMessage => {
             println("received need-analysis-bos-start-req message ...")
             startNABosPhase(naBSReqMsg)
+        }
+        case naBRReqMsg: NeedAnalysisBosRecommendRequestMessage => {
+            println("received need-analysis-bos-recommend-req message ...")
         }
         case _ =>
             println("unknown message ...")

@@ -5,7 +5,8 @@ import play.api.libs.json.{Reads, Format, Json, Writes}
 import java.util.UUID
 
 import yester.util.DBManager
-import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage}
+import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage, NeedAnalysisConcludeRequestMessage, NeedAnalysisBosStartRequestMessage}
+import yester.message.response.SimpleResponseMessage
 import yester.YesterProducer
 import yester.lib.{NeedAnalysis, NeedAnalysisJsonImplicits, NAConsultationComponent, NAConsultationComponentJsonImplicits, NASurveyComponent, NASurveyComponentJsonImplicits, NAConclusionComponent, NAConclusionComponentJsonImplicits}
 
@@ -23,18 +24,26 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
     implicit val naConclCompWriter: Writes[NAConclusionComponent] = NAConclusionComponentJsonImplicits.naConclCompWrites
 
     def receive = {
-        case prgReqMsg: ProgrammeRequestMessage =>
+        case prgReqMsg: ProgrammeRequestMessage => {
             println("received need-analysis-start-req message ...")
             createPreProgramme(prgReqMsg)
-        case naConsReqMsg: NeedAnalysisConsultationRequestMessage =>
+        }
+        case naConsReqMsg: NeedAnalysisConsultationRequestMessage => {
             println("received need-analysis-consult-req message ...")
             addNeedAnalysisConsultation(naConsReqMsg)
-        case naSurvReqMsg: NeedAnalysisSurveyRequestMessage =>
+        }
+        case naSurvReqMsg: NeedAnalysisSurveyRequestMessage => {
             println("received need-analysis-survey-req message ...")
             addNeedAnalysisSurvey(naSurvReqMsg)
-        case naConclReqMsg: NeedAnalysisConcludeRequestMessage =>
+        }
+        case naConclReqMsg: NeedAnalysisConcludeRequestMessage => {
             println("received need-analysis-conclude-req message...")
             addNeedAnalysisConclusion(naConclReqMsg)
+        }
+        case naBSReqMsg: NeedAnalysisBosStartRequestMessage => {
+            println("received need-analysis-bos-start-req message ...")
+            startNABosPhase(naBSReqMsg)
+        }
         case _ =>
             println("unknown message ...")
     }
@@ -126,5 +135,12 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
                 handleInsertionResultWithSimpleResponse(addConclusionOpRes1, message.messageId, "need-analysis-conclude-res")
             }
         }
+    }
+
+    def startNABosPhase(message: NeedAnalysisBosStartRequestMessage): Unit = {
+        println("handling bos start phase during na -- this is a placeholder for the workflow manager...")
+        val naBosRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("Ok"))
+        val naBosMsgStr = Json.toJson(naBosRespMsg).toString()
+        messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-bos-start-res", naBosMsgStr))
     }
 }

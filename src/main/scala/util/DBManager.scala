@@ -29,7 +29,7 @@ object DBManager {
   implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites
 
   def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
-  def findNeedAnalysisObject(naCode: Stringh): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
+  def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
 
   def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 

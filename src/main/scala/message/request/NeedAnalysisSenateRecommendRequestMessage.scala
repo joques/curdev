@@ -6,7 +6,7 @@ import yester.lib.{NeedAnalysisSenateRecommend, NeedAnalysisSenateRecommendJsonI
 
 final case class NeedAnalysisSenateRecommendRequestMessage(messageId: String, content: NeedAnalysisSenateRecommend) extends ComplexRequestMessage[NeedAnalysisSenateRecommend](messageId, content)
 
-object NeedAnalysisBosRecommendRequestMessageJsonImplicits {
+object NeedAnalysisSenateRecommendRequestMessageJsonImplicits {
     implicit val needAnaSRFormat: Format[NeedAnalysisSenateRecommend] =  NeedAnalysisSenateRecommendJsonImplicits.needAnaSRFmt
 
     implicit val needAnaSRRequestMessageFmt = Json.format[NeedAnalysisSenateRecommendRequestMessage]

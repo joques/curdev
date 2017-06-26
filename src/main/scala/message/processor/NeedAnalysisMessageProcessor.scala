@@ -1,8 +1,12 @@
 package yester.message.processor
 
+
 import akka.actor._
 import play.api.libs.json.{Reads, Format, Json, Writes}
 import java.util.UUID
+import org.apache.kafka.clients.producer.ProducerRecord
+import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import yester.util.DBManager
 import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage,

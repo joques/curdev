@@ -39,7 +39,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val naclReqReader: Reads[NeedAnalysisConcludeRequestMessage] = NeedAnalysisConcludeRequestMessageJsonImplicits.needAnaConclRequestMessageReads
     implicit val nabsReqReader: Reads[NeedAnalysisBosStartRequestMessage] = NeedAnalysisBosStartRequestMessageJsonImplicits.needAnaBSRequestMessageReads
     implicit val nabrReqReader: Reads[NeedAnalysisBosRecommendRequestMessage] = NeedAnalysisBosRecommendRequestMessageJsonImplicits.needAnaBRRequestMessageReads
-    implicit val nasrReqReader: Reads[NeedAnalysisSenateRecommendRequestMessage] = NeedAnalysisBosRecommendRequestMessageJsonImplicits.needAnaSRRequestMessageReads
+    implicit val nasrReqReader: Reads[NeedAnalysisSenateRecommendRequestMessage] = NeedAnalysisSenateRecommendRequestMessageJsonImplicits.needAnaSRRequestMessageReads
     implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
     implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
     implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
@@ -120,7 +120,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 actorMap("need-analysis") ! needAnalysisSurveyMessage
             }
             case "need-analysis-conclude-req" => {
-                val needAnalysisConcludeMessage = Json.parse(recordValue).as[needAnalysisConcludeRequestMessage]
+                val needAnalysisConcludeMessage = Json.parse(recordValue).as[NeedAnalysisConcludeRequestMessage]
                 actorMap("need-analysis") ! needAnalysisConcludeMessage
             }
             case "need-analysis-bos-start-req" => {

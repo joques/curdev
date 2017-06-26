@@ -85,26 +85,27 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
 
         val needAnalysisObjRes = DBManager.findNeedAnalysisObject(consultationObj.devCode)
         needAnalysisObjRes.onComplete {
-            case Success(needAnalysisObj1) => {
-                var needAnalysisObj = needAnalysisObj1.get
+            case Success(needAnalysisObj) => {
                 println("there is an existing need analysis object. We shall build on that...")
-                needAnalysisObj.consultations match {
+                needAnalysisObj.get.consultations match {
                     case Some(consCol) => {
-                        val naConsComp = new NAConsultationComponent(consultationObj.date, consultationObj.organization, Some(consultationObj.commitHash))
-                        needAnalysisObj.consultations = Some(naConsComp :: consCol)
+                        val naConsComp = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
+                        val na2 = new NeedAnalysis(Some(naConsComp :: consCol), needAnalysisObj.get.survey.get, needAnalysisObj.get.conclusion.get, needAnalysisObj.get.bos.get, needAnalysisObj.get.senate.get)
+                        val addConsultationOpRes2 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na2)
+                        handleInsertionResultWithSimpleResponse(addConsultationOpRes2, message.messageId, "need-analysis-consult-res")
                     }
                     case None => {
-                        val naConsComp1 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, Some(consultationObj.commitHash))
+                        val naConsComp1 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
                         val consCompList1: List[NAConsultationComponent] = naConsComp1 :: Nil
-                        needAnalysisObj.consultations = Some(consCompList1)
+                        val na3 = new NeedAnalysis(Some(consCompList1), needAnalysisObj.get.survey.get, needAnalysisObj.get.conclusion.get, needAnalysisObj.get.bos.get, needAnalysisObj.get.senate.get)
+                        val addConsultationOpRes3 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na3)
+                        handleInsertionResultWithSimpleResponse(addConsultationOpRes2, message.messageId, "need-analysis-consult-res")
                     }
                 }
-                val addConsultationOpRes = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, needAnalysisObj)
-                handleInsertionResultWithSimpleResponse(addConsultationOpRes, message.messageId, "need-analysis-consult-res")
             }
             case Failure(naFailure) => {
                 println("no need analysis object for this programme yet...")
-                val naConsComp2 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, Some(consultationObj.commitHash))
+                val naConsComp2 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
                 val consCompList2: List[NAConsultationComponent] = naConsComp2 :: Nil
                 val na1: NeedAnalysis = new NeedAnalysis(Some(consCompList2), None, None, None, None)
                 val addConsultationOpRes1 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na1)

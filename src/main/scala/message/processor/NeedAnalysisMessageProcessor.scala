@@ -199,8 +199,7 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         needAnalysisObjRes.onComplete {
             case Success(needAnalysisObj) => {
                 println("there is an existing need analysis object. We shall build on that...")
-                val naSenateComp = new NABosComponent(senateRecommendationObj.date, senateRecommendationObj.status, senateRecommendationObj.commitHash)
-                needAnalysisObj.get.senate = Some(naSenateComp)
+                val naSenateComp = new NASenateComponent(senateRecommendationObj.date, senateRecommendationObj.status, senateRecommendationObj.commitHash)
                 val na1: NeedAnalysis = new NeedAnalysis(needAnalysisObj.get.consultations, needAnalysisObj.get.survey, needAnalysisObj.get.conclusion,  needAnalysisObj.get.bos, Some(naSenComp))
                 val addSenateRecommendationOpRes = DBManager.addOrUpdateNeedAnalysis(senateRecommendationObj.devCode, needAnalysisObj.get)
                 handleInsertionResultWithSimpleResponse(addSenateRecommendationOpRes, message.messageId, "need-analysis-senate-recommend-res")

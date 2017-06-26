@@ -86,7 +86,7 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         val needAnalysisObjRes = DBManager.findNeedAnalysisObject(consultationObj.devCode)
         needAnalysisObjRes.onComplete {
             case Success(needAnalysisObj1) => {
-                val needAnalysisObj = needAnalysisObj1.get
+                var needAnalysisObj = needAnalysisObj1.get
                 println("there is an existing need analysis object. We shall build on that...")
                 needAnalysisObj.consultations match {
                     case Some(consCol) => {

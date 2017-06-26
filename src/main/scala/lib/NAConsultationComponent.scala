@@ -2,7 +2,7 @@ package yester.lib
 
 import play.api.libs.json.Json
 
-final case class NAConsultationComponent(date: String, organization: String, commitHash: String)
+final case class NAConsultationComponent(date: String, organization: String, commitHash: Option[String])
 
 object NAConsultationComponentJsonImplicits {
     implicit val naConsCompFmt = Json.format[NAConsultationComponent]

@@ -5,10 +5,13 @@ import play.api.libs.json.{Reads, Format, Json, Writes}
 import java.util.UUID
 
 import yester.util.DBManager
-import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage, NeedAnalysisConcludeRequestMessage, NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessage}
+import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage,
+    NeedAnalysisConcludeRequestMessage, NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessage}
 import yester.message.response.SimpleResponseMessage
 import yester.YesterProducer
-import yester.lib.{NeedAnalysis, NeedAnalysisJsonImplicits, NAConsultationComponent, NAConsultationComponentJsonImplicits, NASurveyComponent, NASurveyComponentJsonImplicits, NAConclusionComponent, NAConclusionComponentJsonImplicits, NABosComponent, NABosComponentJsonImplicits, NASenateComponent, NASenateComponentJsonImplicits }
+import yester.lib.{NeedAnalysis, NeedAnalysisJsonImplicits, NAConsultationComponent, NAConsultationComponentJsonImplicits, NASurveyComponent,
+    NASurveyComponentJsonImplicits, NAConclusionComponent, NAConclusionComponentJsonImplicits, NABosComponent, NABosComponentJsonImplicits, NASenateComponent,
+    NASenateComponentJsonImplicits }
 
 final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt

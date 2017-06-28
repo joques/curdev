@@ -7,7 +7,7 @@ import org.reactivecouchbase.client.{OpResult, Constants}
 import com.couchbase.client.protocol.views.{Stale, Query}
 import play.api.libs.json.{Json, Format, Writes}
 import net.spy.memcached.{PersistTo, ReplicateTo}
-import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysisConsultation, NeedAnalysisConsultationJsonImplicits, NeedAnalysisSurvey, NeedAnalysisSurveyJsonImplicits, NeedAnalysisConclude, NeedAnalysisConcludeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, NAConsultationComponent, NAConsultationComponentJsonImplicits}
+import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits}
 
 object DBManager {
   val driver = ReactiveCouchbaseDriver()
@@ -15,15 +15,6 @@ object DBManager {
 
   implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
   implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
-
-  implicit val naConsFormat: Format[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsFmt
-  implicit val naConsWriter: Writes[NeedAnalysisConsultation] = NeedAnalysisConsultationJsonImplicits.needAnaConsWrites
-
-  implicit val naSurvFormat: Format[NeedAnalysisSurvey] = NeedAnalysisSurveyJsonImplicits.needAnaSurvFmt
-  implicit val naSurvWriter: Writes[NeedAnalysisSurvey] = NeedAnalysisSurveyJsonImplicits.needAnaSurvWrites
-
-  implicit val naConclFormat: Format[NeedAnalysisConclude] = NeedAnalysisConcludeJsonImplicits.needAnaConclFmt
-  implicit val naConclWriter: Writes[NeedAnalysisConclude] = NeedAnalysisConcludeJsonImplicits.needAnaConclWrites
 
   implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt
   implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites

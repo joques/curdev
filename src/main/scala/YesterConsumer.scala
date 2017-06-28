@@ -112,7 +112,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 actorMap("need-analysis") ! needAnalysisStartMessage
             }
             case "need-analysis-consult-req" => {
-                printlin("spotted need analysis consultation case....")
+                println("spotted need analysis consultation case....")
                 val needAnalysisConsultMessage = Json.parse(recordValue).as[NeedAnalysisConsultationRequestMessage]
                 actorMap("need-analysis") ! needAnalysisConsultMessage
             }

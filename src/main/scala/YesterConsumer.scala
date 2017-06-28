@@ -70,12 +70,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
         println(s"offset = $recordOffset")
 
         println("printing details about the new record -- end")
-        println("")
-
-        println("delving into the message -- begin")
-        val message = Json.parse(recordValue).as[SimpleRequestMessage]
-        println(message)
-
+        
         recordTopic match {
             case "cur-dev-amendment-from-senate-req" => {
                 val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]

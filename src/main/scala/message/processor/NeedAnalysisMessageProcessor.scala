@@ -87,19 +87,31 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         needAnalysisObjRes.onComplete {
             case Success(needAnalysisObj) => {
                 println("there is an existing need analysis object. We shall build on that...")
-                needAnalysisObj.get.consultations match {
-                    case Some(consCol) => {
-                        val naConsComp = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
-                        val na2 = new NeedAnalysis(Some(naConsComp :: consCol), needAnalysisObj.get.survey, needAnalysisObj.get.conclusion, needAnalysisObj.get.bos, needAnalysisObj.get.senate)
-                        val addConsultationOpRes2 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na2)
-                        handleInsertionResultWithSimpleResponse(addConsultationOpRes2, message.messageId, "need-analysis-consult-res")
+                needAnalysisObj match {
+                    case Some(naObj) => {
+                        needAnalysisObj.get.consultations match {
+                            case Some(consCol) => {
+                                val naConsComp = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
+                                val na2 = new NeedAnalysis(Some(naConsComp :: consCol), needAnalysisObj.get.survey, needAnalysisObj.get.conclusion, needAnalysisObj.get.bos, needAnalysisObj.get.senate)
+                                val addConsultationOpRes2 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na2)
+                                handleInsertionResultWithSimpleResponse(addConsultationOpRes2, message.messageId, "need-analysis-consult-res")
+                            }
+                            case None => {
+                                val naConsComp1 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
+                                val consCompList1: List[NAConsultationComponent] = naConsComp1 :: Nil
+                                val na3 = new NeedAnalysis(Some(consCompList1), needAnalysisObj.get.survey, needAnalysisObj.get.conclusion, needAnalysisObj.get.bos, needAnalysisObj.get.senate)
+                                val addConsultationOpRes3 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na3)
+                                handleInsertionResultWithSimpleResponse(addConsultationOpRes3, message.messageId, "need-analysis-consult-res")
+                            }
+                        }
                     }
                     case None => {
-                        val naConsComp1 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
-                        val consCompList1: List[NAConsultationComponent] = naConsComp1 :: Nil
-                        val na3 = new NeedAnalysis(Some(consCompList1), needAnalysisObj.get.survey, needAnalysisObj.get.conclusion, needAnalysisObj.get.bos, needAnalysisObj.get.senate)
-                        val addConsultationOpRes3 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na3)
-                        handleInsertionResultWithSimpleResponse(addConsultationOpRes3, message.messageId, "need-analysis-consult-res")
+                        println("there was actually no need analysis object...")
+                        val naConsComp4 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
+                        val consCompList4: List[NAConsultationComponent] = naConsComp4 :: Nil
+                        val na4: NeedAnalysis = new NeedAnalysis(Some(consCompList4), None, None, None, None)
+                        val addConsultationOpRes4 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na4)
+                        handleInsertionResultWithSimpleResponse(addConsultationOpRes4, message.messageId, "need-analysis-consult-res")
                     }
                 }
             }

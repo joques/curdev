@@ -92,14 +92,14 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
                         needAnalysisObj.get.consultations match {
                             case Some(consCol) => {
                                 val naConsComp = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
-                                val na2 = new NeedAnalysis(Some(naConsComp :: consCol), needAnalysisObj.get.survey, needAnalysisObj.get.conclusion, needAnalysisObj.get.bos, needAnalysisObj.get.senate)
+                                val na2 = new NeedAnalysis(Some(naConsComp :: consCol), naObj.get.survey, naObj.get.conclusion, naObj.get.bos, naObj.get.senate)
                                 val addConsultationOpRes2 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na2)
                                 handleInsertionResultWithSimpleResponse(addConsultationOpRes2, message.messageId, "need-analysis-consult-res")
                             }
                             case None => {
                                 val naConsComp1 = new NAConsultationComponent(consultationObj.date, consultationObj.organization, consultationObj.commitHash)
                                 val consCompList1: List[NAConsultationComponent] = naConsComp1 :: Nil
-                                val na3 = new NeedAnalysis(Some(consCompList1), needAnalysisObj.get.survey, needAnalysisObj.get.conclusion, needAnalysisObj.get.bos, needAnalysisObj.get.senate)
+                                val na3 = new NeedAnalysis(Some(consCompList1), naObj.get.survey, naObj.get.conclusion, naObj.get.bos, naObj.get.senate)
                                 val addConsultationOpRes3 = DBManager.addOrUpdateNeedAnalysis(consultationObj.devCode, na3)
                                 handleInsertionResultWithSimpleResponse(addConsultationOpRes3, message.messageId, "need-analysis-consult-res")
                             }
@@ -134,10 +134,21 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         needAnalysisObjRes.onComplete {
             case Success(needAnalysisObj) => {
                 println("there is an existing need analysis object. We shall build on that...")
-                val naSurvComp = new NASurveyComponent(surveyObj.commitHash)
-                val na: NeedAnalysis = new NeedAnalysis(needAnalysisObj.get.consultations, Some(naSurvComp), needAnalysisObj.get.conclusion, needAnalysisObj.get.bos, needAnalysisObj.get.senate)
-                val addSurveyOpRes = DBManager.addOrUpdateNeedAnalysis(surveyObj.devCode, na)
-                handleInsertionResultWithSimpleResponse(addSurveyOpRes, message.messageId, "need-analysis-survey-res")
+                needAnalysisObj match {
+                    case Some(naObj) => {
+                        val naSurvComp = new NASurveyComponent(surveyObj.commitHash)
+                        val na: NeedAnalysis = new NeedAnalysis(naObj.get.consultations, Some(naSurvComp), naObj.get.conclusion, naObj.get.bos, naObj.get.senate)
+                        val addSurveyOpRes = DBManager.addOrUpdateNeedAnalysis(surveyObj.devCode, na)
+                        handleInsertionResultWithSimpleResponse(addSurveyOpRes, message.messageId, "need-analysis-survey-res")
+                    }
+                    case None => {
+                        println("there was actually no need analysis object...")
+                        val naSurvComp2 = new NASurveyComponent(surveyObj.commitHash)
+                        val na2: NeedAnalysis = new NeedAnalysis(None, Some(naSurvComp2), None, None, None)
+                        val addSurveyOpRes2 = DBManager.addOrUpdateNeedAnalysis(surveyObj.devCode, na2)
+                        handleInsertionResultWithSimpleResponse(addSurveyOpRes2, message.messageId, "need-analysis-survey-res")
+                    }
+                }
             }
             case Failure(naFailure) => {
                 println("no need analysis object for this programme yet...")
@@ -157,10 +168,21 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         needAnalysisObjRes.onComplete {
             case Success(needAnalysisObj) => {
                 println("there is an existing need analysis object. We shall build on that...")
-                val naConclComp = new NAConclusionComponent(conclusionObj.decision, conclusionObj.commitHash)
-                val na: NeedAnalysis = new NeedAnalysis(needAnalysisObj.get.consultations, needAnalysisObj.get.survey, Some(naConclComp), needAnalysisObj.get.bos, needAnalysisObj.get.senate)
-                val addConclusionOpRes = DBManager.addOrUpdateNeedAnalysis(conclusionObj.devCode, na)
-                handleInsertionResultWithSimpleResponse(addConclusionOpRes, message.messageId, "need-analysis-conclude-res")
+                needAnalysisObj match {
+                    case Some(naObj) => {
+                        val naConclComp = new NAConclusionComponent(conclusionObj.decision, conclusionObj.commitHash)
+                        val na: NeedAnalysis = new NeedAnalysis(naObj.get.consultations, naObj.get.survey, Some(naConclComp), naObj.get.bos, naObj.get.senate)
+                        val addConclusionOpRes = DBManager.addOrUpdateNeedAnalysis(conclusionObj.devCode, na)
+                        handleInsertionResultWithSimpleResponse(addConclusionOpRes, message.messageId, "need-analysis-conclude-res")
+                    }
+                    case None => {
+                        println("there was actually no need analysis object...")
+                        val naConclComp2 = new NAConclusionComponent(conclusionObj.decision, conclusionObj.commitHash)
+                        val na2: NeedAnalysis = new NeedAnalysis(None, None, Some(naConclComp2), None, None)
+                        val addConclusionOpRes2 = DBManager.addOrUpdateNeedAnalysis(conclusionObj.devCode, na2)
+                        handleInsertionResultWithSimpleResponse(addConclusionOpRes2, message.messageId, "need-analysis-conclude-res")
+                    }
+                }
             }
             case Failure(naFailure) => {
                 println("no need analysis object for this programme yet...")
@@ -188,10 +210,21 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         needAnalysisObjRes.onComplete {
             case Success(needAnalysisObj) => {
                 println("there is an existing need analysis object. We shall build on that...")
-                val naBosComp = new NABosComponent(bosRecommendationObj.date, bosRecommendationObj.status, bosRecommendationObj.commitHash)
-                val na: NeedAnalysis = new NeedAnalysis(needAnalysisObj.get.consultations, needAnalysisObj.get.survey, needAnalysisObj.get.conclusion,  Some(naBosComp), needAnalysisObj.get.senate)
-                val addBosRecommendationOpRes = DBManager.addOrUpdateNeedAnalysis(bosRecommendationObj.devCode, na)
-                handleInsertionResultWithSimpleResponse(addBosRecommendationOpRes, message.messageId, "need-analysis-bos-recommend-res")
+                needAnalysisObj match {
+                    case Some(naObj) => {
+                        val naBosComp = new NABosComponent(bosRecommendationObj.date, bosRecommendationObj.status, bosRecommendationObj.commitHash)
+                        val na: NeedAnalysis = new NeedAnalysis(naObj.get.consultations, naObj.get.survey, naObj.get.conclusion,  Some(naBosComp), naObj.get.senate)
+                        val addBosRecommendationOpRes = DBManager.addOrUpdateNeedAnalysis(bosRecommendationObj.devCode, na)
+                        handleInsertionResultWithSimpleResponse(addBosRecommendationOpRes, message.messageId, "need-analysis-bos-recommend-res")
+                    }
+                    case None => {
+                        println("there was actually no need analysis...")
+                        val naBosComp2 = new NABosComponent(bosRecommendationObj.date, bosRecommendationObj.status, bosRecommendationObj.commitHash)
+                        val na2: NeedAnalysis = new NeedAnalysis(None, None, None,  Some(naBosComp2), None)
+                        val addBosRecommendationOpRes2 = DBManager.addOrUpdateNeedAnalysis(bosRecommendationObj.devCode, na2)
+                        handleInsertionResultWithSimpleResponse(addBosRecommendationOpRes2, message.messageId, "need-analysis-bos-recommend-res")
+                    }
+                }
             }
             case Failure(naFailure) => {
                 println("no need analysis object for this programme yet...")
@@ -211,10 +244,21 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         needAnalysisObjRes.onComplete {
             case Success(needAnalysisObj) => {
                 println("there is an existing need analysis object. We shall build on that...")
-                val naSenateComp = new NASenateComponent(senateRecommendationObj.date, senateRecommendationObj.status, senateRecommendationObj.commitHash)
-                val na: NeedAnalysis = new NeedAnalysis(needAnalysisObj.get.consultations, needAnalysisObj.get.survey, needAnalysisObj.get.conclusion,  needAnalysisObj.get.bos, Some(naSenateComp))
-                val addSenateRecommendationOpRes = DBManager.addOrUpdateNeedAnalysis(senateRecommendationObj.devCode, na)
-                handleInsertionResultWithSimpleResponse(addSenateRecommendationOpRes, message.messageId, "need-analysis-senate-recommend-res")
+                needAnalysisObj match {
+                    case Some(naObj) => {
+                        val naSenateComp = new NASenateComponent(senateRecommendationObj.date, senateRecommendationObj.status, senateRecommendationObj.commitHash)
+                        val na: NeedAnalysis = new NeedAnalysis(naObj.get.consultations, naObj.get.survey, naObj.get.conclusion,  naObj.get.bos, Some(naSenateComp))
+                        val addSenateRecommendationOpRes = DBManager.addOrUpdateNeedAnalysis(senateRecommendationObj.devCode, na)
+                        handleInsertionResultWithSimpleResponse(addSenateRecommendationOpRes, message.messageId, "need-analysis-senate-recommend-res")
+                    }
+                    case None => {
+                        println("there was actually no need analysis object ...")
+                        val naSenComp2 = new NASenateComponent(senateRecommendationObj.date, senateRecommendationObj.status, senateRecommendationObj.commitHash)
+                        val na2: NeedAnalysis = new NeedAnalysis(None, None, None,  None, Some(naSenComp2))
+                        val addSenateRecommendationOpRes2 = DBManager.addOrUpdateNeedAnalysis(senateRecommendationObj.devCode, na2)
+                        handleInsertionResultWithSimpleResponse(addSenateRecommendationOpRes2, message.messageId, "need-analysis-senate-recommend-res")
+                    }
+                }
             }
             case Failure(naFailure) => {
                 println("no need analysis object for this programme yet ...")

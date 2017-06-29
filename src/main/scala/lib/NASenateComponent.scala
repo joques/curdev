@@ -2,7 +2,7 @@ package yester.lib
 
 import play.api.libs.json.Json
 
-final case class NASenateComponent(date: String, status: Boolean, commitHash: Option[String])
+final case class NASenateComponent(date: String, status: String, commitHash: Option[String])
 
 object NASenateComponentJsonImplicits {
     implicit val naSenateCompFmt = Json.format[NASenateComponent]

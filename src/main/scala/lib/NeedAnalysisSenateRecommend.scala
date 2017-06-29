@@ -3,7 +3,7 @@ package yester.lib
 import play.api.libs.json.Json
 
 
-final case class NeedAnalysisSenateRecommend(devCode: String, date: String, status: String, commitHash: Option[String])
+final case class NeedAnalysisSenateRecommend(devCode: String, date: String, status: String, madeBy: String, commitHash: Option[String])
 
 object NeedAnalysisSenateRecommendJsonImplicits {
     implicit val needAnaSRFmt = Json.format[NeedAnalysisSenateRecommend]

@@ -10,7 +10,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import yester.util.DBManager
 import yester.message.request.{ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage,
-    NeedAnalysisConcludeRequestMessage, NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessage}
+    NeedAnalysisConcludeRequestMessage, NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessage,
+    NeedAnalysisSenateStartRequestMessage}
 import yester.message.response.SimpleResponseMessage
 import yester.YesterProducer
 import yester.lib.{NeedAnalysis, NeedAnalysisJsonImplicits, NAConsultationComponent, NAConsultationComponentJsonImplicits, NASurveyComponent,
@@ -64,6 +65,10 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         case naSRReqMsg: NeedAnalysisSenateRecommendRequestMessage => {
             println("received need-analysis-senate-recommend-req message ...")
             addNeedAnalysisSenateRecommendation(naSRReqMsg)
+        }
+        case naSSReqMsg: NeedAnalysisSenateStartRequestMessage => {
+            println("received need-analysis-senate-start-req message ...")
+            startNASenatePhase(naSSReqMsg)
         }
         case _ =>
             println("unknown message ...")
@@ -200,6 +205,14 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
         val naBosRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("Ok"))
         val naBosMsgStr = Json.toJson(naBosRespMsg).toString()
         messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-bos-start-res", naBosMsgStr))
+    }
+
+    def startNASenatePhase(message: NeedAnalysisSenateStartRequestMessage): Unit = {
+        // this is a placeholder for the workflow manager
+        println("handling senate start phase during na -- this is a placeholder for the workflow manager...")
+        val naSenateRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("Ok"))
+        val naSenateMsgStr = Json.toJson(naSenateRespMsg).toString()
+        messenger.getProducer().send(new ProducerRecord[String,String]("need-analysis-senate-start-res", naSenateMsgStr))
     }
 
     def addNeedAnalysisBosRecommendation(message: NeedAnalysisBosRecommendRequestMessage): Unit = {

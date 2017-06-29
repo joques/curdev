@@ -21,8 +21,8 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     NeedAnalysisSurveyRequestMessageJsonImplicits, NeedAnalysisConcludeRequestMessage, NeedAnalysisConcludeRequestMessageJsonImplicits,
     NeedAnalysisBosStartRequestMessage, NeedAnalysisBosStartRequestMessageJsonImplicits, NeedAnalysisBosRecommendRequestMessage,
     NeedAnalysisBosRecommendRequestMessageJsonImplicits, NeedAnalysisSenateRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessageJsonImplicits,
-    CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits, FindUserRequestMessage, FindUserRequestMessageJsonImplicits,
-    CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage,
+    NeedAnalysisSenateStartRequestMessage, NeedAnalysisSenateStartRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits,
+    FindUserRequestMessage, FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage,
     CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits, CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits}
 
 
@@ -38,6 +38,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val nasReqReader: Reads[NeedAnalysisSurveyRequestMessage] = NeedAnalysisSurveyRequestMessageJsonImplicits.needAnaSurvRequestMessageReads
     implicit val naclReqReader: Reads[NeedAnalysisConcludeRequestMessage] = NeedAnalysisConcludeRequestMessageJsonImplicits.needAnaConclRequestMessageReads
     implicit val nabsReqReader: Reads[NeedAnalysisBosStartRequestMessage] = NeedAnalysisBosStartRequestMessageJsonImplicits.needAnaBSRequestMessageReads
+    implicit val nassReqReader: Reads[NeedAnalysisSenateStartRequestMessage] = NeedAnalysisSenateStartRequestMessageJsonImplicits.needAnaSSRequestMessageReads
     implicit val nabrReqReader: Reads[NeedAnalysisBosRecommendRequestMessage] = NeedAnalysisBosRecommendRequestMessageJsonImplicits.needAnaBRRequestMessageReads
     implicit val nasrReqReader: Reads[NeedAnalysisSenateRecommendRequestMessage] = NeedAnalysisSenateRecommendRequestMessageJsonImplicits.needAnaSRRequestMessageReads
     implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
@@ -127,6 +128,10 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "need-analysis-bos-recommend-req" => {
                 val needAnalysisBRMessage = Json.parse(recordValue).as[NeedAnalysisBosRecommendRequestMessage]
                 actorMap("need-analysis") ! needAnalysisBRMessage
+            }
+            case "need-analysis-senate-start-req" => {
+                val needAnalysisSSMessage = Json.parse(recordValue).as[NeedAnalysisSenateStartRequestMessage]
+                actorMap("need-analysis") ! needAnalysisSSMessage
             }
             case "need-analysis-senate-recommend-req" => {
                 val needAnalysisSRMessage = Json.parse(recordValue).as[NeedAnalysisSenateRecommendRequestMessage]

@@ -9,7 +9,7 @@ final case class NeedAnalysisSenateStartRequestMessage(messageId: String, conten
 object NeedAnalysisSenateStartRequestMessageJsonImplicits {
     implicit val needAnaSSFormat: Format[NeedAnalysisSenateStart] =  NeedAnalysisSenateStartJsonImplicits.needAnaSSFmt
 
-    implicit val needAnaBSRequestMessageFmt = Json.format[NeedAnalysisSenateStartRequestMessage]
-    implicit val needAnaBSRequestMessageeWrites = Json.writes[NeedAnalysisSenateStartRequestMessage]
-    implicit val needAnaBSRequestMessageReads = Json.reads[NeedAnalysisSenateStartRequestMessage]
+    implicit val needAnaSSRequestMessageFmt = Json.format[NeedAnalysisSenateStartRequestMessage]
+    implicit val needAnaSSRequestMessageeWrites = Json.writes[NeedAnalysisSenateStartRequestMessage]
+    implicit val needAnaSSRequestMessageReads = Json.reads[NeedAnalysisSenateStartRequestMessage]
 }

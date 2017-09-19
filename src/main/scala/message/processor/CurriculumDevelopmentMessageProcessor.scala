@@ -9,14 +9,19 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{PreProgrammeComponent, Programme}
-import yester.message.request.CurriculumReviewRequestMessage
+import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAppointPACRequestMessage}
 import yester.message.response.SimpleResponseMessage
 
 final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
-        case curDevReqMsg: CurriculumReviewRequestMessage =>
+        case curDevReqMsg: CurriculumReviewRequestMessage => {
             println("received curriculum-review message ...")
             startCurriculumReview(curDevReqMsg)
+        }
+        case pacMembersReqMsg: CurriculumDevelopmentAppointPACRequestMessage => {
+            println("received pac member appointment request ...")
+            addPACMembers(pacMembersReqMsg)
+        }
         case _ =>
             println("unknown message type ...")
     }
@@ -54,5 +59,13 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 }
             }
         }
+    }
+
+    def addPACMembers(message: CurriculumDevelopmentAppointPACRequestMessage): Unit = {
+        println("adding PAC members ...")
+
+        val memberObj = message.content
+
+        
     }
 }

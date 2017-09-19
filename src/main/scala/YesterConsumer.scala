@@ -23,7 +23,9 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     NeedAnalysisBosRecommendRequestMessageJsonImplicits, NeedAnalysisSenateRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessageJsonImplicits,
     NeedAnalysisSenateStartRequestMessage, NeedAnalysisSenateStartRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits,
     FindUserRequestMessage, FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage,
-    CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits, CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits}
+    CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits, CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits,
+    CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentAppointPACRequestMessageJsonImplicits
+}
 
 
 final case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {
@@ -46,6 +48,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
     implicit val cdaReqReader: Reads[CurriculumDevelopmentAuthorizationRequestMessage] = CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits.cdaRequestMessageReads
     implicit val cmtMemReqReader: Reads[CommitteeMembersRequestMessage] = CommitteeMembersJsonImplicitsRequestMessageJsonImplicits.cmtMembersRequestMessageReads
+    implicit val pacCmtMemReqReader: Reads[CurriculumDevelopmentAppointPACRequestMessage] = CurriculumDevelopmentAppointPACRequestMessageJsonImplicits.cdpacmembRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -86,7 +89,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 actorMap("curriculum-development") ! cdcMembersReqMsg
             }
             case "cur-dev-appoint-pac-req" => {
-                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAppointPACRequestMessage]
                 actorMap("curriculum-development") ! pacMembersReqMsg
             }
             case "find-users-req" => {

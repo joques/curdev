@@ -24,7 +24,8 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     NeedAnalysisSenateStartRequestMessage, NeedAnalysisSenateStartRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits,
     FindUserRequestMessage, FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage,
     CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits, CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits,
-    CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentAppointPACRequestMessageJsonImplicits
+    CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentAppointPACRequestMessageJsonImplicits, CurriculumDevelopmentDraftRevisionRequestMessage,
+    CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits
 }
 
 
@@ -49,6 +50,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val cdaReqReader: Reads[CurriculumDevelopmentAuthorizationRequestMessage] = CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits.cdaRequestMessageReads
     implicit val cmtMemReqReader: Reads[CommitteeMembersRequestMessage] = CommitteeMembersJsonImplicitsRequestMessageJsonImplicits.cmtMembersRequestMessageReads
     implicit val pacCmtMemReqReader: Reads[CurriculumDevelopmentAppointPACRequestMessage] = CurriculumDevelopmentAppointPACRequestMessageJsonImplicits.cdpacmembRequestMessageReads
+    implicit val draftRevReqReader: Reads[CurriculumDevelopmentDraftRevisionRequestMessage] = CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits.cdDraftRevRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -76,22 +78,6 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
         println("printing details about the new record -- end")
 
         recordTopic match {
-            case "cur-dev-amendment-from-senate-req" => {
-                val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
-                actorMap("curriculum-development") ! amendmentFromSenateReqMsg
-            }
-            case "cur-dev-authorize-from-senate-req" => {
-                val authorizeFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
-                actorMap("curriculum-development") ! authorizeFromSenateReqMsg
-            }
-            case "cur-dev-appoint-cdc-req" => {
-                val cdcMembersReqMsg = Json.parse(recordValue).as[CommitteeMembersRequestMessage]
-                actorMap("curriculum-development") ! cdcMembersReqMsg
-            }
-            case "cur-dev-appoint-pac-req" => {
-                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAppointPACRequestMessage]
-                actorMap("curriculum-development") ! pacMembersReqMsg
-            }
             case "find-users-req" => {
                 val smpMsg = Json.parse(recordValue).as[SimpleRequestMessage]
                 val findUserMessage = new FindUserRequestMessage(smpMsg)
@@ -139,6 +125,26 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "need-analysis-senate-recommend-req" => {
                 val needAnalysisSRMessage = Json.parse(recordValue).as[NeedAnalysisSenateRecommendRequestMessage]
                 actorMap("need-analysis") ! needAnalysisSRMessage
+            }
+            case "cur-dev-amendment-from-senate-req" => {
+                val amendmentFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! amendmentFromSenateReqMsg
+            }
+            case "cur-dev-authorize-from-senate-req" => {
+                val authorizeFromSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
+                actorMap("curriculum-development") ! authorizeFromSenateReqMsg
+            }
+            case "cur-dev-appoint-cdc-req" => {
+                val cdcMembersReqMsg = Json.parse(recordValue).as[CommitteeMembersRequestMessage]
+                actorMap("curriculum-development") ! cdcMembersReqMsg
+            }
+            case "cur-dev-appoint-pac-req" => {
+                val pacMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAppointPACRequestMessage]
+                actorMap("curriculum-development") ! pacMembersReqMsg
+            }
+            case "cur-dev-draft-revise-req" => {
+                val draftRevisionReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentDraftRevisionRequestMessage]
+                actorMap("curriculum-development") ! draftRevisionReqMsg
             }
             case "curriculum-review-req" => {
                 val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]

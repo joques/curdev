@@ -9,7 +9,9 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{PreProgrammeComponent, Programme}
-import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAppointPACRequestMessage}
+import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentDraftRevisionRequestMessage,
+    CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits
+}
 import yester.message.response.SimpleResponseMessage
 
 final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
@@ -21,6 +23,10 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         case pacMembersReqMsg: CurriculumDevelopmentAppointPACRequestMessage => {
             println("received pac member appointment request ...")
             addPACMembers(pacMembersReqMsg)
+        }
+        case draftRevisionReqMsg: CurriculumDevelopmentDraftRevisionRequestMessage => {
+            println("received draft revision request for curriculum development ...")
+            addDraftRevision(draftRevisionReqMsg)
         }
         case _ =>
             println("unknown message type ...")
@@ -89,6 +95,13 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev1, "cur-dev-appoint-pac-res")
             }
         }
+    }
+
+    def addDraftRevision(message: CurriculumDevelopmentDraftRevisionRequestMessage): Unit => {
+        println("adding draft revision...")
+        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messamge.messageId, None, Option("ok"))
+        val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+        messenger.getProducer().send(new ProducerRecord[String,String]("cur-dev-draft-revise-res", succMsgStr))
     }
 
     def saveCurriculumDevelopmentObject(messageId: String, devCode: String,  curDev: CurriculumDevelopment, respTopic: String): Unit = {

@@ -63,9 +63,36 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
 
     def addPACMembers(message: CurriculumDevelopmentAppointPACRequestMessage): Unit = {
         println("adding PAC members ...")
-
         val memberObj = message.content
 
-        
+        val curDevObjRes = DBManager.findCurriculumDevelopmentObject(memberObj.devCode)
+        curDevObjRes.onComplete {
+            case Success(curDevObj) => {
+                println("there could be an existing curriculum development object. We shall explore further ...")
+
+                curDevObj match {
+                    case Some(cdo) => {
+                        println("there is an existing object ...")
+                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), cdo.submissionDate, cdo.validated)
+                        saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev3, "cur-dev-appoint-pac-res")
+                    }
+                    case None => {
+                        println("it seems like there was no object at all...")
+                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, false)
+                        saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev2, "cur-dev-appoint-pac-res")
+                    }
+                }
+            }
+            case Failure(curDevFailure) => {
+                println("no curriculum development object exists yet...")
+                val curDev1: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, false)
+                saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev1, "cur-dev-appoint-pac-res")
+            }
+        }
+    }
+
+    def saveCurriculumDevelopmentObject(messageId: String, devCode: String,  curDev: CurriculumDevelopment, respTopic: String): Unit = {
+        val addCurDevOpRes = DBManager.upsertCurriculumDevelopment(devCode, curDev)
+        handleInsertionResultWithSimpleResponse(addCurDevOpRes, messageId, respTopic)
     }
 }

@@ -84,19 +84,19 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 curDevObj match {
                     case Some(cdo) => {
                         println("there is an existing object ...")
-                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), cdo.submissionDate, cdo.validated)
+                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), cdo.submissionDate, cdo.decision)
                         saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev3, "cur-dev-appoint-pac-res")
                     }
                     case None => {
                         println("it seems like there was no object at all...")
-                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, false)
+                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, None)
                         saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev2, "cur-dev-appoint-pac-res")
                     }
                 }
             }
             case Failure(curDevFailure) => {
                 println("no curriculum development object exists yet...")
-                val curDev1: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, false)
+                val curDev1: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, None)
                 saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev1, "cur-dev-appoint-pac-res")
             }
         }
@@ -119,19 +119,19 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 curDevObj match {
                     case Some(cdo) => {
                         println("a curriculum development object exists already ...")
-                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, Some(submissionObj.submissionDate), cdo.validated)
+                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, Some(submissionObj.submissionDate), cdo.decision)
                         saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev3, "cur-dev-draft-submit-res")
                     }
                     case None => {
                         println("it seems there is no object yet...")
-                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, Some(submissionObj.submissionDate), false)
+                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, Some(submissionObj.submissionDate), None)
                         saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev2, "cur-dev-draft-submit-res")
                     }
                 }
             }
             case Failure(curDevFailure) => {
                 println("no curriculum development object exists yet ...")
-                val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, Some(submissionObj.submissionDate), false)
+                val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, Some(submissionObj.submissionDate), None)
                 saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev1, "cur-dev-draft-submit-res")
             }
         }

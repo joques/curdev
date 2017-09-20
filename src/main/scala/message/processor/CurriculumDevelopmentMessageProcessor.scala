@@ -11,7 +11,8 @@ import yester.util.DBManager
 import yester.lib.{PreProgrammeComponent, Programme, CurriculumDevelopment}
 import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentDraftRevisionRequestMessage,
     CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
-    CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits
+    CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
+    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits
 }
 import yester.message.response.SimpleResponseMessage
 
@@ -32,6 +33,10 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         case draftSubmissionReqMsg: CurriculumDevelopmentDraftSubmissionRequestMessage => {
             println("received draft submission request for curriculum development ...")
             handleDraftSubmission(draftSubmissionReqMsg)
+        }
+        case draftValidationReqMsg: CurriculumDevelopmentDraftValidationRequestMessage => {
+            println("received draft validation request for curriculum development ...")
+            handleDraftValidation(draftValidationReqMsg)
         }
         case _ =>
             println("unknown message type ...")
@@ -110,7 +115,7 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
     }
 
     def handleDraftSubmission(message: CurriculumDevelopmentDraftSubmissionRequestMessage): Unit => {
-        println("handlingdraft submission ...")
+        println("handling draft submission ...")
         val submissionObj = message.content
 
         val curDevObjRes = DBManager.findCurriculumDevelopmentObject(submissionObj.devCode)
@@ -133,6 +138,34 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 println("no curriculum development object exists yet ...")
                 val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, Some(submissionObj.submissionDate), None)
                 saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev1, "cur-dev-draft-submit-res")
+            }
+        }
+    }
+
+    def handleDraftValidation(message: CurriculumDevelopmentDraftValidationRequestMessage): Unit => {
+        println("handling draft validation ...")
+        val validationObj = message.content
+
+        val curDevObjRes = DBManager.findCurriculumDevelopmentObject(validationObj.devCode)
+        curDevObjRes.onComplete {
+            case Success(curDevObj) => {
+                curDevObj match {
+                    case Some(cdo) => {
+                        println("a curriculum development object exists already ...")
+                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, cdo.submissionDate, Some(validationObj.decision))
+                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev3, "cur-dev-draft-validate-res")
+                    }
+                    case None => {
+                        println("it seems there is no object yet...")
+                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, None, Some(validationObj.decision))
+                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev2, "cur-dev-draft-validate-res")
+                    }
+                }
+            }
+            case Failure(curDevFailure) => {
+                println("no curriculum development object exists yet ...")
+                val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, None, Some(validationObj.decision))
+                saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev1, "cur-dev-draft-validate-res")
             }
         }
     }

@@ -7,7 +7,7 @@ import yester.lib.{DraftSubmission, DraftSubmissionJsonImplicits}
 final case class CurriculumDevelopmentDraftSubmissionRequestMessage(messageId: String, content: DraftSubmission) extends ComplexRequestMessage[DraftSubmission](messageId, content)
 
 object CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits {
-    implicit val draftSubFormat: Format[DraftRevision] =  DraftSubmissionJsonImplicits.draftSubFmt
+    implicit val draftSubFormat: Format[DraftSubmission] =  DraftSubmissionJsonImplicits.draftSubFmt
 
     implicit val cdDraftSubRequestMessageFmt = Json.format[CurriculumDevelopmentDraftRevisionRequestMessage]
     implicit val cdDraftSubRequestMessageeWrites = Json.writes[CurriculumDevelopmentDraftRevisionRequestMessage]

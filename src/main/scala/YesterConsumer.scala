@@ -26,7 +26,8 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits, CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits,
     CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentAppointPACRequestMessageJsonImplicits, CurriculumDevelopmentDraftRevisionRequestMessage,
     CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
-    CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits
+    CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
+    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits
 }
 
 
@@ -53,6 +54,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val pacCmtMemReqReader: Reads[CurriculumDevelopmentAppointPACRequestMessage] = CurriculumDevelopmentAppointPACRequestMessageJsonImplicits.cdpacmembRequestMessageReads
     implicit val draftRevReqReader: Reads[CurriculumDevelopmentDraftRevisionRequestMessage] = CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits.cdDraftRevRequestMessageReads
     implicit val draftSubReqReader: Reads[CurriculumDevelopmentDraftSubmissionRequestMessage] = CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits.cdDraftSubRequestMessageReads
+    implicit val draftValReqReader: Reads[CurriculumDevelopmentDraftValidationRequestMessage] = CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits.cdDraftValRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -149,8 +151,12 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 actorMap("curriculum-development") ! draftRevisionReqMsg
             }
             case "cur-dev-draft-submit-req" => {
-                val draftSubmissionReqMsg = Json.parse(recordValue)as[CurriculumDevelopmentDraftSubmissionRequestMessage]
+                val draftSubmissionReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentDraftSubmissionRequestMessage]
                 actorMap("curriculum-development") ! draftSubmissionReqMsg
+            }
+            case "cur-dev-draft-validate-req" => {
+                val draftValidationReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentDraftValidationRequestMessage]
+                actorMap("curriculum-development") ! draftValidationReqMsg
             }
             case "curriculum-review-req" => {
                 val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]

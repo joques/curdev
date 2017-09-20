@@ -8,9 +8,10 @@ import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
-import yester.lib.{PreProgrammeComponent, Programme}
+import yester.lib.{PreProgrammeComponent, Programme, CurriculumDevelopment}
 import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentDraftRevisionRequestMessage,
-    CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits
+    CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
+    CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits
 }
 import yester.message.response.SimpleResponseMessage
 
@@ -26,7 +27,11 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         }
         case draftRevisionReqMsg: CurriculumDevelopmentDraftRevisionRequestMessage => {
             println("received draft revision request for curriculum development ...")
-            addDraftRevision(draftRevisionReqMsg)
+            handleDraftRevision(draftRevisionReqMsg)
+        }
+        case draftSubmissionReqMsg: CurriculumDevelopmentDraftSubmissionRequestMessage => {
+            println("received draft submission request for curriculum development ...")
+            handleDraftSubmission(draftSubmissionReqMsg)
         }
         case _ =>
             println("unknown message type ...")
@@ -97,11 +102,39 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         }
     }
 
-    def addDraftRevision(message: CurriculumDevelopmentDraftRevisionRequestMessage): Unit => {
-        println("adding draft revision...")
-        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messamge.messageId, None, Option("ok"))
+    def handleDraftRevision(message: CurriculumDevelopmentDraftRevisionRequestMessage): Unit => {
+        println("handling draft revision...")
+        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messamge.messageId, None, Some("ok"))
         val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
         messenger.getProducer().send(new ProducerRecord[String,String]("cur-dev-draft-revise-res", succMsgStr))
+    }
+
+    def handleDraftSubmission(message: CurriculumDevelopmentDraftSubmissionRequestMessage): Unit => {
+        println("handlingdraft submission ...")
+        val submissionObj = message.content
+
+        val curDevObjRes = DBManager.findCurriculumDevelopmentObject(submissionObj.devCode)
+        curDevObjRes.onComplete {
+            case Success(curDevObj) => {
+                curDevObj match {
+                    case Some(cdo) => {
+                        println("a curriculum development object exists already ...")
+                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, Some(submissionObj.submissionDate), cdo.validated)
+                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev3, "cur-dev-draft-submit-res")
+                    }
+                    case None => {
+                        println("it seems there is no object yet...")
+                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, Some(submissionObj.submissionDate), false)
+                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev2, "cur-dev-draft-submit-res")
+                    }
+                }
+            }
+            case Failure(curDevFailure) => {
+                println("no curriculum development object exists yet ...")
+                val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, Some(submissionObj.submissionDate), false)
+                saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev1, "cur-dev-draft-submit-res")
+            }
+        }
     }
 
     def saveCurriculumDevelopmentObject(messageId: String, devCode: String,  curDev: CurriculumDevelopment, respTopic: String): Unit = {

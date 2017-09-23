@@ -109,7 +109,7 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
 
     def handleDraftRevision(message: CurriculumDevelopmentDraftRevisionRequestMessage): Unit => {
         println("handling draft revision...")
-        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(messamge.messageId, None, Some("ok"))
+        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
         val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
         messenger.getProducer().send(new ProducerRecord[String,String]("cur-dev-draft-revise-res", succMsgStr))
     }

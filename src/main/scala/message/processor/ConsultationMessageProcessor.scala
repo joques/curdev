@@ -20,4 +20,11 @@ final case class ConsultationMessageProcessor(messenger: YesterProducer) extends
             addConsultations(consReqMsg)
         }
     }
+
+    def addConsultations(message: ConsultationRequestMessage): Unit  = {
+        println("handling consultation data ...")
+        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
+        val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+        messenger.getProducer().send(new ProducerRecord[String,String]("consult-start-pac-res", succMsgStr))
+    }
 }

@@ -6,7 +6,7 @@ import yester.lib.{Consultation, ConsultationJsonImplicits}
 
 final case class ConsultationRequestMessage(messageId: String, content: Consultation) extends ComplexRequestMessage[Consultation](messageId, content)
 
-object ConsultationRequestMessageRequestMessageJsonImplicits {
+object ConsultationRequestMessageJsonImplicits {
     implicit val consFormat: Format[Consultation] =  ConsultationJsonImplicits.consFmt
 
     implicit val consRequestMessageFmt = Json.format[ConsultationRequestMessage]

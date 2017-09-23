@@ -9,7 +9,7 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 mport yester.lib.{Consultation}
-import yester.message.request.{ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits}
+import yester.message.request.{ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits, BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits}
 import yester.message.response.SimpleResponseMessage
 
 
@@ -19,6 +19,10 @@ final case class ConsultationMessageProcessor(messenger: YesterProducer) extends
             println("received consultation message ...")
             addConsultations(consReqMsg)
         }
+        case benchmarkReqMsg: BenchmarkRequestMessage => {
+            println("received benchmark message ...")
+            addBenchmark(benchmarkReqMsg)
+        }
     }
 
     def addConsultations(message: ConsultationRequestMessage): Unit  = {
@@ -26,5 +30,12 @@ final case class ConsultationMessageProcessor(messenger: YesterProducer) extends
         val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
         val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
         messenger.getProducer().send(new ProducerRecord[String,String]("consult-start-pac-res", succMsgStr))
+    }
+
+    def addBenchmark(message: BenchmarkRequestMessage): Unit = {
+        println("handling benchmark data ...")
+        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
+        val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+        messenger.getProducer().send(new ProducerRecord[String,String]("consult-benchmark-res", succMsgStr))
     }
 }

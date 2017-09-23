@@ -12,7 +12,7 @@ object Yester {
             "cur-dev-amendment-from-bos-req", "cur-dev-submit-to-bos-req", "cur-dev-authorize-from-bos-req", "cur-dev-submit-to-senate-req", "cur-dev-amendment-from-senate-req",
             "cur-dev-authorization-from-senate-req", "cur-dev-appoint-cdc-req", "cur-dev-appoint-pac-req", "cur-dev-draft-submit-req",
             "cur-dev-draft-revise-req", "cur-dev-draft-validate-req", "cur-dev-appoint-pac-req", "cur-dev-draft-revise-req", "cur-dev-draft-submit-req",
-            "cur-dev-draft-validate-req", "consult-start-pac-req")
+            "cur-dev-draft-validate-req", "consult-start-pac-req", "consult-benchmark-req")
 
         val yConsumer = new YesterConsumer(topicList)
         val yProducer = new YesterProducer()

@@ -27,7 +27,8 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentAppointPACRequestMessageJsonImplicits, CurriculumDevelopmentDraftRevisionRequestMessage,
     CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
     CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
-    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits
+    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits,
+    BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits
 }
 
 
@@ -56,6 +57,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val draftSubReqReader: Reads[CurriculumDevelopmentDraftSubmissionRequestMessage] = CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits.cdDraftSubRequestMessageReads
     implicit val draftValReqReader: Reads[CurriculumDevelopmentDraftValidationRequestMessage] = CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits.cdDraftValRequestMessageReads
     implicit val consReqReader: Reads[ConsultationRequestMessage] = ConsultationRequestMessageJsonImplicits.consRequestMessageReads
+    implicit val bchReqReader: Reads[BenchmarkRequestMessage] = BenchmarkRequestMessageJsonImplicits.benchmarkRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -162,6 +164,10 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "consult-start-pac-req" => {
                 val consultReqMsg = Json.parse(recordValue).as[ConsultationRequestMessage]
                 actorMap("consultation") ! consultReqMsg
+            }
+            case "consult-benchmark-req" => {
+                val benchmarkReqMsg = Json.parse(recordValue).as[BenchmarkRequestMessage]
+                actorMap("consultation") ! benchmarkReqMsg
             }
             case "curriculum-review-req" => {
                 val curriculumReviewMessage = Json.parse(recordValue).as[CurriculumReviewRequestMessage]

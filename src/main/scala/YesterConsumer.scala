@@ -27,7 +27,7 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentAppointPACRequestMessageJsonImplicits, CurriculumDevelopmentDraftRevisionRequestMessage,
     CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
     CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
-    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits
+    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits
 }
 
 
@@ -55,6 +55,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val draftRevReqReader: Reads[CurriculumDevelopmentDraftRevisionRequestMessage] = CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits.cdDraftRevRequestMessageReads
     implicit val draftSubReqReader: Reads[CurriculumDevelopmentDraftSubmissionRequestMessage] = CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits.cdDraftSubRequestMessageReads
     implicit val draftValReqReader: Reads[CurriculumDevelopmentDraftValidationRequestMessage] = CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits.cdDraftValRequestMessageReads
+    implicit val consReqReader: Reads[ConsultationRequestMessage] = ConsultationRequestMessageJsonImplicits.consRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors

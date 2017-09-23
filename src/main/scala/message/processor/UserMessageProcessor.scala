@@ -13,7 +13,7 @@ import yester.message.request.{FindUserRequestMessage, CreateUserRequestMessage}
 import yester.message.response.{UserResponseMessage, UserWithPreProgrammeResponseMessage, UserResponseMessageJsonImplicits, UserWithPreProgrammeResponseMessageJsonImplicits}
 
 
-final case class UsertMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
+final case class UserMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
 
     implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
     implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites

@@ -1,6 +1,6 @@
 package yester.lib
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Format}
 
 final case class PACCommitteeMembers(devCode: String, members: List[SinglePACCommitteeMember])
 

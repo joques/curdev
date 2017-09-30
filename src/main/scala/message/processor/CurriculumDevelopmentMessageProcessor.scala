@@ -1,5 +1,6 @@
 package yester.message.processor
 
+
 import akka.actor._
 import org.apache.kafka.clients.producer.ProducerRecord
 import scala.util.{Failure, Success}
@@ -107,14 +108,14 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         }
     }
 
-    def handleDraftRevision(message: CurriculumDevelopmentDraftRevisionRequestMessage): Unit => {
+    def handleDraftRevision(message: CurriculumDevelopmentDraftRevisionRequestMessage): Unit = {
         println("handling draft revision...")
         val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
         val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
         messenger.getProducer().send(new ProducerRecord[String,String]("cur-dev-draft-revise-res", succMsgStr))
     }
 
-    def handleDraftSubmission(message: CurriculumDevelopmentDraftSubmissionRequestMessage): Unit => {
+    def handleDraftSubmission(message: CurriculumDevelopmentDraftSubmissionRequestMessage): Unit = {
         println("handling draft submission ...")
         val submissionObj = message.content
 
@@ -142,7 +143,7 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
         }
     }
 
-    def handleDraftValidation(message: CurriculumDevelopmentDraftValidationRequestMessage): Unit => {
+    def handleDraftValidation(message: CurriculumDevelopmentDraftValidationRequestMessage): Unit = {
         println("handling draft validation ...")
         val validationObj = message.content
 

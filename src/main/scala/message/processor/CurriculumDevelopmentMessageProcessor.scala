@@ -154,19 +154,19 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                     case Some(cdo) => {
                         println("a curriculum development object exists already ...")
                         val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, cdo.submissionDate, Some(validationObj.decision))
-                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev3, "cur-dev-draft-validate-res")
+                        saveCurriculumDevelopmentObject(message.messageId, validationObj.devCode, curDev3, "cur-dev-draft-validate-res")
                     }
                     case None => {
                         println("it seems there is no object yet...")
                         val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, None, Some(validationObj.decision))
-                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev2, "cur-dev-draft-validate-res")
+                        saveCurriculumDevelopmentObject(message.messageId, validationObj.devCode, curDev2, "cur-dev-draft-validate-res")
                     }
                 }
             }
             case Failure(curDevFailure) => {
                 println("no curriculum development object exists yet ...")
                 val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, None, Some(validationObj.decision))
-                saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev1, "cur-dev-draft-validate-res")
+                saveCurriculumDevelopmentObject(message.messageId, validationObj.devCode, curDev1, "cur-dev-draft-validate-res")
             }
         }
     }

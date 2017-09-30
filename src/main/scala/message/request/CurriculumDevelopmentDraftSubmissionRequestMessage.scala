@@ -9,7 +9,7 @@ final case class CurriculumDevelopmentDraftSubmissionRequestMessage(messageId: S
 object CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits {
     implicit val draftSubFormat: Format[DraftSubmission] =  DraftSubmissionJsonImplicits.draftSubFmt
 
-    implicit val cdDraftSubRequestMessageFmt = Json.format[CurriculumDevelopmentDraftRevisionRequestMessage]
-    implicit val cdDraftSubRequestMessageeWrites = Json.writes[CurriculumDevelopmentDraftRevisionRequestMessage]
-    implicit val cdDraftSubRequestMessageReads = Json.reads[CurriculumDevelopmentDraftRevisionRequestMessage]
+    implicit val cdDraftSubRequestMessageFmt = Json.format[CurriculumDevelopmentDraftSubmissionRequestMessage]
+    implicit val cdDraftSubRequestMessageeWrites = Json.writes[CurriculumDevelopmentDraftSubmissionRequestMessage]
+    implicit val cdDraftSubRequestMessageReads = Json.reads[CurriculumDevelopmentDraftSubmissionRequestMessage]
 }

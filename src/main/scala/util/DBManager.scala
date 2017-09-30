@@ -21,7 +21,7 @@ object DBManager {
 
   def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
   def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
-  def findCurriculumDevelopmentObject(devCode: String): Future[CurriculumDevelopment] = findById[CurriculumDevelopment]("yester-curricula-dev", devCode)
+  def findCurriculumDevelopmentObject(devCode: String): Future[Option[CurriculumDevelopment]] = findById[CurriculumDevelopment]("yester-curricula-dev", devCode)
 
   def findAllProgrammes(): Future[List[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 

@@ -8,7 +8,7 @@ import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
-mport yester.lib.{Consultation}
+import yester.lib.{Consultation}
 import yester.message.request.{ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits, BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits}
 import yester.message.response.SimpleResponseMessage
 

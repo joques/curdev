@@ -19,6 +19,9 @@ object DBManager {
   implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt
   implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites
 
+  implicit val cdFormat: Format[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdFmt
+  implicit val cdWriter: Writes[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdWrites
+
   def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
   def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
   def findCurriculumDevelopmentObject(devCode: String): Future[Option[CurriculumDevelopment]] = findById[CurriculumDevelopment]("yester-curricula-dev", devCode)

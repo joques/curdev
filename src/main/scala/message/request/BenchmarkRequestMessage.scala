@@ -12,3 +12,4 @@ object BenchmarkRequestMessageJsonImplicits {
     implicit val benchmarkRequestMessageFmt = Json.format[BenchmarkRequestMessage]
     implicit val benchmarkRequestMessageeWrites = Json.writes[BenchmarkRequestMessage]
     implicit val benchmarkRequestMessageReads = Json.reads[BenchmarkRequestMessage]
+}

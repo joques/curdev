@@ -28,7 +28,8 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
     CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
     CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits,
-    BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits
+    BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits, CurriculumDevelopmentAppointCDCRequestMessage,
+    CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits
 }
 
 
@@ -52,7 +53,8 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
     implicit val cdaReqReader: Reads[CurriculumDevelopmentAuthorizationRequestMessage] = CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits.cdaRequestMessageReads
     implicit val cmtMemReqReader: Reads[CommitteeMembersRequestMessage] = CommitteeMembersJsonImplicitsRequestMessageJsonImplicits.cmtMembersRequestMessageReads
-    implicit val pacCmtMemReqReader: Reads[CurriculumDevelopmentAppointPACRequestMessage] = CurriculumDevelopmentAppointPACRequestMessageJsonImplicits.cdpacmembRequestMessageReads
+    implicit val paCmtMemReqReader: Reads[CurriculumDevelopmentAppointPACRequestMessage] = CurriculumDevelopmentAppointPACRequestMessageJsonImplicits.cdpacmembRequestMessageReads
+    implicit val cdCmtMemReqReader: Reads[CurriculumDevelopmentAppointCDCRequestMessage] = CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits.cdcmembRequestMessageReads
     implicit val draftRevReqReader: Reads[CurriculumDevelopmentDraftRevisionRequestMessage] = CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits.cdDraftRevRequestMessageReads
     implicit val draftSubReqReader: Reads[CurriculumDevelopmentDraftSubmissionRequestMessage] = CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits.cdDraftSubRequestMessageReads
     implicit val draftValReqReader: Reads[CurriculumDevelopmentDraftValidationRequestMessage] = CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits.cdDraftValRequestMessageReads
@@ -142,7 +144,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 actorMap("curriculum-development") ! authorizeFromSenateReqMsg
             }
             case "cur-dev-appoint-cdc-req" => {
-                val cdcMembersReqMsg = Json.parse(recordValue).as[CommitteeMembersRequestMessage]
+                val cdcMembersReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAppointCDCRequestMessage]
                 actorMap("curriculum-development") ! cdcMembersReqMsg
             }
             case "cur-dev-appoint-pac-req" => {

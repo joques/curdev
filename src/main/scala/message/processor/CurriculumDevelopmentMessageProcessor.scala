@@ -13,7 +13,8 @@ import yester.lib.{PreProgrammeComponent, Programme, CurriculumDevelopment}
 import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentDraftRevisionRequestMessage,
     CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
     CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
-    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits
+    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, CurriculumDevelopmentAppointCDCRequestMessage,
+    CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits
 }
 import yester.message.response.SimpleResponseMessage
 

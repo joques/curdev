@@ -5,7 +5,7 @@ import play.api.libs.json.{Json, Format}
 final case class PACommitteeMembers(devCode: String, members: List[SingleCommitteeMember])
 
 object PACommitteeMembersJsonImplicits {
-    implicit val singlePACommitteeMemberFormat: Format[SinglePACommitteeMember] = SingleCommitteeMemberJsonImplicits.singleComFmt
+    implicit val singleCommitteeMemberFormat: Format[SingleCommitteeMember] = SingleCommitteeMemberJsonImplicits.singleComFmt
 
     implicit val paCmtMembersFmt = Json.format[PACommitteeMembers]
     implicit val paCmtMembersWrites = Json.writes[PACommitteeMembers]

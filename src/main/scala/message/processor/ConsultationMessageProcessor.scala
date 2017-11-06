@@ -8,9 +8,10 @@ import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
-import yester.lib.{Consultation}
+import yester.lib.{Consultation, Benchmark, FinalDraft, Endorsement}
 import yester.message.request.{ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits, BenchmarkRequestMessage,
-    BenchmarkRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits}
+    BenchmarkRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits, EndorsementRequestMessage,
+    EndorsementRequestMessageJsonImplicits}
 import yester.message.response.SimpleResponseMessage
 
 final case class ConsultationMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
@@ -26,6 +27,10 @@ final case class ConsultationMessageProcessor(messenger: YesterProducer) extends
         case fdReqMsg: FinalDraftRequestMessage => {
             println("received final draft request ...")
             addFinalDraft(fdReqMsg)
+        }
+        case endReqMsg: EndorsementRequestMessage => {
+            println("received endorsement request ...")
+            addEndorsement(endReqMsg)
         }
     }
 
@@ -48,5 +53,12 @@ final case class ConsultationMessageProcessor(messenger: YesterProducer) extends
         val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
         val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
         messenger.getProducer().send(new ProducerRecord[String,String]("consult-final-draft-res", succMsgStr))
+    }
+
+    def addEndorsement(message: EndorsementRequestMessage): Unit = {
+        println("handling endorsement data ...")
+        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
+        val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+        messenger.getProducer().send(new ProducerRecord[String,String]("consult-endorse-res", succMsgStr))
     }
 }

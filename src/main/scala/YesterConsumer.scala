@@ -29,7 +29,8 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
     CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits,
     BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits, CurriculumDevelopmentAppointCDCRequestMessage,
-    CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits
+    CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits, EndorsementRequestMessage,
+    EndorsementRequestMessageJsonImplicits
 }
 
 
@@ -61,6 +62,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val consReqReader: Reads[ConsultationRequestMessage] = ConsultationRequestMessageJsonImplicits.consRequestMessageReads
     implicit val bchReqReader: Reads[BenchmarkRequestMessage] = BenchmarkRequestMessageJsonImplicits.benchmarkRequestMessageReads
     implicit val fDraftReqReader: Reads[FinalDraftRequestMessage] = FinalDraftRequestMessageJsonImplicits.fdRequestMessageReads
+    implicit val endReqReader: Reads[EndorsementRequestMessage] = EndorsementRequestMessageJsonImplicits.endRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -195,6 +197,10 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "consult-final-draft-req" => {
                 val fdReqMsg = Json.parse(recordValue).as[FinalDraftRequestMessage]
                 actorMap("consultation") ! fdReqMsg
+            }
+            case "consult-endorse-req" => {
+                val endReqMsg = Json.parse(recordValue).as[EndorsementRequestMessage]
+                actorMap("consultation") ! endReqMsg
             }
 
             case _ => println("unknown topic ...")

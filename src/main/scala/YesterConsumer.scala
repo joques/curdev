@@ -30,7 +30,7 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits,
     BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits, CurriculumDevelopmentAppointCDCRequestMessage,
     CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits, EndorsementRequestMessage,
-    EndorsementRequestMessageJsonImplicits
+    EndorsementRequestMessageJsonImplicits, StartReviewRequestMessage, StartReviewRequestMessageJsonImplicits
 }
 
 
@@ -63,6 +63,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val bchReqReader: Reads[BenchmarkRequestMessage] = BenchmarkRequestMessageJsonImplicits.benchmarkRequestMessageReads
     implicit val fDraftReqReader: Reads[FinalDraftRequestMessage] = FinalDraftRequestMessageJsonImplicits.fdRequestMessageReads
     implicit val endReqReader: Reads[EndorsementRequestMessage] = EndorsementRequestMessageJsonImplicits.endRequestMessageReads
+    implicit val sRevReqReader: Reads[StartReviewRequestMessage] = StartReviewRequestMessageJsonImplicits.sRevRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -201,6 +202,10 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "consult-endorse-req" => {
                 val endReqMsg = Json.parse(recordValue).as[EndorsementRequestMessage]
                 actorMap("consultation") ! endReqMsg
+            }
+            case "review-unit-start-req" => {
+                val sRevReqMsg = Json.parse(recordValue).as[StartReviewRequestMessage]
+                actorMap("review") ! sRevReqMsg
             }
 
             case _ => println("unknown topic ...")

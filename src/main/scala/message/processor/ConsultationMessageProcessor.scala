@@ -9,9 +9,9 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{Consultation}
-import yester.message.request.{ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits, BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits}
+import yester.message.request.{ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits, BenchmarkRequestMessage,
+    BenchmarkRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits}
 import yester.message.response.SimpleResponseMessage
-
 
 final case class ConsultationMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
@@ -22,6 +22,10 @@ final case class ConsultationMessageProcessor(messenger: YesterProducer) extends
         case benchmarkReqMsg: BenchmarkRequestMessage => {
             println("received benchmark message ...")
             addBenchmark(benchmarkReqMsg)
+        }
+        case fdReqMsg: FinalDraftRequestMessage => {
+            println("received final draft request ...")
+            addFinalDraft(fdReqMsg)
         }
     }
 
@@ -37,5 +41,12 @@ final case class ConsultationMessageProcessor(messenger: YesterProducer) extends
         val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
         val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
         messenger.getProducer().send(new ProducerRecord[String,String]("consult-benchmark-res", succMsgStr))
+    }
+
+    def addFinalDraft(message: FinalDraftRequestMessage): Unit = {
+        println("handling final draft data ...")
+        val simpleSuccessRespMsg: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, None, Some("ok"))
+        val succMsgStr = Json.toJson(simpleSuccessRespMsg).toString()
+        messenger.getProducer().send(new ProducerRecord[String,String]("consult-final-draft-res", succMsgStr))
     }
 }

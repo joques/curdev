@@ -29,7 +29,7 @@ import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImp
     CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
     CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits,
     BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits, CurriculumDevelopmentAppointCDCRequestMessage,
-    CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits
+    CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits
 }
 
 
@@ -60,6 +60,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     implicit val draftValReqReader: Reads[CurriculumDevelopmentDraftValidationRequestMessage] = CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits.cdDraftValRequestMessageReads
     implicit val consReqReader: Reads[ConsultationRequestMessage] = ConsultationRequestMessageJsonImplicits.consRequestMessageReads
     implicit val bchReqReader: Reads[BenchmarkRequestMessage] = BenchmarkRequestMessageJsonImplicits.benchmarkRequestMessageReads
+    implicit val fDraftReqReader: Reads[FinalDraftRequestMessage] = FinalDraftRequestMessageJsonImplicits.fdRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors
@@ -190,6 +191,10 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "cur-dev-submit-to-senate-req" => {
                 val submitToSenateReqMsg = Json.parse(recordValue).as[CurriculumDevelopmentAuthorizationRequestMessage]
                 actorMap("curriculum-development") ! submitToSenateReqMsg
+            }
+            case "consult-final-draft-req" => {
+                val fdReqMsg = Json.parse(recordValue).as[FinalDraftRequestMessage]
+                actorMap("consultation") ! fdReqMsg
             }
 
             case _ => println("unknown topic ...")

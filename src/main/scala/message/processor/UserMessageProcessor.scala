@@ -41,14 +41,14 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
                 val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.simpleMsg.messageId, None, userVal)
                 val succMsgStr = Json.toJson(userSuccessRespMsg).toString()
                 println(s"the success message to be sent is $succMsgStr")
-                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
+                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res1", succMsgStr))
             }
             case Failure(userErr) => {
                 userErr.printStackTrace
                 val userErrorRespMsg: UserResponseMessage = new UserResponseMessage(message.simpleMsg.messageId, Option(userErr.getMessage), None)
                 val errMsgStr = Json.toJson(userErrorRespMsg).toString()
                 println(s"the error message to be sent it $errMsgStr")
-                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr))
+                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res1", errMsgStr))
             }
         }
     }
@@ -71,7 +71,7 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
                         val progListErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(progError.getMessage), None)
                         val errMsgStr1 = Json.toJson(progListErrorRespMsg).toString()
                         println(s"the error message to be sent is $errMsgStr1")
-                        messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr1))
+                        messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res1", errMsgStr1))
                     }
                     case Success(progList) => {
                         val preProgrammeList: List[Programme] = progList.filter((prg: Programme) => prg.isPreProgramme)
@@ -86,7 +86,7 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
                         val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, None, userWPrePrg)
                         val succMsgStr = Json.toJson(succRespMsg).toString()
                         println(s"the success message to be sent is $succMsgStr")
-                        messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
+                        messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res1", succMsgStr))
                     }
                 }
             }
@@ -95,7 +95,7 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
                 val userErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(userErr.getMessage), None)
                 val errMsgStr = Json.toJson(userErrorRespMsg).toString()
                 println(s"the error message to be sent it $errMsgStr")
-                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr))
+                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res1", errMsgStr))
             }
         }
     }

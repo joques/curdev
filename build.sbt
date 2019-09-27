@@ -8,7 +8,9 @@ lazy val root = (project in file(".")).settings(
     mainClass in (Compile) := Some("yester.Yester")
 )
 
-resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
+// resolvers ++= Seq("ReactiveCouchbase Releases" at "https://raw.github.com/ReactiveCouchbase/repository/master/releases/")
+
+resolvers += "reactive-couchbase-rs-releases" at "https://raw.github.com/ReactiveCouchbase/reactivecouchbase-rs-core/master/repository/releases"
 
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.0",
@@ -21,7 +23,7 @@ libraryDependencies ++= Seq(
     "com.typesafe" % "config" % "1.2.1",
     "com.typesafe.akka" % "akka-actor_2.11" % "2.3.3",
     "com.typesafe.play" % "play-json_2.11" % "2.4.0-M2",
-    "org.reactivecouchbase" %% "reactivecouchbase-core" % "0.3",
+    "org.reactivecouchbase" %% "reactivecouchbase-rs-core" % "1.0.0",
     "io.lamma" %% "lamma" % "2.2.2",
     "io.leonard" %% "play-json-traits" % "1.2.1"
 )

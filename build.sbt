@@ -1,4 +1,8 @@
-lazy val root = (project in file(".")).settings(
+lazy val root = project
+    .in(file("."))
+    .enablePlugins(JavaAppPackaging)
+    .settings(
+        // common
     name := "yester",
     version := "0.2.5",
     organization := "NUST - Programme Development Unit; FCI",
@@ -21,12 +25,13 @@ lazy val root = (project in file(".")).settings(
         "io.lamma" %% "lamma" % "2.2.2",
         "io.leonard" %% "play-json-traits" % "1.2.1"
     ),
+    // environment-specific
     mappings in Universal += {
         val confFile = buildEnv.value match {
             case BuildEnv.Development => "dev.conf"
             case BuildEnv.Production => "prod.conf"
         }
-        ((resourceDirectory in Compile).value / confFile) -> "conf/application.conf"
+        ((resourceDirectory in Compile).value / confFile) -> "application.conf"
     }
 )
 

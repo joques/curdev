@@ -35,8 +35,8 @@ lazy val root = project
     }
 )
 
-// assemblyMergeStrategy  in assembly := {
-//     case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-//     case PathList("lo4j.Properties") => MergeStrategy.last
-//     case x => MergeStrategy.first
-// }
+assemblyMergeStrategy  in assembly := {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case PathList("lo4j.Properties") => MergeStrategy.last
+    case x => MergeStrategy.first
+}

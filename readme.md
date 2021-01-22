@@ -17,4 +17,4 @@ Before going any further one needs to take a closer look at the following points
 
 Note1: one needs to be careful how the concurrency is managed here.
 Note2: I need to design more carefully how many actors should be created for the management of the communicators (consumer and producer) and the db management API implementation
-Note3: Need to identify what are the different types of messages that one should expect during the message consumption and production. Also the same need might apply for the DB API
+Note3: Need to identify what are the different types of messages that one should expect during the message consumption and production. Also the same need might apply for the DB API.

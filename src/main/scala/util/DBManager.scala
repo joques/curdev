@@ -23,5 +23,9 @@ import com.couchbase.client.protocol.views.{Stale, Query}
 
 
 object DBManager {
-
+	val system = ActorSystem("YesterReactiveCouchbaseSystem")
+	implicit val materialiser = ActorMaterializer(system)
+	implicit val ec = system.dispatcher
+	
+	val driver = ReactiveCouchbase(ConfigFactory.load())	
 }

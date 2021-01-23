@@ -19,7 +19,7 @@
         "io.reactivex" % "rxscala_2.13" % "0.7.0",
         "net.cakesolutions" %% "scala-kafka-client" % "2.3.1",
         "net.cakesolutions" %% "scala-kafka-client-akka" % "2.3.1",
-        "com.typesafe" % "config" % "1.3.4",
+        "com.typesafe" % "config" % "1.4.1",
         "com.typesafe.play" % "play-json_2.11" % "2.9.1",
         "org.reactivecouchbase" %% "reactivecouchbase-rs-core" % "1.2.1",
         "io.lamma" %% "lamma" % "2.2.2",

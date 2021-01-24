@@ -36,6 +36,8 @@ object DBManager {
 
 	implicit val cdFormat: Format[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdFmt
   	implicit val cdWriter: Writes[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdWrites
+	
+	// will need to rewrite these methods
 
   	def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
   	def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)

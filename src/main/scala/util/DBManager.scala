@@ -27,5 +27,5 @@ object DBManager {
 	implicit val materialiser = ActorMaterializer(system)
 	implicit val ec = system.dispatcher
 	
-	val driver = ReactiveCouchbase(ConfigFactory.load())	
+	val driver = ReactiveCouchbase(ConfigFactory.load())
 }

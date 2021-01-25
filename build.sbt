@@ -16,7 +16,7 @@
     ),
     libraryDependencies ++= Seq(
         "org.scala-lang" % "scala-library" % "2.12.13",
-        "io.reactivex" % "rxscala_2.13" % "0.27.0",
+        "io.reactivex" % "rxscala_2.12" % "0.27.0",
         "net.cakesolutions" %% "scala-kafka-client" % "2.3.1",
 		"net.cakesolutions" %% "scala-kafka-client-akka" % "2.3.1",
         "com.typesafe" % "config" % "1.4.1",

@@ -1,6 +1,8 @@
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
+import scala.concurrent.ExecutionContext.Implicits.global
+import org.reactivecouchbase.ReactiveCouchbaseDriver
 import org.reactivecouchbase.rs.scaladsl.{N1qlQuery, ReactiveCouchbase}
 import org.reactivecouchbase.rs.scaladsl.json._
 import play.api.libs.json._
@@ -11,13 +13,6 @@ import scala.concurrent.Future
 import play.api.libs.json.{Json, Format, Writes}
 import net.spy.memcached.{PersistTo, ReplicateTo}
 import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
-
-
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import org.reactivecouchbase.ReactiveCouchbaseDriver
-
-
 import org.reactivecouchbase.client.{OpResult, Constants}
 import com.couchbase.client.protocol.views.{Stale, Query}
 
@@ -36,8 +31,6 @@ object DBManager {
 
 	implicit val cdFormat: Format[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdFmt
   	implicit val cdWriter: Writes[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdWrites
-	
-	// will need to rewrite these methods
 
   	def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
   	def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)

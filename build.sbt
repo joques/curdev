@@ -6,7 +6,7 @@
     name := "yester",
     version := "0.2.5",
     organization := "NUST - Programme Development Unit; FCI",
-    scalaVersion := "2.13.1",
+    scalaVersion := "2.13.4",
     autoScalaLibrary := false,
     scalacOptions := Seq("-unchecked", "-deprecation"),
     mainClass in (Compile) := Some("yester.Yester"),
@@ -15,7 +15,7 @@
         Resolver.bintrayRepo("mathieuancelin", "reactivecouchbase-maven")
     ),
     libraryDependencies ++= Seq(
-        "org.scala-lang" % "scala-library" % "2.13.1",
+        "org.scala-lang" % "scala-library" % "2.13.4",
         "io.reactivex" % "rxscala_2.13" % "0.7.0",
         "net.cakesolutions" %% "scala-kafka-client" % "2.3.1",
         "net.cakesolutions" %% "scala-kafka-client-akka" % "2.3.1",

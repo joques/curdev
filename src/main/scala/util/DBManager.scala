@@ -1,3 +1,5 @@
+package yester.util
+
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory

@@ -50,7 +50,7 @@ object DBManager {
 	
 	// generic methods
 
-  	def findById[T](bucketName: String, docKey: String)(implicit valFormat: Format[T]): Future[Option[T]] = {
+  	def findById[T](bucketName: String, docKey: String)(implicit valFormat: JsonFormat[T]): Future[Option[T]] = {
       val curBucket = driver.bucket(bucketName)
       curBucket.get[T](docKey)
   	}
@@ -60,7 +60,7 @@ object DBManager {
 	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).asSeq
   	}
 
-  	def save[T](bucketName: String, key: String, data: T)(implicit valFormat: Format[T]): Future[T] = {
+  	def save[T](bucketName: String, key: String, data: T)(implicit valFormat: JsonFormat[T]): Future[T] = {
       val curBucket = driver.bucket(bucketName)
       curBucket.upsert(key, data)
   	}

@@ -23,6 +23,7 @@ object DBManager {
 	// formatters and writers
 	
 	implicit val userFormat: JsonFormat[User] = UserJsonImplicits.userJsonFormat
+	implicit val userFmt: Format[User] = UserJsonImplicits.userFmt
 
 	implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
   	implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites

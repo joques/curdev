@@ -25,8 +25,8 @@ object DBManager {
 	implicit val userFormat: JsonFormat[User] = UserJsonImplicits.userJsonFormat
 	//implicit val userFmt: Format[User] = UserJsonImplicits.userFmt
 
-	implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
-	implicit val progFormat2: Format[Programme] = ProgrammeJsonImplicits.progJsonFormat
+	//implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
+	implicit val progFormat2: JsonFormat[Programme] = ProgrammeJsonImplicits.progJsonFormat
   	//implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
 
 	//implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt

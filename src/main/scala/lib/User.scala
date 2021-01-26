@@ -1,7 +1,8 @@
 package yester.lib
 
-import play.api.libs.json.{Json, Format}
-import org.reactivecouchbase.rs.scaladsl.json.{JsonReads, JsonWrites, JsonFormat, JsonSuccess}
+import akka.util.ByteString
+import play.api.libs.json.{Json, Format, Writes}
+import org.reactivecouchbase.rs.scaladsl.json.{JsonReads, JsonWrites, JsonFormat, JsonSuccess, JsonResult, JsonError}
 import UserProfile._
 
 final case class User(username: String, password: String, profile: UserProfile, firstname: String, lastname: String, usrUnit: UserUnit, emailAddress: String)
@@ -12,8 +13,16 @@ object UserJsonImplicits {
     implicit val userFmt = Json.format[User]
     implicit val userWrites = Json.writes[User]
     implicit val userReads = Json.reads[User]
-	
-	implicit val userJsonReads: JsonReads[User] = JsonReads(bs => JsonSuccess(Json.parse(bs.utf8String)))
-	implicit val userJsonWrites: JsonWrites[User] = JsonWrites(jsv => ByteString(Json.stringify(jsv)))
-	implicit val defaultUserFormat: JsonFormat[User] = JsonFormat(read, write)
+		
+	implicit def convertJsonFormat[User](modelFormat: Format[User]): JsonFormat[User] =
+    JsonFormat[User](
+      JsonReads[User](
+        bs =>
+          modelFormat
+            .reads(Json.parse(bs.utf8String))
+            .map(result => JsonSuccess(result))
+            .getOrElse[JsonResult[User]](JsonError())
+      ),
+      JsonWrites[User](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
+    )
 }

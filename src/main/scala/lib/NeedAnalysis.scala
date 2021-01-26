@@ -1,7 +1,8 @@
 package yester.lib
 
-import play.api.libs.json.{Json, Format}
-import org.reactivecouchbase.rs.scaladsl.json.{JsonReads, JsonWrites, JsonFormat, JsonSuccess}
+import akka.util.ByteString
+import play.api.libs.json.{Json, Format, Writes}
+import org.reactivecouchbase.rs.scaladsl.json.{JsonReads, JsonWrites, JsonFormat, JsonSuccess, JsonResult, JsonError}
 
 final case class NeedAnalysis(consultations: Option[List[NAConsultationComponent]], survey: Option[NASurveyComponent], conclusion: Option[NAConclusionComponent], bos: Option[NABosComponent], senate: Option[NASenateComponent])
 
@@ -15,8 +16,16 @@ object NeedAnalysisJsonImplicits {
     implicit val naFmt = Json.format[NeedAnalysis]
     implicit val naWrites = Json.writes[NeedAnalysis]
     implicit val naReads = Json.reads[NeedAnalysis]
-	
-	implicit val naJsonReads: JsonReads[NeedAnalysis] = JsonReads(bs => JsonSuccess(Json.parse(bs.utf8String)))
-	implicit val naJsonWrites: JsonWrites[NeedAnalysis] = JsonWrites(jsv => ByteString(Json.stringify(jsv)))
-	implicit val defaultNAFormat: JsonFormat[NeedAnalysis] = JsonFormat(read, write)
+		
+	implicit def convertJsonFormat[NeedAnalysis](modelFormat: Format[NeedAnalysis]): JsonFormat[NeedAnalysis] =
+    JsonFormat[NeedAnalysis](
+      JsonReads[NeedAnalysis](
+        bs =>
+          modelFormat
+            .reads(Json.parse(bs.utf8String))
+            .map(result => JsonSuccess(result))
+            .getOrElse[JsonResult[NeedAnalysis]](JsonError())
+      ),
+      JsonWrites[NeedAnalysis](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
+    )
 }

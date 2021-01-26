@@ -13,7 +13,7 @@ object UserJsonImplicits {
     implicit val userWrites = Json.writes[User]
     implicit val userReads = Json.reads[User]
 	
-	implicit val userJsonReads: JsonReads[User] = JsonReads(bs => JsonSuccess(User.parse(bs.utf8String)))
-	implicit val userJsonWrites: JsonWrites[User] = JsonWrites(jsv => ByteString(User.stringify(jsv)))
+	implicit val userJsonReads: JsonReads[User] = JsonReads(bs => JsonSuccess(Json.parse(bs.utf8String)))
+	implicit val userJsonWrites: JsonWrites[User] = JsonWrites(jsv => ByteString(Json.stringify(jsv)))
 	implicit val defaultUserFormat: JsonFormat[User] = JsonFormat(read, write)
 }

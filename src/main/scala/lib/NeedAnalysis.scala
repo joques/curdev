@@ -16,7 +16,7 @@ object NeedAnalysisJsonImplicits {
     implicit val naWrites = Json.writes[NeedAnalysis]
     implicit val naReads = Json.reads[NeedAnalysis]
 	
-	implicit val naJsonReads: JsonReads[NeedAnalysis] = JsonReads(bs => JsonSuccess(NeedAnalysis.parse(bs.utf8String)))
-	implicit val naJsonWrites: JsonWrites[NeedAnalysis] = JsonWrites(jsv => ByteString(NeedAnalysis.stringify(jsv)))
+	implicit val naJsonReads: JsonReads[NeedAnalysis] = JsonReads(bs => JsonSuccess(Json.parse(bs.utf8String)))
+	implicit val naJsonWrites: JsonWrites[NeedAnalysis] = JsonWrites(jsv => ByteString(Json.stringify(jsv)))
 	implicit val defaultNAFormat: JsonFormat[NeedAnalysis] = JsonFormat(read, write)
 }

@@ -1,6 +1,7 @@
 package yester.lib
 
-import play.api.libs.json.{Json, Format}
+import akka.util.ByteString
+import play.api.libs.json.{Json, Format, Writes}
 import org.reactivecouchbase.rs.scaladsl.json.{JsonReads, JsonWrites, JsonFormat, JsonSuccess}
 
 final case class CurriculumDevelopment(pacMembers: Option[List[SingleCommitteeMember]], cdcMembers: Option[List[SingleCommitteeMember]], submissionDate: Option[String], decision: Option[String])
@@ -16,15 +17,15 @@ object CurriculumDevelopmentJsonImplicits {
   	val cdJsonWrites: JsonWrites[CurriculumDevelopment] = JsonWrites(jsv => ByteString(Json.stringify(jsv)))
   	implicit val defaultCDFormat: JsonFormat[CurriculumDevelopment] = JsonFormat(cdJsonReads, cdJsonWrites)
 	
-	implicit def convertJsonFormat[MODELTYPE](modelFormat: Format[MODELTYPE]): JsonFormat[MODELTYPE] =
-    JsonFormat[MODELTYPE](
-      JsonReads[MODELTYPE](
+	implicit def convertJsonFormat[CurriculumDevelopment](modelFormat: Format[CurriculumDevelopment]): JsonFormat[CurriculumDevelopment] =
+    JsonFormat[CurriculumDevelopment](
+      JsonReads[CurriculumDevelopment](
         bs =>
           modelFormat
             .reads(Json.parse(bs.utf8String))
             .map(result => JsonSuccess(result))
-            .getOrElse[JsonResult[MODELTYPE]](JsonError())
+            .getOrElse[JsonResult[CurriculumDevelopment]](JsonError())
       ),
-      JsonWrites[MODELTYPE](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
+      JsonWrites[CurriculumDevelopment](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
     )
 }

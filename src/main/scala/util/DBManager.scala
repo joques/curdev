@@ -4,17 +4,14 @@ package yester.util
 //import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.reactivecouchbase.ReactiveCouchbaseDriver
+import org.reactivecouchbase.rs.scaladsl.ReactiveCouchbase
+
 import org.reactivecouchbase.rs.scaladsl.{N1qlQuery, ReactiveCouchbase}
 import scala.concurrent.Future
 
 import org.reactivecouchbase.rs.scaladsl.json._
 import play.api.libs.json._
 import play.api.libs.json.{Json, Format, Writes}
-
-
-
-
 
 import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
 import com.couchbase.client.protocol.views.{Stale, Query}

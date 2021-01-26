@@ -21,26 +21,20 @@ import play.api.libs.json.{Json, Format, Writes}
 import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
 
 object DBManager {
-	implicit val system       = ActorSystem("YesterReactiveCouchbaseSystem")
-    implicit val materializer = ActorMaterializer.create(system)
+	implicit val yesSys = ActorSystem("YesterReactiveCouchbaseSystem")
+    implicit val materializer = ActorMaterializer.create(yesSys)
+	implicit val ec = yesSys.dispatcher
 	val driver = ReactiveCouchbase(ConfigFactory.load())
 	
 	// formatters and writers
 	
 	implicit val userFormat: JsonFormat[User] = UserJsonImplicits.userJsonFormat
-	//implicit val userFmt: Format[User] = UserJsonImplicits.userFmt
-
-	//implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
+	
 	implicit val progFormat2: JsonFormat[Programme] = ProgrammeJsonImplicits.progJsonFormat
-  	//implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
 
-	//implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt
 	implicit val naFormat2: JsonFormat[NeedAnalysis] = NeedAnalysisJsonImplicits.naJsonFormat
-  	//implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites
 
-	//implicit val cdFormat: Format[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdFmt
 	implicit val cdFormat2: JsonFormat[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdJsonFormat
-  	//implicit val cdWriter: Writes[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdWrites
 
 	// data manipulation
 	
@@ -63,7 +57,7 @@ object DBManager {
 
   	def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: JsonFormat[T]): Future[Seq[T]] = {
       val curBucket = driver.bucket(bucketName)
-	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).asSeq
+	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).asSeq()
   	}
 
   	def save[T](bucketName: String, key: String, data: T)(implicit valFormat: JsonFormat[T]): Future[T] = {

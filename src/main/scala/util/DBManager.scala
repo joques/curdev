@@ -1,7 +1,11 @@
+/* 
+========================================== 
+DB Manager -- provides access to couchbase
+========================================== 
+*/
+
 package yester.util
 
-//import akka.actor.ActorSystem
-//import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.rs.scaladsl.{ReactiveCouchbase, ViewQuery}

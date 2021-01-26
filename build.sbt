@@ -21,7 +21,7 @@
 		"net.cakesolutions" %% "scala-kafka-client-akka" % "2.3.1",
         "com.typesafe" % "config" % "1.4.1",
         "com.typesafe.play" % "play-json_2.12" % "2.9.1",
-        "org.reactivecouchbase" %% "reactivecouchbase-rs-core" % "1.2.1",
+        "org.reactivecouchbase" %% "reactivecouchbase-rs-core" % "1.2.2-SNAPSHOT",
         "io.lamma" %% "lamma" % "2.3.1",
         "io.leonard" %% "play-json-traits" % "1.5.1"
     ),

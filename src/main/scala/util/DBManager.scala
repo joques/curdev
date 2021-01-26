@@ -5,9 +5,8 @@ package yester.util
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.rs.scaladsl.ReactiveCouchbase
-
-import org.reactivecouchbase.rs.scaladsl.{N1qlQuery, ReactiveCouchbase}
 import scala.concurrent.Future
+import com.couchbase.client.java.view.Stale
 
 import org.reactivecouchbase.rs.scaladsl.json._
 import play.api.libs.json._

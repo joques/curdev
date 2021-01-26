@@ -57,7 +57,7 @@ object DBManager {
 
   	def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: JsonFormat[T]): Future[Seq[T]] = {
       val curBucket = driver.bucket(bucketName)
-	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).asSeq()
+	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).asSeq(materializer)
   	}
 
   	def save[T](bucketName: String, key: String, data: T)(implicit valFormat: JsonFormat[T]): Future[T] = {

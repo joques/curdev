@@ -27,5 +27,5 @@ object ProgrammeJsonImplicits {
       JsonWrites[Programme](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
     )
 	
-	implicit val progJsonFormat: JsonFormat[User] = convertJsonFormat(prgFmt)
+	implicit val progJsonFormat: JsonFormat[Programme] = convertJsonFormat(prgFmt)
 }

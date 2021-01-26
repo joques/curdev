@@ -75,9 +75,9 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                     val newReviewProg: Programme = new Programme(beingReviewed.faculty, beingReviewed.department, beingReviewed.name, beingReviewed.level, false, None, currentPreProgCom)
 
                     val reviewKey = UUID.randomUUID().toString()
-                    val createProgOpRes = DBManager.createProgramme(reviewKey, newReviewProg)
+                    val createProgRes = DBManager.createProgramme(reviewKey, newReviewProg)
 
-                    handleInsertionResultWithSimpleResponse(createProgOpRes, message.messageId, "curriculum-review-res")
+                    handleInsertionResultWithSimpleResponse[Programme](createProgRes, message.messageId, "curriculum-review-res")
                 }
             }
         }
@@ -207,7 +207,7 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
     }
 
     def saveCurriculumDevelopmentObject(messageId: String, devCode: String,  curDev: CurriculumDevelopment, respTopic: String): Unit = {
-        val addCurDevOpRes = DBManager.upsertCurriculumDevelopment(devCode, curDev)
-        handleInsertionResultWithSimpleResponse(addCurDevOpRes, messageId, respTopic)
+        val addCurDevRes = DBManager.upsertCurriculumDevelopment(devCode, curDev)
+        handleInsertionResultWithSimpleResponse[CurriculumDevelopment](addCurDevRes, messageId, respTopic)
     }
 }

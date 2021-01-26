@@ -23,18 +23,19 @@ object DBManager {
 	// formatters and writers
 	
 	implicit val userFormat: JsonFormat[User] = UserJsonImplicits.userJsonFormat
-	implicit val userFmt: Format[User] = UserJsonImplicits.userFmt
+	//implicit val userFmt: Format[User] = UserJsonImplicits.userFmt
 
 	implicit val progFormat: Format[Programme] = ProgrammeJsonImplicits.prgFmt
-  	implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
+	implicit val progFormat2: Format[Programme] = ProgrammeJsonImplicits.progJsonFormat
+  	//implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
 
-	implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt
+	//implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt
 	implicit val naFormat2: JsonFormat[NeedAnalysis] = NeedAnalysisJsonImplicits.naJsonFormat
-  	implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites
+  	//implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites
 
-	implicit val cdFormat: Format[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdFmt
+	//implicit val cdFormat: Format[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdFmt
 	implicit val cdFormat2: JsonFormat[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdJsonFormat
-  	implicit val cdWriter: Writes[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdWrites
+  	//implicit val cdWriter: Writes[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdWrites
 
 	// data manipulation
 	
@@ -55,7 +56,7 @@ object DBManager {
       curBucket.get[T](docKey)
   	}
 
-  	def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: Format[T]): Future[Seq[T]] = {
+  	def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: JsonFormat[T]): Future[Seq[T]] = {
       val curBucket = driver.bucket(bucketName)
 	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).asSeq
   	}

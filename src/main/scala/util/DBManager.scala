@@ -29,9 +29,11 @@ object DBManager {
   	implicit val progWriter: Writes[Programme] = ProgrammeJsonImplicits.prgWrites
 
 	implicit val naFormat: Format[NeedAnalysis] = NeedAnalysisJsonImplicits.naFmt
+	implicit val naFormat2: JsonFormat[NeedAnalysis] = NeedAnalysisJsonImplicits.naJsonFormat
   	implicit val naWriter: Writes[NeedAnalysis] = NeedAnalysisJsonImplicits.naWrites
 
 	implicit val cdFormat: Format[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdFmt
+	implicit val cdFormat2: JsonFormat[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdJsonFormat
   	implicit val cdWriter: Writes[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdWrites
 
 	// data manipulation

@@ -25,4 +25,6 @@ object CurriculumDevelopmentJsonImplicits {
       ),
       JsonWrites[CurriculumDevelopment](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
     )
+	
+	implicit val cdJsonFormat: JsonFormat[CurriculumDevelopment] = convertJsonFormat(cdFmt)
 }

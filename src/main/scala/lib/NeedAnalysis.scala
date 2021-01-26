@@ -28,4 +28,6 @@ object NeedAnalysisJsonImplicits {
       ),
       JsonWrites[NeedAnalysis](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
     )
+	
+	implicit val naJsonFormat: JsonFormat[NeedAnalysis] = convertJsonFormat(naFmt)
 }

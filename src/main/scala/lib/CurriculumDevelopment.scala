@@ -12,7 +12,7 @@ object CurriculumDevelopmentJsonImplicits {
     implicit val cdWrites = Json.writes[CurriculumDevelopment]
     implicit val cdReads = Json.reads[CurriculumDevelopment]
 	
-	implicit val cdJsonReads: JsonReads[CurriculumDevelopment] = JsonReads(bs => JsonSuccess(Json.parse(bs.utf8String)))
-	implicit val cdJsonWrites: JsonWrites[CurriculumDevelopment] = JsonWrites(jsv => ByteString(Json.stringify(jsv)))
+	implicit val cdJsonReads: JsonReads[CurriculumDevelopment] = JsonReads(bs => JsonSuccess(bs)
+	implicit val cdJsonWrites: JsonWrites[CurriculumDevelopment] = JsonWrites(bs => bs))
 	implicit val defaultCDFormat: JsonFormat[CurriculumDevelopment] = JsonFormat(read, write)
 }

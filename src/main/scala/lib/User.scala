@@ -25,4 +25,6 @@ object UserJsonImplicits {
       ),
       JsonWrites[User](jsv => ByteString(Json.stringify(modelFormat.writes(jsv))))
     )
+	
+	implicit val userJsonFormat: JsonFormat[User] = convertJsonFormat(userFmt)
 }

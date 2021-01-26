@@ -6,6 +6,8 @@ DB Manager -- provides access to couchbase
 
 package yester.util
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.rs.scaladsl.{ReactiveCouchbase, ViewQuery}
@@ -13,11 +15,14 @@ import scala.concurrent.Future
 import com.couchbase.client.java.view.Stale
 
 import org.reactivecouchbase.rs.scaladsl.json._
+
 import play.api.libs.json.{Json, Format, Writes}
 
 import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
 
 object DBManager {
+	implicit val system       = ActorSystem("YesterReactiveCouchbaseSystem")
+    implicit val materializer = ActorMaterializer.create(system)
 	val driver = ReactiveCouchbase(ConfigFactory.load())
 	
 	// formatters and writers

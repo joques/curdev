@@ -12,12 +12,10 @@ import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.rs.scaladsl.{ReactiveCouchbase, ViewQuery}
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 import com.couchbase.client.java.view.Stale
-
 import org.reactivecouchbase.rs.scaladsl.json._
-
 import play.api.libs.json.{Json, Format, Writes}
-
 import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
 
 object DBManager {
@@ -42,7 +40,16 @@ object DBManager {
   	def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
   	def findCurriculumDevelopmentObject(devCode: String): Future[Option[CurriculumDevelopment]] = findById[CurriculumDevelopment]("yester-curricula-dev", devCode)
 
-  	def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
+	//rewrite this function to eliminate the inner future
+	def findAllProgrammes(): Future[Seq[Pogramme]] = {
+		val progSeqFuture: Future[Seq[Future[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
+		progSegFuture.onComplete {
+			case Failure(progSeqError) => Failure(new Exception("Error fetching programme list ", progSeqError))
+			case Success(allProgsFuture) => Future.sequence(allProgsFuture)
+		}
+	}
+	
+  	//def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 
   	def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData)
   	def addOrUpdateNeedAnalysis(key: String, naData: NeedAnalysis): Future[NeedAnalysis] = save[NeedAnalysis]("yester-need-analyses", key, naData)
@@ -55,9 +62,9 @@ object DBManager {
       curBucket.get[T](docKey)
   	}
 
-  	def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: JsonFormat[T]): Future[Seq[T]] = {
+  	def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: JsonFormat[T]): Future[Seq[Future[T]]] = {
       val curBucket = driver.bucket(bucketName)
-	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).asSeq(materializer)
+	  curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).map(vRow => vRow.typed(ec)).asSeq(materializer)
   	}
 
   	def save[T](bucketName: String, key: String, data: T)(implicit valFormat: JsonFormat[T]): Future[T] = {

@@ -13,6 +13,6 @@ object CurriculumDevelopmentJsonImplicits {
     implicit val cdReads = Json.reads[CurriculumDevelopment]
 	
 	implicit val cdJsonReads: JsonReads[CurriculumDevelopment] = JsonReads(bs => JsonSuccess(bs)
-	implicit val cdJsonWrites: JsonWrites[CurriculumDevelopment] = JsonWrites(bs => bs))
+	implicit val cdJsonWrites: JsonWrites[CurriculumDevelopment] = JsonWrites(bs => bs)
 	implicit val defaultCDFormat: JsonFormat[CurriculumDevelopment] = JsonFormat(read, write)
 }

@@ -11,7 +11,7 @@ import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.rs.scaladsl.{ReactiveCouchbase, ViewQuery}
-import scala.concurrent.Future
+import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}
 import com.couchbase.client.java.view.Stale
 import org.reactivecouchbase.rs.scaladsl.json._
@@ -43,13 +43,16 @@ object DBManager {
 	//rewrite this function to eliminate the inner future
 	def findAllProgrammes(): Future[Seq[Programme]] = {
 		val progSeqFuture: Future[Seq[Future[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
-		var finalRes: Future[Seq[Programme]] = null; 
+		//var finalRes: Future[Seq[Programme]] = null; 
 		progSeqFuture.onComplete {
-			case Failure(progSeqError) => finalRes = Failure(new Exception("Error fetching programme list ", progSeqError))
-			case Success(allProgsFuture) => finalRes = Future.sequence(allProgsFuture)
+			case Failure(progSeqError) => {
+				p: Promise[Seq[Programme]]
+				return p failure (new Exception("Error fetching programme list ", progSeqError)) 
+			}
+			case Success(allProgsFuture) => return Future.sequence(allProgsFuture)
 		}
 		
-		finalRes
+		//finalRes
 	}
 	
   	//def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")

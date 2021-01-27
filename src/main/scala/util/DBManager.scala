@@ -46,8 +46,10 @@ object DBManager {
 		var finalRes: Future[Seq[Programme]] = null; 
 		progSeqFuture.onComplete {
 			case Failure(progSeqError) => {
-				p: Promise[Seq[Programme]]
-				finalRes = p failure (new Exception("Error fetching programme list ", progSeqError)) 
+				val p: Promise[Seq[Programme]]
+				val fut = p.future
+				p failure (new Exception("Error fetching programme list ", progSeqError)) 
+				finalRes = f
 			}
 			case Success(allProgsFuture) => finalRes = Future.sequence(allProgsFuture)
 		}

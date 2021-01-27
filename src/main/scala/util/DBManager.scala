@@ -43,7 +43,7 @@ object DBManager {
 	//rewrite this function to eliminate the inner future
 	def findAllProgrammes(): Future[Seq[Programme]] = {
 		val progSeqFuture: Future[Seq[Future[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
-		progSegFuture.onComplete {
+		progSeqFuture.onComplete {
 			case Failure(progSeqError) => Failure(new Exception("Error fetching programme list ", progSeqError))
 			case Success(allProgsFuture) => Future.sequence(allProgsFuture)
 		}

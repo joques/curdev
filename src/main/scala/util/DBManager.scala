@@ -49,7 +49,7 @@ object DBManager {
 				val p = Promise[Seq[Programme]]()
 				val fut = p.future
 				p failure (new Exception("Error fetching programme list ", progSeqError)) 
-				finalRes = f
+				finalRes = fut
 			}
 			case Success(allProgsFuture) => finalRes = Future.sequence(allProgsFuture)
 		}

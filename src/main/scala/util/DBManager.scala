@@ -41,7 +41,7 @@ object DBManager {
   	def findCurriculumDevelopmentObject(devCode: String): Future[Option[CurriculumDevelopment]] = findById[CurriculumDevelopment]("yester-curricula-dev", devCode)
 
 	//rewrite this function to eliminate the inner future
-	def findAllProgrammes(): Future[Seq[Pogramme]] = {
+	def findAllProgrammes(): Future[Seq[Programme]] = {
 		val progSeqFuture: Future[Seq[Future[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 		progSegFuture.onComplete {
 			case Failure(progSeqError) => Failure(new Exception("Error fetching programme list ", progSeqError))

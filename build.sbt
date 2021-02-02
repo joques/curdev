@@ -8,7 +8,7 @@
     organization := "NUST - Programme Development Unit; FCI",
     scalaVersion := "2.12.13",
     autoScalaLibrary := false,
-    scalacOptions := Seq("-unchecked", "-deprecation"),
+    scalacOptions := Seq("-unchecked", "-deprecation", "-feature"),
     mainClass in (Compile) := Some("yester.Yester"),
     resolvers ++= Seq(
         Resolver.bintrayRepo("cakesolutions", "maven"),

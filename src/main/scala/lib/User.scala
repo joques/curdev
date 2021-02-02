@@ -14,7 +14,7 @@ object UserJsonImplicits {
     implicit val userWrites = Json.writes[User]
     implicit val userReads = Json.reads[User]
 		
-	implicit def convertJsonFormat[User](modelFormat: Format[User]): JsonFormat[User] =
+	def convertJsonFormat[User](modelFormat: Format[User]): JsonFormat[User] =
     JsonFormat[User](
       JsonReads[User](
         bs =>

@@ -15,7 +15,7 @@ object ProgrammeJsonImplicits {
     implicit val prgReads = Json.reads[Programme]
 	
 	
-	implicit def convertJsonFormat[Programme](modelFormat: Format[Programme]): JsonFormat[Programme] =
+	def convertJsonFormat[Programme](modelFormat: Format[Programme]): JsonFormat[Programme] =
     JsonFormat[Programme](
       JsonReads[Programme](
         bs =>

@@ -6,7 +6,9 @@ import java.util.concurrent.{TimeUnit, Executors, ExecutorService}
 import org.apache.kafka.clients.consumer.{KafkaConsumer, ConsumerRecords, ConsumerRecord}
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
-import scala.collection.JavaConversions._
+//import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
+import java.time.Duration
 import scala.util.{Failure, Success}
 // import org.reactivecouchbase.client.OpResult
 import scala.concurrent.Future
@@ -225,6 +227,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             val props = new Properties()
             val groupIDSuffix: String = UUID.randomUUID().toString
             props.put("group.id", s"yester-$groupIDSuffix")
+			//this should now depend on the environment
             props.put("bootstrap.servers", "localhost:9092")
             props.put("zookeeper.connect", "localhost:2181")
             props.put("enable.auto.commit", "true")
@@ -237,12 +240,12 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             props.put("auto.offset.reset", "latest")
 
             consumer = new KafkaConsumer[String,String](props)
-            consumer.subscribe(topics)
+            consumer.subscribe(topics.asJava)
 
             while(shouldRun) {
                 println("yester consumer loop -- begin")
 
-                val records: ConsumerRecords[String,String] = consumer.poll(200)
+                val records: ConsumerRecords[String,String] = consumer.poll(Duration.ofMillis(200))
                 val itRec = records.iterator()
 
                 while(itRec.hasNext()) {

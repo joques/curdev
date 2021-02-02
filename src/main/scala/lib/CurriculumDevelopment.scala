@@ -14,7 +14,7 @@ object CurriculumDevelopmentJsonImplicits {
     implicit val cdReads = Json.reads[CurriculumDevelopment]
 	
 	
-	implicit def convertJsonFormat[CurriculumDevelopment](modelFormat: Format[CurriculumDevelopment]): JsonFormat[CurriculumDevelopment] =
+	def convertJsonFormat[CurriculumDevelopment](modelFormat: Format[CurriculumDevelopment]): JsonFormat[CurriculumDevelopment] =
     JsonFormat[CurriculumDevelopment](
       JsonReads[CurriculumDevelopment](
         bs =>

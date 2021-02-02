@@ -17,7 +17,7 @@ object NeedAnalysisJsonImplicits {
     implicit val naWrites = Json.writes[NeedAnalysis]
     implicit val naReads = Json.reads[NeedAnalysis]
 		
-	implicit def convertJsonFormat[NeedAnalysis](modelFormat: Format[NeedAnalysis]): JsonFormat[NeedAnalysis] =
+	def convertJsonFormat[NeedAnalysis](modelFormat: Format[NeedAnalysis]): JsonFormat[NeedAnalysis] =
     JsonFormat[NeedAnalysis](
       JsonReads[NeedAnalysis](
         bs =>

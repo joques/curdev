@@ -1,6 +1,7 @@
 package yester.lib
 
 import play.api.libs.json._
+import scla.language.implicitConversions
 
 object EnumUtils {
     def enumReads[E <: Enumeration](enum: E): Reads[E#Value] = new Reads[E#Value] {
@@ -19,7 +20,7 @@ object EnumUtils {
         def writes(v: E#Value): JsValue = JsString(v.toString)
     }
 
-    implicit def enumFormat[E <: Enumeration](enum: E): Format[E#Value] = {
+    def enumFormat[E <: Enumeration](enum: E): Format[E#Value] = {
         Format(EnumUtils.enumReads(enum), EnumUtils.enumWrites)
     }
 }

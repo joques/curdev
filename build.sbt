@@ -39,6 +39,6 @@
 
 assemblyMergeStrategy  in assembly := {
     case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-    case PathList("lo4j.Properties") => MergeStrategy.last
+    //case PathList("lo4j.Properties") => MergeStrategy.last
     case x => MergeStrategy.first
 }

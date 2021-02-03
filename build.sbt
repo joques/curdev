@@ -19,6 +19,7 @@
         "io.reactivex" % "rxscala_2.12" % "0.27.0",
         "net.cakesolutions" %% "scala-kafka-client" % "2.3.1",
 		"net.cakesolutions" %% "scala-kafka-client-akka" % "2.3.1",
+		"org.apache.logging.log4j" % "log4j-core" % "2.7",
         "com.typesafe" % "config" % "1.4.1",
         "com.typesafe.play" % "play-json_2.12" % "2.9.1",
         "org.reactivecouchbase" %% "reactivecouchbase-rs-core" % "1.2.1",

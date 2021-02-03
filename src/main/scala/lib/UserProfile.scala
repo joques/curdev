@@ -1,7 +1,7 @@
 package yester.lib
 
 import play.api.libs.json._
-import scla.language.implicitConversions
+import scala.language.implicitConversions
 
 object EnumUtils {
     def enumReads[E <: Enumeration](enum: E): Reads[E#Value] = new Reads[E#Value] {

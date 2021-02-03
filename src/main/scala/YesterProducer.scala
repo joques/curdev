@@ -5,7 +5,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 
 final case class YesterProducer() {
     val props = new Properties()
-    props.put("bootstrap.servers", "localhost:9092")
+    props.put("bootstrap.servers", "172.28.253.76:9092")
     props.put("acks", "all")
     props.put("retries", "0")
     props.put("batch.size", "16384")

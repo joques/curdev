@@ -228,8 +228,8 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             val groupIDSuffix: String = UUID.randomUUID().toString
             props.put("group.id", s"yester-$groupIDSuffix")
 			//this should now depend on the environment
-            props.put("bootstrap.servers", "localhost:9092")
-            props.put("zookeeper.connect", "localhost:2181")
+            props.put("bootstrap.servers", "172.28.253.76:9092")
+            props.put("zookeeper.connect", "172.28.253.76:2181")
             props.put("enable.auto.commit", "true")
             props.put("auto.commit.interval.ms", "3000")
             props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")

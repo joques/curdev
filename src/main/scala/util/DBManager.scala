@@ -92,7 +92,7 @@ object DBManager {
 				println("handling an error case in onComplete inside findAllProgrammes...")
 				val p = Promise[Seq[Programme]]()
 				val fut = p.future
-				return p failure (new Exception("Error fetching programme list ", progSeqError))
+				p failure (new Exception("Error fetching programme list ", progSeqError))
 				finalRes = fut
 			}
 			case Success(allProgsFuture) => {

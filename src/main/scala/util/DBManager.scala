@@ -85,18 +85,24 @@ object DBManager {
 	//rewrite this function to eliminate the inner future
 	def findAllProgrammes(): Future[Seq[Programme]] = {
 		val progSeqFuture: Future[Seq[Future[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
-		//var finalRes: Future[Seq[Programme]] = null;
+		var finalRes: Future[Seq[Programme]] = null;
+
 		progSeqFuture.onComplete {
 			case Failure(progSeqError) => {
+				println("handling an error case in onComplete inside findAllProgrammes...")
 				val p = Promise[Seq[Programme]]()
-				// val fut = p.future
+				val fut = p.future
 				return p failure (new Exception("Error fetching programme list ", progSeqError))
-				// finalRes = fut
+				finalRes = fut
 			}
-			case Success(allProgsFuture) => return Future.sequence(allProgsFuture)
+			case Success(allProgsFuture) => {
+				println("handling a success case in onComplete inside findAllProgrammes...")
+				finalRes =  Future.sequence(allProgsFuture)
+			}
 		}
 
-		// finalRes
+		println(s"finalRes = $finalRes")
+		finalRes
 	}
 
   	//def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")

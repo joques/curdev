@@ -43,6 +43,7 @@ object DBManager {
 			|		name: "yester-curricula-dev",
 			|		hosts: ["172.28.253.79"]
 			|	}
+			|}
 		""".stripMargin))
 
 

@@ -22,11 +22,32 @@ object DBManager {
 	implicit val yesSys = ActorSystem("YesterReactiveCouchbaseSystem")
   implicit val materializer = ActorMaterializer.create(yesSys)
 	implicit val ec = yesSys.dispatcher
-	val dbConfig: Config = ConfigFactory.load("application.conf")
-	val driver = ReactiveCouchbase(dbConfig)
+	//val dbConfig: Config = ConfigFactory.load("application.conf")
+	//val driver = ReactiveCouchbase(dbConfig)
+	val driver = ReactiveCouchbase(ConfigFactory.parseString(
+		"""
+			|buckets {
+			|	users {
+			|		name: "yester-users",
+			|		hosts: ["172.28.253.79"]
+			|	},
+			|	progs {
+			|		name: "yester-programmes",
+			|		hosts: ["172.28.253.79"]
+			|	},
+			|	analyses {
+			|		name: "yester-need-analyses",
+			|		hosts: ["172.28.253.79"]
+			|	},
+			|	devel {
+			|		name: "yester-curricula-dev",
+			|		hosts: ["172.28.253.79"]
+			|	}
+		""".stripMargin))
+
 
 	// testing the config
-	println(s"config = $dbConfig")
+	//println(s"config = $dbConfig")
 
 	// formatters and writers
 

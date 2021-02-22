@@ -22,7 +22,7 @@ object DBManager {
 	implicit val yesSys = ActorSystem("YesterReactiveCouchbaseSystem")
   implicit val materializer = ActorMaterializer.create(yesSys)
 	implicit val ec = yesSys.dispatcher
-	val dbConfig: Config = ConfigFactory.load()
+	val dbConfig: Config = ConfigFactory.load("application.conf")
 	val driver = ReactiveCouchbase(dbConfig)
 
 	// testing the config

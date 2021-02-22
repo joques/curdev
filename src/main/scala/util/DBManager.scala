@@ -1,14 +1,14 @@
-/* 
-========================================== 
+/*
+==========================================
 DB Manager -- provides access to couchbase
-========================================== 
+==========================================
 */
 
 package yester.util
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.reactivecouchbase.rs.scaladsl.{ReactiveCouchbase, ViewQuery}
 import scala.concurrent.{Future, Promise}
@@ -20,14 +20,18 @@ import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, N
 
 object DBManager {
 	implicit val yesSys = ActorSystem("YesterReactiveCouchbaseSystem")
-    implicit val materializer = ActorMaterializer.create(yesSys)
+  implicit val materializer = ActorMaterializer.create(yesSys)
 	implicit val ec = yesSys.dispatcher
-	val driver = ReactiveCouchbase(ConfigFactory.load())
-	
+	val dbConfig: Config = ConfigFactory.load()
+	val driver = ReactiveCouchbase(dbConfig)
+
+	// testing the config
+	println(s"config = $dbConfig")
+
 	// formatters and writers
-	
+
 	implicit val userFormat: JsonFormat[User] = UserJsonImplicits.userJsonFormat
-	
+
 	implicit val progFormat2: JsonFormat[Programme] = ProgrammeJsonImplicits.progJsonFormat
 
 	implicit val naFormat2: JsonFormat[NeedAnalysis] = NeedAnalysisJsonImplicits.naJsonFormat
@@ -35,7 +39,7 @@ object DBManager {
 	implicit val cdFormat2: JsonFormat[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdJsonFormat
 
 	// data manipulation
-	
+
   	def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
   	def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
   	def findCurriculumDevelopmentObject(devCode: String): Future[Option[CurriculumDevelopment]] = findById[CurriculumDevelopment]("yester-curricula-dev", devCode)
@@ -43,26 +47,26 @@ object DBManager {
 	//rewrite this function to eliminate the inner future
 	def findAllProgrammes(): Future[Seq[Programme]] = {
 		val progSeqFuture: Future[Seq[Future[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
-		var finalRes: Future[Seq[Programme]] = null; 
+		var finalRes: Future[Seq[Programme]] = null;
 		progSeqFuture.onComplete {
 			case Failure(progSeqError) => {
 				val p = Promise[Seq[Programme]]()
 				val fut = p.future
-				p failure (new Exception("Error fetching programme list ", progSeqError)) 
+				p failure (new Exception("Error fetching programme list ", progSeqError))
 				finalRes = fut
 			}
 			case Success(allProgsFuture) => finalRes = Future.sequence(allProgsFuture)
 		}
-		
+
 		finalRes
 	}
-	
+
   	//def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 
   	def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData)
   	def addOrUpdateNeedAnalysis(key: String, naData: NeedAnalysis): Future[NeedAnalysis] = save[NeedAnalysis]("yester-need-analyses", key, naData)
   	def upsertCurriculumDevelopment(key: String, cdData: CurriculumDevelopment): Future[CurriculumDevelopment] = save[CurriculumDevelopment]("yester-curricula-dev", key, cdData)
-	
+
 	// generic methods
 
   	def findById[T](bucketName: String, docKey: String)(implicit valFormat: JsonFormat[T]): Future[Option[T]] = {
@@ -79,5 +83,5 @@ object DBManager {
       val curBucket = driver.bucket(bucketName)
       curBucket.upsert(key, data)
   	}
-	
+
 }

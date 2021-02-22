@@ -29,19 +29,23 @@ object DBManager {
 			|buckets {
 			|	"yester-users" {
 			|		name: "yester-users",
-			|		hosts: ["172.28.253.79"]
+			|		hosts: ["172.28.253.79"],
+			|		password: "curidev"
 			|	},
 			|	"yester-programmes" {
 			|		name: "yester-programmes",
-			|		hosts: ["172.28.253.79"]
+			|		hosts: ["172.28.253.79"],
+			|		password: "curidev"
 			|	},
 			|	"yester-need-analyses" {
 			|		name: "yester-need-analyses",
-			|		hosts: ["172.28.253.79"]
+			|		hosts: ["172.28.253.79"],
+			|		password: "curidev"
 			|	},
 			|	"yester-curricula-dev" {
 			|		name: "yester-curricula-dev",
-			|		hosts: ["172.28.253.79"]
+			|		hosts: ["172.28.253.79"],
+			|		password: "curidev"
 			|	}
 			|}
 		""".stripMargin))

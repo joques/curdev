@@ -27,19 +27,19 @@ object DBManager {
 	val driver = ReactiveCouchbase(ConfigFactory.parseString(
 		"""
 			|buckets {
-			|	users {
+			|	"yester-users" {
 			|		name: "yester-users",
 			|		hosts: ["172.28.253.79"]
 			|	},
-			|	progs {
+			|	"yester-programmes" {
 			|		name: "yester-programmes",
 			|		hosts: ["172.28.253.79"]
 			|	},
-			|	analyses {
+			|	"yester-need-analyses" {
 			|		name: "yester-need-analyses",
 			|		hosts: ["172.28.253.79"]
 			|	},
-			|	devel {
+			|	"yester-curricula-dev" {
 			|		name: "yester-curricula-dev",
 			|		hosts: ["172.28.253.79"]
 			|	}

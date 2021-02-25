@@ -40,42 +40,53 @@ final case class SummaryMessageProcessor(messenger: YesterProducer) extends Mess
 
         val allProgs = DBManager.findAllProgrammes()
         allProgs.onComplete {
-            case (Success(progs)) => {
-                println(s"the list is: $progs")
+            case Success(allProgs) => {
+                allProgs.rowsAs[Programme] match {
+                    case Failure(rowError) => {
+                        val rowErrorRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, Option(rowError.getMessage), None)
+                        val errMsgStr11 = Json.toJson(rowErrorRespMsg).toString()
+                        println(s"the error message to be sent is $errMsgStr11")
+                        messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", errMsgStr11))
+                    }
+                    case Success(progs) => {
+                        println(s"the list is: $progs")
 
-                val inProgress: Seq[Programme] = progs.filter((prg: Programme) => prg.isPreProgramme).take(5)
-                println(s"the in progress list is $inProgress")
+                        val inProgress: Seq[Programme] = progs.filter((prg: Programme) => prg.isPreProgramme).take(5)
+                        println(s"the in progress list is $inProgress")
 
 
-                val now = Date.today()
-                val inSixMonth = now + (6 months)
-                val threeMonthsAgo = now - (3 months)
-                println(s"the time now is $now and in six months is $inSixMonth")
+                        val now = Date.today()
+                        val inSixMonth = now + (6 months)
+                        val threeMonthsAgo = now - (3 months)
+                        println(s"the time now is $now and in six months is $inSixMonth")
 
-                val durForReview: Seq[Programme] = for {
-                    curProg <- progs
-                    if ((!curProg.isPreProgramme) && (Date(curProg.progComponent.get.nextReview) <= inSixMonth))
-                } yield curProg
-                println(s"due for review list $durForReview")
+                        val durForReview: Seq[Programme] = for {
+                            curProg <- progs
+                            if ((!curProg.isPreProgramme) && (Date(curProg.progComponent.get.nextReview) <= inSixMonth))
+                        } yield curProg
+                        println(s"due for review list $durForReview")
 
-                val recentlyApproved: Seq[Programme] = for {
-                    curProg1 <- progs
-                    if ((!curProg1.isPreProgramme) && (threeMonthsAgo <= Date(curProg1.progComponent.get.approvedOn)))
-                } yield curProg1
-                println(s"recently approved list $recentlyApproved")
+                        val recentlyApproved: Seq[Programme] = for {
+                            curProg1 <- progs
+                            if ((!curProg1.isPreProgramme) && (threeMonthsAgo <= Date(curProg1.progComponent.get.approvedOn)))
+                        } yield curProg1
+                        println(s"recently approved list $recentlyApproved")
 
-                val summary = new Summary(Option(inProgress), Option(durForReview), Option(recentlyApproved))
-                val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, Option(summary))
+                        val summary = new Summary(Option(inProgress), Option(durForReview), Option(recentlyApproved))
+                        val summaryRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, None, Option(summary))
 
-                val summaryRespMsgStr = Json.toJson(summaryRespMsg).toString()
-                println(s"the  message to be sent is $summaryRespMsgStr")
-                messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", summaryRespMsgStr))
+                        val summaryRespMsgStr = Json.toJson(summaryRespMsg).toString()
+                        println(s"the  message to be sent is $summaryRespMsgStr")
+                        messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", summaryRespMsgStr))
+                    }
+                }
             }
-            case (Failure(progErr)) => {
+            case Failure(progErr) => {
                 progErr.printStackTrace
                 val progErrorRespMsg: SummaryResponseMessage = new SummaryResponseMessage(messageId, Option(progErr.getMessage), None)
                 val errMsgStr = Json.toJson(progErrorRespMsg).toString
                 println(s"the error message to be sent for all progs is $errMsgStr")
+                messenger.getProducer().send(new ProducerRecord[String,String]("summary-res", errMsgStr))
             }
         }
     }

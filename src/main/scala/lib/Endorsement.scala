@@ -3,7 +3,6 @@ package yester.lib
 // import play.api.libs.json.Json
 import com.couchbase.client.scala.implicits.Codec
 
-
 final case class Endorsement(devCode: String, endorsementDate: String, decision: String)
 
 object Endorsement {

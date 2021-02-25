@@ -74,7 +74,6 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
                         messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr1))
                     }
                     case Success(progs) => {
-
                         progs.rowsAs[Programme] match {
                             case Failure(rowError) => {
                                 val rowErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(rowError.getMessage), None)

@@ -8,7 +8,7 @@ import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
-import yester.lib.{UserWithPreProgramme, Programme}
+import yester.lib.Programme
 import yester.message.request.{FindUserRequestMessage, CreateUserRequestMessage}
 import yester.message.response.{UserResponseMessage, UserWithPreProgrammeResponseMessage, UserResponseMessageJsonImplicits, UserWithPreProgrammeResponseMessageJsonImplicits}
 
@@ -73,21 +73,31 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
                         println(s"the error message to be sent is $errMsgStr1")
                         messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr1))
                     }
-                    case Success(progSeq) => {
-                        val preProgrammeSeq: Seq[Programme] = progSeq.filter((prg: Programme) => prg.isPreProgramme)
-                        var preProgCodes: Seq[String] = for (prg1 <- preProgrammeSeq if prg1.preProgComponent.get.initiator == userName) yield prg1.preProgComponent.get.devCode
+                    case Success(progs) => {
 
-												var userWPrePrg: Option[UserWithPreProgramme] = None
-                        if (preProgCodes.isEmpty) {
-                            userWPrePrg = Some(new UserWithPreProgramme(userVal.get, None))
+                        progs.rowsAs[Programme] match {
+                            case Failure(rowError) => {
+                                val rowErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(rowError.getMessage), None)
+                                val errMsgStr11 = Json.toJson(rowErrorRespMsg).toString()
+                                println(s"the error message to be sent is $errMsgStr11")
+                                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", errMsgStr11))
+                            }
+                            case Success(progSeq) => {
+                                val preProgrammeSeq: Seq[Programme] = progSeq.filter((prg: Programme) => prg.isPreProgramme)
+                                var preProgCodes: Seq[String] = for (prg1 <- preProgrammeSeq if prg1.preProgComponent.get.initiator == userName) yield prg1.preProgComponent.get.devCode
+
+                                var userWPrePrg: Option[UserWithPreProgramme] = None
+                                if (preProgCodes.isEmpty) {
+                                    userWPrePrg = Some(new UserWithPreProgramme(userVal.get, None))
+                                } else {
+                                    userWPrePrg = Some(new UserWithPreProgramme(userVal.get, Option(preProgCodes)))
+                                }
+                                val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, None, userWPrePrg)
+                                val succMsgStr = Json.toJson(succRespMsg).toString()
+                                println(s"the success message to be sent is $succMsgStr")
+                                messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
+                            }
                         }
-                        else {
-                            userWPrePrg = Some(new UserWithPreProgramme(userVal.get, Option(preProgCodes)))
-                        }
-                        val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, None, userWPrePrg)
-                        val succMsgStr = Json.toJson(succRespMsg).toString()
-                        println(s"the success message to be sent is $succMsgStr")
-                        messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
                     }
                 }
             }

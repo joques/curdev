@@ -1,131 +1,96 @@
 /*
-==========================================
-DB Manager -- provides access to couchbase
-==========================================
-*/
+ ==================================================================================================
+ DB Manager -- provides access to CouchBase
+ implements Couchase Scala SDK 1.1.2
+ ==================================================================================================
+ */
+
 
 package yester.util
 
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import com.typesafe.config.{Config, ConfigFactory}
+import com.couchbase.client.core.error.{CouchbaseException, DocumentNotFoundException}
+import com.couchbase.client.scala.Cluster
+import com.couchbase.client.scala.durability.Durability
+import com.couchbase.client.scala.json._
+import com.couchbase.client.scala.kv.{MutationResult, GetResult}
+import com.couchbase.client.scala.query.QueryResult
+import com.couchbase.client.scala.codec.{JsonSerializer, JsonDeserializer}
+
+import scala.concurrent.duration._
+import scala.util.{Failure, Success, Try}
+import concurrent.duration._
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.reactivecouchbase.rs.scaladsl.{ReactiveCouchbase, ViewQuery}
-import scala.concurrent.{Future, Promise}
-import scala.util.{Failure, Success}
-import com.couchbase.client.java.view.Stale
-import org.reactivecouchbase.rs.scaladsl.json._
-import play.api.libs.json.{Json, Format, Writes}
-import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
+
+import yester.lib.{User, Programme, NeedAnalysis, CurriculumDevelopment}
 
 object DBManager {
-	implicit val yesSys = ActorSystem("YesterReactiveCouchbaseSystem")
-  implicit val materializer = ActorMaterializer.create(yesSys)
-	implicit val ec = yesSys.dispatcher
-	//val dbConfig: Config = ConfigFactory.load("application.conf")
-	//val driver = ReactiveCouchbase(dbConfig)
-	val driver = ReactiveCouchbase(ConfigFactory.parseString(
-		"""
-			|buckets {
-			|	"yester-users" {
-			|		name: "yester-users",
-			|		hosts: ["172.28.253.79"],
-			|		authentication: {
-			|			username: "curi",
-			|			password: "curidev"
-			|		}
-			|	},
-			|	"yester-programmes" {
-			|		name: "yester-programmes",
-			|		hosts: ["172.28.253.79"],
-			|		authentication: {
-			|			username: "curi",
-			|			password: "curidev"
-			|		}
-			|	},
-			|	"yester-need-analyses" {
-			|		name: "yester-need-analyses",
-			|		hosts: ["172.28.253.79"],
-			|		authentication: {
-			|			username: "curi",
-			|			password: "curidev"
-			|		}
-			|	},
-			|	"yester-curricula-dev" {
-			|		name: "yester-curricula-dev",
-			|		hosts: ["172.28.253.79"],
-			|		authentication: {
-			|			username: "curi",
-			|			password: "curidev"
-			|		}
-			|	}
-			|}
-		""".stripMargin))
+	val cluster = Cluster.connect("172.28.253.79", "curi", "curidev")
 
+	//find document inside a bucket using the document identifier
+	def findDocByID(bucketName: String, docID: String): Future[GetResult] = {
+		val curBucket = cluster.bucket(bucketName)
+		curBucket.waitUntilReady(30.seconds).get
 
-	// testing the config
-	//println(s"config = $dbConfig")
-
-	// formatters and writers
-
-	implicit val userFormat: JsonFormat[User] = UserJsonImplicits.userJsonFormat
-
-	implicit val progFormat2: JsonFormat[Programme] = ProgrammeJsonImplicits.progJsonFormat
-
-	implicit val naFormat2: JsonFormat[NeedAnalysis] = NeedAnalysisJsonImplicits.naJsonFormat
-
-	implicit val cdFormat2: JsonFormat[CurriculumDevelopment] = CurriculumDevelopmentJsonImplicits.cdJsonFormat
-
-	// data manipulation
-
-  	def findUser(username: String): Future[Option[User]] = findById[User]("yester-users", username)
-  	def findNeedAnalysisObject(naCode: String): Future[Option[NeedAnalysis]] = findById[NeedAnalysis]("yester-need-analyses", naCode)
-  	def findCurriculumDevelopmentObject(devCode: String): Future[Option[CurriculumDevelopment]] = findById[CurriculumDevelopment]("yester-curricula-dev", devCode)
-
-	//rewrite this function to eliminate the inner future
-	def findAllProgrammes(): Future[Seq[Programme]] = {
-		val progSeqFuture: Future[Seq[Future[Programme]]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
-		var finalRes: Future[Seq[Programme]] = null;
-
-		progSeqFuture.onComplete {
-			case Failure(progSeqError) => {
-				println("handling an error case in onComplete inside findAllProgrammes...")
-				val p = Promise[Seq[Programme]]()
-				val fut = p.future
-				p failure (new Exception("Error fetching programme list ", progSeqError))
-				finalRes = fut
-			}
-			case Success(allProgsFuture) => {
-				println("handling a success case in onComplete inside findAllProgrammes...")
-				finalRes =  Future.sequence(allProgsFuture)
-			}
-		}
-
-		println(s"finalRes = $finalRes")
-		finalRes
+		val DocColl = curBucket.getDefaultCollection
+		docColl.async.get(docID)
 	}
 
-  	//def findAllProgrammes(): Future[Seq[Programme]] = findAll[Programme]("yester-programmes", "progr_dd", "prog")
 
-  	def createProgramme(progKey: String, progData: Programme): Future[Programme] = save[Programme]("yester-programmes", progKey, progData)
-  	def addOrUpdateNeedAnalysis(key: String, naData: NeedAnalysis): Future[NeedAnalysis] = save[NeedAnalysis]("yester-need-analyses", key, naData)
-  	def upsertCurriculumDevelopment(key: String, cdData: CurriculumDevelopment): Future[CurriculumDevelopment] = save[CurriculumDevelopment]("yester-curricula-dev", key, cdData)
+	//find a user
+	def findUser(username: String): Future[User] = {
+		findDocByID("yester-users", username)
+			.map((v: GetResult) => v.contentAs[User])
+			.map((v: Try[User]) => v.get)
+			.map((v: User) => v)
+	}
 
-	// generic methods
+	//find a need analysis document based on its code
+	def findNeedAnalysisObject(naCode: String): Future[NeedAnaysis] = {
+		findDocByID("yester-need-analyses", naCode)
+			.map((v: GetResult) => v.contentAs[NeedAnalysis])
+			.map((v: Try[NeedAnalysis]) => v.get)
+			.map((v: NeedAnalysis) => v)
+	}
 
-  	def findById[T](bucketName: String, docKey: String)(implicit valFormat: JsonFormat[T]): Future[Option[T]] = {
-      val curBucket = driver.bucket(bucketName)
-      curBucket.get[T](docKey)
-  	}
+	//find a curriculum development document
+	def findCurriculumDevelopmentObject(devCode: String): Future[CurriculumDevelopment] = {
+		findDocByID("yester-need-curricula-dev", devCode)
+			.map((v: GetResult) => v.contentAs[CurriculumDevelopment])
+			.map((v: Try[CurriculumDevelopment]) => v.get)
+			.map((v: CurriculumDevelopment) => v)
+	}
 
-  	def findAll[T](bucketName: String, designDoc: String, viewName: String)(implicit valFormat: JsonFormat[T]): Future[Seq[Future[T]]] = {
-      val curBucket = driver.bucket(bucketName)
-	  	curBucket.searchView[T](ViewQuery(designDoc, viewName, _.includeDocs().stale(Stale.FALSE))).map(vRow => vRow.typed(ec)).asSeq(materializer)
-  	}
+	//save a document in a bucket
+	def saveDoc[T](bucketName: String, docID: String, docData: T)(implicit jser: JsonSerializer[T]): Future[MutationResult] = {
+		val curBucket = cluster.bucket(bucketName)
+		curBucket.waitUntilReady(30.seconds)
+		val docColl = curBucket.getDefaultCollection
+		docColl.async.upsert(docID, docData)
+	}
 
-  	def save[T](bucketName: String, key: String, data: T)(implicit valFormat: JsonFormat[T]): Future[T] = {
-      val curBucket = driver.bucket(bucketName)
-      curBucket.upsert(key, data)
-  	}
+	//create a programme
+	def createProgramme(progKey: String, progData: Programme): Future[MutaationResult] = {
+		saveDoc[Programme]("yester-programmes",progKey, progData)
+	}
 
+	//add or update a need analysis document
+	def addOrUpdateNeedAnalysis(naCode: String, naData: NeedAnalysis): Future[MutationResult] = {
+		saveDoc[NeedAnalysis]("yester-need-analyses", naCode, naData)
+	}
+
+	//insert or update a curriculum development document
+	def upsertCurriculumDevelopment(cdCode: String, cdData: CurriculumDevelopment): Future[MutationResult] = {
+		saveDoc[CurriculumDevelopment]("yester-curricula-dev", cdCode, cdData)
+	}
+
+	//find all documents in a bucket
+	def findAllDocs(statement: String): Future[QueryResult] = {
+		cluster.async.query(statement)
+	}
+
+	def findAllProgrammes(): Future[QueryResult] = {
+		val stmt = """SELECT `yester-programmes`.* FROM `yester-programmes`;"""
+		findAllDocs(stmt)
+	}
 }

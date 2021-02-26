@@ -64,7 +64,7 @@ object DBManager {
 	//save a document in a bucket
 	def saveDoc[T](bucketName: String, docID: String, docData: T)(implicit jser: JsonSerializer[T]): Future[MutationResult] = {
 		val curBucket = cluster.bucket(bucketName)
-		curBucket.waitUntilReady(30.seconds)
+		curBucket.waitUntilReady(30.seconds).get
 		val docColl = curBucket.getDefaultCollection
 		docColl.async.upsert(docID, docData)
 	}

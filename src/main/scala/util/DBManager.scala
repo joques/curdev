@@ -32,7 +32,7 @@ object DBManager {
 		val curBucket = cluster.bucket(bucketName)
 		curBucket.waitUntilReady(30.seconds).get
 
-		val DocColl = curBucket.getDefaultCollection
+		val DocColl = curBucket.defaultCollection
 		docColl.async.get(docID)
 	}
 
@@ -65,7 +65,7 @@ object DBManager {
 	def saveDoc[T](bucketName: String, docID: String, docData: T)(implicit jser: JsonSerializer[T]): Future[MutationResult] = {
 		val curBucket = cluster.bucket(bucketName)
 		curBucket.waitUntilReady(30.seconds).get
-		val docColl = curBucket.getDefaultCollection
+		val docColl = curBucket.defaultCollection
 		docColl.async.upsert(docID, docData)
 	}
 

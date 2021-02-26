@@ -10,8 +10,7 @@ import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.Programme
 import yester.message.request.{FindUserRequestMessage, CreateUserRequestMessage}
-import yester.message.response.UserResponseMessage._
-import yester.message.response.UserWithPreProgrammeResponseMessage._
+import yester.message.response.{UserResponseMessage, UserWithPreProgrammeResponseMessage}
 
 
 final case class UserMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {

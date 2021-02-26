@@ -32,5 +32,5 @@ final case class User(username: String, password: String, profile: UserProfile, 
 // }
 
 object User {
-  implicit val userCodec: Codec[USer] = Codec.codec[User]
+  implicit val codec: Codec[User] = Codec.codec[User]
 }

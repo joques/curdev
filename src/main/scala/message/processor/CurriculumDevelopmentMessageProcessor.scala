@@ -62,22 +62,31 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr))
             }
             case Success(progSeq) => {
-                val toBeReviewedProgs: Seq[Programme] = progSeq.filter((prg: Programme) => ((! prg.isPreProgramme) && (prg.progComponent.get.code == reviewObj.code)))
-                if (toBeReviewedProgs.isEmpty) {
-                    val progErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(s"No exisiting programme with code $reviewObj.code"), None)
-                    val errMsgStr1 = Json.toJson(progErrorRespMsg1).toString
-                    println(s"the error message to be sent for all progs is $errMsgStr1")
-                    messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr1))
-                }
-                else {
-                    val beingReviewed: Programme = toBeReviewedProgs.head
-                    val currentPreProgCom: Option[PreProgrammeComponent] = Some(new PreProgrammeComponent(reviewObj.devCode, reviewObj.initiator))
-                    val newReviewProg: Programme = new Programme(beingReviewed.faculty, beingReviewed.department, beingReviewed.name, beingReviewed.level, false, None, currentPreProgCom)
+                progs.rowsAs[Programme] match {
+                    case Failure(rowError) => {
+                        val rowErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(rowError.getMessage), None)
+                        val errMsgStr11 = Json.toJson(rowErrorRespMsg).toString()
+                        println(s"the error message to be sent is $errMsgStr11")
+                        messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr11))
+                    }
+                    case Success(progSeq) => {
+                        val toBeReviewedProgs: Seq[Programme] = progSeq.filter((prg: Programme) => ((! prg.isPreProgramme) && (prg.progComponent.get.code == reviewObj.code)))
+                        if (toBeReviewedProgs.isEmpty) {
+                            val progErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(s"No exisiting programme with code $reviewObj.code"), None)
+                            val errMsgStr1 = Json.toJson(progErrorRespMsg1).toString
+                            println(s"the error message to be sent for all progs is $errMsgStr1")
+                            messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr1))
+                        } else {
+                            val beingReviewed: Programme = toBeReviewedProgs.head
+                            val currentPreProgCom: Option[PreProgrammeComponent] = Some(new PreProgrammeComponent(reviewObj.devCode, reviewObj.initiator))
+                            val newReviewProg: Programme = new Programme(beingReviewed.faculty, beingReviewed.department, beingReviewed.name, beingReviewed.level, false, None, currentPreProgCom)
 
-                    val reviewKey = UUID.randomUUID().toString()
-                    val createProgRes = DBManager.createProgramme(reviewKey, newReviewProg)
+                            val reviewKey = UUID.randomUUID().toString()
+                            val createProgRes = DBManager.createProgramme(reviewKey, newReviewProg)
 
-                    handleInsertionResultWithSimpleResponse[Programme](createProgRes, message.messageId, "curriculum-review-res")
+                            handleInsertionResultWithSimpleResponse(createProgRes, message.messageId, "curriculum-review-res")
+                        }
+                    }
                 }
             }
         }
@@ -89,26 +98,15 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
 
         val curDevObjRes = DBManager.findCurriculumDevelopmentObject(memberObj.devCode)
         curDevObjRes.onComplete {
-            case Success(curDevObj) => {
-                println("there could be an existing curriculum development object. We shall explore further ...")
-
-                curDevObj match {
-                    case Some(cdo) => {
-                        println("there is an existing object ...")
-                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), cdo.cdcMembers, cdo.submissionDate, cdo.decision)
-                        saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev3, "cur-dev-appoint-pac-res")
-                    }
-                    case None => {
-                        println("it seems like there was no object at all...")
-                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, None, None)
-                        saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev2, "cur-dev-appoint-pac-res")
-                    }
-                }
-            }
             case Failure(curDevFailure) => {
                 println("no curriculum development object exists yet...")
                 val curDev1: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), None, None, None)
                 saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev1, "cur-dev-appoint-pac-res")
+            }
+            case Success(cdo) => {
+                println("there is an existing object ...")
+                val curDev3: CurriculumDevelopment = new CurriculumDevelopment(Some(memberObj.members), cdo.cdcMembers, cdo.submissionDate, cdo.decision)
+                saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev3, "cur-dev-appoint-pac-res")
             }
         }
     }
@@ -119,26 +117,15 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
 
         val curDevObjRes = DBManager.findCurriculumDevelopmentObject(memberObj.devCode)
         curDevObjRes.onComplete {
-            case Success(curDevObj) => {
-                println("there could be an existing curriculum development object. We shall explore further ...")
-
-                curDevObj match {
-                    case Some(cdo) => {
-                        println("there is an existing object ...")
-                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, Some(memberObj.members), cdo.submissionDate, cdo.decision)
-                        saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev3, "cur-dev-appoint-cdc-res")
-                    }
-                    case None => {
-                        println("it seems like there was no object at all...")
-                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, Some(memberObj.members), None, None)
-                        saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev2, "cur-dev-appoint-cdc-res")
-                    }
-                }
-            }
             case Failure(curDevFailure) => {
                 println("no curriculum development object exists yet...")
                 val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, Some(memberObj.members), None, None)
                 saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev1, "cur-dev-appoint-cdc-res")
+            }
+            case Success(cdo) => {
+                println("there is an existing object ...")
+                val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, Some(memberObj.members), cdo.submissionDate, cdo.decision)
+                saveCurriculumDevelopmentObject(message.messageId, memberObj.devCode, curDev3, "cur-dev-appoint-cdc-res")
             }
         }
     }
@@ -156,24 +143,15 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
 
         val curDevObjRes = DBManager.findCurriculumDevelopmentObject(submissionObj.devCode)
         curDevObjRes.onComplete {
-            case Success(curDevObj) => {
-                curDevObj match {
-                    case Some(cdo) => {
-                        println("a curriculum development object exists already ...")
-                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, cdo.cdcMembers, Some(submissionObj.submissionDate), cdo.decision)
-                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev3, "cur-dev-draft-submit-res")
-                    }
-                    case None => {
-                        println("it seems there is no object yet...")
-                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, None, Some(submissionObj.submissionDate), None)
-                        saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev2, "cur-dev-draft-submit-res")
-                    }
-                }
-            }
             case Failure(curDevFailure) => {
                 println("no curriculum development object exists yet ...")
                 val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, None, Some(submissionObj.submissionDate), None)
                 saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev1, "cur-dev-draft-submit-res")
+            }
+            case Success(cdo) => {
+                println("a curriculum development object exists already ...")
+                val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, cdo.cdcMembers, Some(submissionObj.submissionDate), cdo.decision)
+                saveCurriculumDevelopmentObject(message.messageId, submissionObj.devCode, curDev3, "cur-dev-draft-submit-res")
             }
         }
     }
@@ -184,30 +162,21 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
 
         val curDevObjRes = DBManager.findCurriculumDevelopmentObject(validationObj.devCode)
         curDevObjRes.onComplete {
-            case Success(curDevObj) => {
-                curDevObj match {
-                    case Some(cdo) => {
-                        println("a curriculum development object exists already ...")
-                        val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, cdo.cdcMembers, cdo.submissionDate, Some(validationObj.decision))
-                        saveCurriculumDevelopmentObject(message.messageId, validationObj.devCode, curDev3, "cur-dev-draft-validate-res")
-                    }
-                    case None => {
-                        println("it seems there is no object yet...")
-                        val curDev2: CurriculumDevelopment = new CurriculumDevelopment(None, None, None, Some(validationObj.decision))
-                        saveCurriculumDevelopmentObject(message.messageId, validationObj.devCode, curDev2, "cur-dev-draft-validate-res")
-                    }
-                }
-            }
             case Failure(curDevFailure) => {
                 println("no curriculum development object exists yet ...")
                 val curDev1: CurriculumDevelopment = new CurriculumDevelopment(None, None, None, Some(validationObj.decision))
                 saveCurriculumDevelopmentObject(message.messageId, validationObj.devCode, curDev1, "cur-dev-draft-validate-res")
+            }
+            case Success(cdo) => {
+                println("a curriculum development object exists already ...")
+                val curDev3: CurriculumDevelopment = new CurriculumDevelopment(cdo.pacMembers, cdo.cdcMembers, cdo.submissionDate, Some(validationObj.decision))
+                saveCurriculumDevelopmentObject(message.messageId, validationObj.devCode, curDev3, "cur-dev-draft-validate-res")
             }
         }
     }
 
     def saveCurriculumDevelopmentObject(messageId: String, devCode: String,  curDev: CurriculumDevelopment, respTopic: String): Unit = {
         val addCurDevRes = DBManager.upsertCurriculumDevelopment(devCode, curDev)
-        handleInsertionResultWithSimpleResponse[CurriculumDevelopment](addCurDevRes, messageId, respTopic)
+        handleInsertionResultWithSimpleResponse(addCurDevRes, messageId, respTopic)
     }
 }

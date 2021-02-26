@@ -25,7 +25,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import yester.lib.{User, Programme, NeedAnalysis, CurriculumDevelopment}
 
 object DBManager {
-	val cluster = Cluster.connect("172.28.253.79", "curi", "curidev")
+	val cluster = Cluster.connect("172.28.253.79", "curi", "curidev").get
 
 	//find document inside a bucket using the document identifier
 	def findDocByID(bucketName: String, docID: String): Future[GetResult] = {

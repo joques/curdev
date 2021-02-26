@@ -10,18 +10,9 @@ final case class UserWithPreProgrammeResponseMessage(messageId: String, operatio
 object UserWithPreProgrammeResponseMessage {
 	implicit val codec: Codec[UserWithPreProgrammeResponseMessage] = Codec.codec[UserWithPreProgrammeResponseMessage]
 
-	// implicit val uwPPFmt: Format[UserWithPreProgramme] =  UserWithPreProgrammeJsonImplicits.uwPPFmt
+	implicit val uwPPFmt: Format[UserWithPreProgramme] =  UserWithPreProgramme.uwPPFmt
 
- //    implicit val uwPPResponseMessageFmt = Json.format[UserWithPreProgrammeResponseMessage]
- //    implicit val uwPPResponseMessageWrites = Json.writes[UserWithPreProgrammeResponseMessage]
- //    implicit val uwPPResponseMessageReads = Json.reads[UserWithPreProgrammeResponseMessage]
+    implicit val uwPPResponseMessageFmt = Json.format[UserWithPreProgrammeResponseMessage]
+    implicit val uwPPResponseMessageWrites = Json.writes[UserWithPreProgrammeResponseMessage]
+    implicit val uwPPResponseMessageReads = Json.reads[UserWithPreProgrammeResponseMessage]
 }
-
-
-// object UserWithPreProgrammeResponseMessageJsonImplicits {
-//     implicit val uwPPFmt: Format[UserWithPreProgramme] =  UserWithPreProgrammeJsonImplicits.uwPPFmt
-
-//     implicit val uwPPResponseMessageFmt = Json.format[UserWithPreProgrammeResponseMessage]
-//     implicit val uwPPResponseMessageWrites = Json.writes[UserWithPreProgrammeResponseMessage]
-//     implicit val uwPPResponseMessageReads = Json.reads[UserWithPreProgrammeResponseMessage]
-// }

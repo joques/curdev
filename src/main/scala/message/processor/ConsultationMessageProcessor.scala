@@ -9,9 +9,7 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{Consultation, Benchmark, FinalDraft, Endorsement}
-import yester.message.request.{ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits, BenchmarkRequestMessage,
-    BenchmarkRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits, EndorsementRequestMessage,
-    EndorsementRequestMessageJsonImplicits}
+import yester.message.request.{ConsultationRequestMessage, BenchmarkRequestMessage, FinalDraftRequestMessage, EndorsementRequestMessage}
 import yester.message.response.SimpleResponseMessage
 
 final case class ConsultationMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {

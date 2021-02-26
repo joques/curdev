@@ -9,8 +9,7 @@ import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{StartReview, RecommendReview}
-import yester.message.request.{StartReviewRequestMessage, StartReviewRequestMessageJsonImplicits, RecommendReviewRequestMessage,
-                                RecommendReviewRequestMessageJsonImplicits}
+import yester.message.request.{StartReviewRequestMessage, RecommendReviewRequestMessage}
 import yester.message.response.SimpleResponseMessage
 
 final case class ReviewMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {

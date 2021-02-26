@@ -9,13 +9,8 @@ final case class SummaryResponseMessage(messageId: String, operationError: Optio
 
 object SummaryResponseMessage {
 	implicit val codec: Codec[SummaryResponseMessage] = Codec.codec[SummaryResponseMessage]
+
+	implicit val summaryResponseMessageFmt = Json.format[SummaryResponseMessage]
+    implicit val summaryResponseMessageWrites = Json.writes[SummaryResponseMessage]
+    implicit val summaryResponseMessageReads = Json.reads[SummaryResponseMessage]
 }
-
-
-// object SummaryResponseMessageJsonImplicits {
-//     implicit val summaryFormat: Format[Summary] =  SummaryJsonImplicits.summaryFmt
-
-//     implicit val summaryResponseMessageFmt = Json.format[SummaryResponseMessage]
-//     implicit val summaryResponseMessageWrites = Json.writes[SummaryResponseMessage]
-//     implicit val summaryResponseMessageReads = Json.reads[SummaryResponseMessage]
-// }

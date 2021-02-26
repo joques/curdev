@@ -1,6 +1,6 @@
 package yester.message.request
 
-// import play.api.libs.json.{Reads, Json, Format}
+import play.api.libs.json.{Reads, Json, Format}
 import com.couchbase.client.scala.implicits.Codec
 
 import yester.lib.NeedAnalysisSenateRecommend
@@ -9,12 +9,8 @@ final case class NeedAnalysisSenateRecommendRequestMessage(messageId: String, co
 
 object NeedAnalysisSenateRecommendRequestMessage {
 	implicit val codec: Codec[NeedAnalysisSenateRecommendRequestMessage] = Codec.codec[NeedAnalysisSenateRecommendRequestMessage]
+
+	implicit val needAnaSRRequestMessageFmt = Json.format[NeedAnalysisSenateRecommendRequestMessage]
+    implicit val needAnaSRRequestMessageeWrites = Json.writes[NeedAnalysisSenateRecommendRequestMessage]
+    implicit val needAnaSRRequestMessageReads = Json.reads[NeedAnalysisSenateRecommendRequestMessage]
 }
-
-// object NeedAnalysisSenateRecommendRequestMessageJsonImplicits {
-//     implicit val needAnaSRFormat: Format[NeedAnalysisSenateRecommend] =  NeedAnalysisSenateRecommendJsonImplicits.needAnaSRFmt
-
-//     implicit val needAnaSRRequestMessageFmt = Json.format[NeedAnalysisSenateRecommendRequestMessage]
-//     implicit val needAnaSRRequestMessageeWrites = Json.writes[NeedAnalysisSenateRecommendRequestMessage]
-//     implicit val needAnaSRRequestMessageReads = Json.reads[NeedAnalysisSenateRecommendRequestMessage]
-// }

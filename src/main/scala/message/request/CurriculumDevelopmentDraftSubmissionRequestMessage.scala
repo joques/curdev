@@ -1,7 +1,7 @@
 package yester.message.request
 
 import com.couchbase.client.scala.implicits.Codec
-// import play.api.libs.json.{Reads, Json, Format}
+import play.api.libs.json.{Reads, Json, Format}
 
 import yester.lib.DraftSubmission
 
@@ -9,13 +9,8 @@ final case class CurriculumDevelopmentDraftSubmissionRequestMessage(messageId: S
 
 object CurriculumDevelopmentDraftSubmissionRequestMessage {
 	implicit val codec: Codec[CurriculumDevelopmentDraftSubmissionRequestMessage] = Codec.codec[CurriculumDevelopmentDraftSubmissionRequestMessage]
+
+	implicit val cdDraftSubRequestMessageFmt = Json.format[CurriculumDevelopmentDraftSubmissionRequestMessage]
+    implicit val cdDraftSubRequestMessageeWrites = Json.writes[CurriculumDevelopmentDraftSubmissionRequestMessage]
+    implicit val cdDraftSubRequestMessageReads = Json.reads[CurriculumDevelopmentDraftSubmissionRequestMessage]
 }
-
-
-// object CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits {
-//     implicit val draftSubFormat: Format[DraftSubmission] =  DraftSubmissionJsonImplicits.draftSubFmt
-
-//     implicit val cdDraftSubRequestMessageFmt = Json.format[CurriculumDevelopmentDraftSubmissionRequestMessage]
-//     implicit val cdDraftSubRequestMessageeWrites = Json.writes[CurriculumDevelopmentDraftSubmissionRequestMessage]
-//     implicit val cdDraftSubRequestMessageReads = Json.reads[CurriculumDevelopmentDraftSubmissionRequestMessage]
-// }

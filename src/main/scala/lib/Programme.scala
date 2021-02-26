@@ -6,7 +6,8 @@ import com.couchbase.client.scala.implicits.Codec
 // import play.api.libs.json.{Json, Format, Writes}
 // import org.reactivecouchbase.rs.scaladsl.json.{JsonReads, JsonWrites, JsonFormat, JsonSuccess, JsonResult, JsonError}
 
-import yester.lib.{ProgrammeComponent, PreProgrammeComponent}
+import ProgrammeComponent._
+import PreProgrammeComponent._
 
 final case class Programme(faculty: Int, department: Int, name: String, level: Int, isPreProgramme: Boolean, progComponent: Option[ProgrammeComponent], preProgComponent: Option[PreProgrammeComponent])
 

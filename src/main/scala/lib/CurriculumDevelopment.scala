@@ -6,6 +6,8 @@ package yester.lib
 
 import com.couchbase.client.scala.implicits.Codec
 
+import SingleCommitteeMember._
+
 final case class CurriculumDevelopment(pacMembers: Option[List[SingleCommitteeMember]], cdcMembers: Option[List[SingleCommitteeMember]], submissionDate: Option[String], decision: Option[String])
 
 object CurriculumDevelopment {

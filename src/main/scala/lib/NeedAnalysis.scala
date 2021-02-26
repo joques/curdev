@@ -6,6 +6,12 @@ import com.couchbase.client.scala.implicits.Codec
 // import play.api.libs.json.{Json, Format, Writes}
 // import org.reactivecouchbase.rs.scaladsl.json.{JsonReads, JsonWrites, JsonFormat, JsonSuccess, JsonResult, JsonError}
 
+import NAConsultationComponent._
+import NASurveyComponent._
+import NAConclusionComponent._
+import NABosComponent._
+import NASenateComponent._
+
 final case class NeedAnalysis(consultations: Option[List[NAConsultationComponent]], survey: Option[NASurveyComponent], conclusion: Option[NAConclusionComponent], bos: Option[NABosComponent], senate: Option[NASenateComponent])
 
 object NeedAnalysis {

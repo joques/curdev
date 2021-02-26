@@ -18,7 +18,7 @@ import org.reactivecouchbase.rs.scaladsl.json._
 import play.api.libs.json.{Json, Format, Writes}
 import yester.lib.{User, UserJsonImplicits, Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
 
-object DBManager {
+object DBManager2 {
 	implicit val yesSys = ActorSystem("YesterReactiveCouchbaseSystem")
   implicit val materializer = ActorMaterializer.create(yesSys)
 	implicit val ec = yesSys.dispatcher

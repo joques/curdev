@@ -2,7 +2,7 @@ package yester.message.response
 
 // import play.api.libs.json.{Reads, Json, Format}
 import com.couchbase.client.scala.implicits.Codec
-import yester.lib.User._
+import yester.lib.User
 
 final case class UserResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[User]) extends ResponseMessage[User](messageId, operationError, operationResult)
 

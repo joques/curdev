@@ -1,14 +1,19 @@
 package yester.message.request
 
-import play.api.libs.json.{Reads, Json, Format}
-import yester.lib.{Programme, ProgrammeJsonImplicits}
+import com.couchbase.client.scala.implicits.Codec
+// import play.api.libs.json.{Reads, Json, Format}
+import yester.lib.Programme
 
 final case class ProgrammeRequestMessage(messageId: String, content: Programme) extends ComplexRequestMessage[Programme](messageId, content)
 
-object ProgrammeRequestMessageJsonImplicits {
-    implicit val programmeFormat: Format[Programme] =  ProgrammeJsonImplicits.prgFmt
-
-    implicit val programmeRequestMessageFmt = Json.format[ProgrammeRequestMessage]
-    implicit val programmeRequestMessageeWrites = Json.writes[ProgrammeRequestMessage]
-    implicit val programmeRequestMessageReads = Json.reads[ProgrammeRequestMessage]
+object ProgrammeRequestMessage {
+	implicit val codec: Codec[ProgrammeRequestMessage] = Codec.codec[ProgrammeRequestMessage]
 }
+
+// object ProgrammeRequestMessageJsonImplicits {
+//     implicit val programmeFormat: Format[Programme] =  ProgrammeJsonImplicits.prgFmt
+
+//     implicit val programmeRequestMessageFmt = Json.format[ProgrammeRequestMessage]
+//     implicit val programmeRequestMessageeWrites = Json.writes[ProgrammeRequestMessage]
+//     implicit val programmeRequestMessageReads = Json.reads[ProgrammeRequestMessage]
+// }

@@ -18,22 +18,11 @@ import rx.lang.scala.Observable
 import java.util.Properties
 import java.util.UUID
 import play.api.libs.json.{Reads, Json, Writes}
-import yester.message.request.{SimpleRequestMessage, SimpleRequestMessageJsonImplicits, ProgrammeRequestMessage, ProgrammeRequestMessageJsonImplicits,
-    NeedAnalysisConsultationRequestMessage, NeedAnalysisConsultationRequestMessageJsonImplicits, NeedAnalysisSurveyRequestMessage,
-    NeedAnalysisSurveyRequestMessageJsonImplicits, NeedAnalysisConcludeRequestMessage, NeedAnalysisConcludeRequestMessageJsonImplicits,
-    NeedAnalysisBosStartRequestMessage, NeedAnalysisBosStartRequestMessageJsonImplicits, NeedAnalysisBosRecommendRequestMessage,
-    NeedAnalysisBosRecommendRequestMessageJsonImplicits, NeedAnalysisSenateRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessageJsonImplicits,
-    NeedAnalysisSenateStartRequestMessage, NeedAnalysisSenateStartRequestMessageJsonImplicits, CurriculumReviewRequestMessage, CurriculumReviewRequestMessageJsonImplicits,
-    FindUserRequestMessage, FindUserRequestMessageJsonImplicits, CreateUserRequestMessage, CreateUserRequestMessageJsonImplicits, CurriculumDevelopmentAuthorizationRequestMessage,
-    CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits, CommitteeMembersRequestMessage, CommitteeMembersJsonImplicitsRequestMessageJsonImplicits,
-    CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentAppointPACRequestMessageJsonImplicits, CurriculumDevelopmentDraftRevisionRequestMessage,
-    CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits, CurriculumDevelopmentDraftSubmissionRequestMessage,
-    CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits, CurriculumDevelopmentDraftValidationRequestMessage,
-    CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits, ConsultationRequestMessage, ConsultationRequestMessageJsonImplicits,
-    BenchmarkRequestMessage, BenchmarkRequestMessageJsonImplicits, CurriculumDevelopmentAppointCDCRequestMessage,
-    CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits, FinalDraftRequestMessage, FinalDraftRequestMessageJsonImplicits, EndorsementRequestMessage,
-    EndorsementRequestMessageJsonImplicits, StartReviewRequestMessage, StartReviewRequestMessageJsonImplicits, RecommendReviewRequestMessage,
-    RecommendReviewRequestMessageJsonImplicits
+import yester.message.request.{SimpleRequestMessage, ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage, NeedAnalysisConcludeRequestMessage,
+    NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessage,
+    NeedAnalysisSenateStartRequestMessage, CurriculumReviewRequestMessage, FindUserRequestMessage, CreateUserRequestMessage, CurriculumDevelopmentAuthorizationRequestMessage, CommitteeMembersRequestMessage,
+    CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentDraftRevisionRequestMessage, CurriculumDevelopmentDraftSubmissionRequestMessage, CurriculumDevelopmentDraftValidationRequestMessage,
+    ConsultationRequestMessage, BenchmarkRequestMessage, CurriculumDevelopmentAppointCDCRequestMessage, FinalDraftRequestMessage, EndorsementRequestMessage, StartReviewRequestMessage, RecommendReviewRequestMessage
 }
 
 
@@ -43,31 +32,31 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
     var shouldRun: Boolean = true
     var actorMap: Map[String, ActorRef] = null
 
-    implicit val reqReader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
-    implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
-    implicit val nacReqReader: Reads[NeedAnalysisConsultationRequestMessage] = NeedAnalysisConsultationRequestMessageJsonImplicits.needAnaConsRequestMessageReads
-    implicit val nasReqReader: Reads[NeedAnalysisSurveyRequestMessage] = NeedAnalysisSurveyRequestMessageJsonImplicits.needAnaSurvRequestMessageReads
-    implicit val naclReqReader: Reads[NeedAnalysisConcludeRequestMessage] = NeedAnalysisConcludeRequestMessageJsonImplicits.needAnaConclRequestMessageReads
-    implicit val nabsReqReader: Reads[NeedAnalysisBosStartRequestMessage] = NeedAnalysisBosStartRequestMessageJsonImplicits.needAnaBSRequestMessageReads
-    implicit val nassReqReader: Reads[NeedAnalysisSenateStartRequestMessage] = NeedAnalysisSenateStartRequestMessageJsonImplicits.needAnaSSRequestMessageReads
-    implicit val nabrReqReader: Reads[NeedAnalysisBosRecommendRequestMessage] = NeedAnalysisBosRecommendRequestMessageJsonImplicits.needAnaBRRequestMessageReads
-    implicit val nasrReqReader: Reads[NeedAnalysisSenateRecommendRequestMessage] = NeedAnalysisSenateRecommendRequestMessageJsonImplicits.needAnaSRRequestMessageReads
-    implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
-    implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
-    implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
-    implicit val cdaReqReader: Reads[CurriculumDevelopmentAuthorizationRequestMessage] = CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits.cdaRequestMessageReads
-    implicit val cmtMemReqReader: Reads[CommitteeMembersRequestMessage] = CommitteeMembersJsonImplicitsRequestMessageJsonImplicits.cmtMembersRequestMessageReads
-    implicit val paCmtMemReqReader: Reads[CurriculumDevelopmentAppointPACRequestMessage] = CurriculumDevelopmentAppointPACRequestMessageJsonImplicits.cdpacmembRequestMessageReads
-    implicit val cdCmtMemReqReader: Reads[CurriculumDevelopmentAppointCDCRequestMessage] = CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits.cdcmembRequestMessageReads
-    implicit val draftRevReqReader: Reads[CurriculumDevelopmentDraftRevisionRequestMessage] = CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits.cdDraftRevRequestMessageReads
-    implicit val draftSubReqReader: Reads[CurriculumDevelopmentDraftSubmissionRequestMessage] = CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits.cdDraftSubRequestMessageReads
-    implicit val draftValReqReader: Reads[CurriculumDevelopmentDraftValidationRequestMessage] = CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits.cdDraftValRequestMessageReads
-    implicit val consReqReader: Reads[ConsultationRequestMessage] = ConsultationRequestMessageJsonImplicits.consRequestMessageReads
-    implicit val bchReqReader: Reads[BenchmarkRequestMessage] = BenchmarkRequestMessageJsonImplicits.benchmarkRequestMessageReads
-    implicit val fDraftReqReader: Reads[FinalDraftRequestMessage] = FinalDraftRequestMessageJsonImplicits.fdRequestMessageReads
-    implicit val endReqReader: Reads[EndorsementRequestMessage] = EndorsementRequestMessageJsonImplicits.endRequestMessageReads
-    implicit val sRevReqReader: Reads[StartReviewRequestMessage] = StartReviewRequestMessageJsonImplicits.sRevRequestMessageReads
-    implicit val rRevReqReader: Reads[RecommendReviewRequestMessage] = RecommendReviewRequestMessageJsonImplicits.rRevRequestMessageReads
+    // implicit val reqReader: Reads[SimpleRequestMessage] = SimpleRequestMessageJsonImplicits.simpleRequestMessageReads
+    // implicit val pReqReader: Reads[ProgrammeRequestMessage] = ProgrammeRequestMessageJsonImplicits.programmeRequestMessageReads
+    // implicit val nacReqReader: Reads[NeedAnalysisConsultationRequestMessage] = NeedAnalysisConsultationRequestMessageJsonImplicits.needAnaConsRequestMessageReads
+    // implicit val nasReqReader: Reads[NeedAnalysisSurveyRequestMessage] = NeedAnalysisSurveyRequestMessageJsonImplicits.needAnaSurvRequestMessageReads
+    // implicit val naclReqReader: Reads[NeedAnalysisConcludeRequestMessage] = NeedAnalysisConcludeRequestMessageJsonImplicits.needAnaConclRequestMessageReads
+    // implicit val nabsReqReader: Reads[NeedAnalysisBosStartRequestMessage] = NeedAnalysisBosStartRequestMessageJsonImplicits.needAnaBSRequestMessageReads
+    // implicit val nassReqReader: Reads[NeedAnalysisSenateStartRequestMessage] = NeedAnalysisSenateStartRequestMessageJsonImplicits.needAnaSSRequestMessageReads
+    // implicit val nabrReqReader: Reads[NeedAnalysisBosRecommendRequestMessage] = NeedAnalysisBosRecommendRequestMessageJsonImplicits.needAnaBRRequestMessageReads
+    // implicit val nasrReqReader: Reads[NeedAnalysisSenateRecommendRequestMessage] = NeedAnalysisSenateRecommendRequestMessageJsonImplicits.needAnaSRRequestMessageReads
+    // implicit val crvReqReader: Reads[CurriculumReviewRequestMessage] = CurriculumReviewRequestMessageJsonImplicits.crvRequestMessageReads
+    // implicit val fuReqReader: Reads[FindUserRequestMessage] = FindUserRequestMessageJsonImplicits.fuRequestMessageReads
+    // implicit val cuReqReader: Reads[CreateUserRequestMessage] = CreateUserRequestMessageJsonImplicits.cuRequestMessageReads
+    // implicit val cdaReqReader: Reads[CurriculumDevelopmentAuthorizationRequestMessage] = CurriculumDevelopmentAuthorizationRequestMessageJsonImplicits.cdaRequestMessageReads
+    // implicit val cmtMemReqReader: Reads[CommitteeMembersRequestMessage] = CommitteeMembersJsonImplicitsRequestMessageJsonImplicits.cmtMembersRequestMessageReads
+    // implicit val paCmtMemReqReader: Reads[CurriculumDevelopmentAppointPACRequestMessage] = CurriculumDevelopmentAppointPACRequestMessageJsonImplicits.cdpacmembRequestMessageReads
+    // implicit val cdCmtMemReqReader: Reads[CurriculumDevelopmentAppointCDCRequestMessage] = CurriculumDevelopmentAppointCDCRequestMessageJsonImplicits.cdcmembRequestMessageReads
+    // implicit val draftRevReqReader: Reads[CurriculumDevelopmentDraftRevisionRequestMessage] = CurriculumDevelopmentDraftRevisionRequestMessageJsonImplicits.cdDraftRevRequestMessageReads
+    // implicit val draftSubReqReader: Reads[CurriculumDevelopmentDraftSubmissionRequestMessage] = CurriculumDevelopmentDraftSubmissionRequestMessageJsonImplicits.cdDraftSubRequestMessageReads
+    // implicit val draftValReqReader: Reads[CurriculumDevelopmentDraftValidationRequestMessage] = CurriculumDevelopmentDraftValidationRequestMessageJsonImplicits.cdDraftValRequestMessageReads
+    // implicit val consReqReader: Reads[ConsultationRequestMessage] = ConsultationRequestMessageJsonImplicits.consRequestMessageReads
+    // implicit val bchReqReader: Reads[BenchmarkRequestMessage] = BenchmarkRequestMessageJsonImplicits.benchmarkRequestMessageReads
+    // implicit val fDraftReqReader: Reads[FinalDraftRequestMessage] = FinalDraftRequestMessageJsonImplicits.fdRequestMessageReads
+    // implicit val endReqReader: Reads[EndorsementRequestMessage] = EndorsementRequestMessageJsonImplicits.endRequestMessageReads
+    // implicit val sRevReqReader: Reads[StartReviewRequestMessage] = StartReviewRequestMessageJsonImplicits.sRevRequestMessageReads
+    // implicit val rRevReqReader: Reads[RecommendReviewRequestMessage] = RecommendReviewRequestMessageJsonImplicits.rRevRequestMessageReads
 
     def startConsuming(actors: Map[String, ActorRef]) : Unit = {
         actorMap = actors

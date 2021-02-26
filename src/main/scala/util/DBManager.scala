@@ -32,7 +32,7 @@ object DBManager {
 		val curBucket = cluster.bucket(bucketName)
 		curBucket.waitUntilReady(30.seconds).get
 
-		val DocColl = curBucket.defaultCollection
+		val docColl = curBucket.defaultCollection
 		docColl.async.get(docID)
 	}
 

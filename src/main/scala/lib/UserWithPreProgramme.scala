@@ -3,7 +3,7 @@ package yester.lib
 // import play.api.libs.json.{Json, Format}
 import com.couchbase.client.scala.implicits.Codec
 
-import User._
+import User
 
 final case class UserWithPreProgramme(userDetails: User, preProgrammeCodes: Option[Seq[String]])
 

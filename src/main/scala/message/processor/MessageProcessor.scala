@@ -10,13 +10,13 @@ import play.api.libs.json.{Reads, Json, Writes}
 import com.couchbase.client.scala.kv.MutationResult
 
 import yester.YesterProducer
-import yester.lib.{User, UserJsonImplicits, PreProgrammeComponent,  Programme, ProgrammeJsonImplicits, NeedAnalysis, NeedAnalysisJsonImplicits, CurriculumDevelopment, CurriculumDevelopmentJsonImplicits}
-import yester.message.response.{SimpleResponseMessage, SummaryResponseMessage, SummaryResponseMessageJsonImplicits, SimpleResponseMessageJsonImplicits}
+import yester.lib.{User, PreProgrammeComponent,  Programme, NeedAnalysis, CurriculumDevelopment}
+import yester.message.response.{SimpleResponseMessage, SummaryResponseMessage}
 
 abstract class MessageProcessor(messenger: YesterProducer) extends Actor {
 
-    implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
-    implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
+    // implicit val summaryRespWriter: Writes[SummaryResponseMessage] = SummaryResponseMessageJsonImplicits.summaryResponseMessageWrites
+    // implicit val simpleRespWriter: Writes[SimpleResponseMessage] = SimpleResponseMessageJsonImplicits.simpleResponseMessageWrites
 
 
     def handleInsertionResultWithSimpleResponse(result: Future[MutationResult], messageId: String, responseTopic: String): Unit = {

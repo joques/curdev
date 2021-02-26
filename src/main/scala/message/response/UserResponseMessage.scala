@@ -7,7 +7,7 @@ import yester.lib.User._
 final case class UserResponseMessage(messageId: String, operationError: Option[String], operationResult: Option[User]) extends ResponseMessage[User](messageId, operationError, operationResult)
 
 object UserResponseMessage {
-	implicit val codec: Codec[UserWithPreProgrammeResponseMessage] = Codec.codec[UserWithPreProgrammeResponseMessage]
+	implicit val codec: Codec[UserResponseMessage] = Codec.codec[UserResponseMessage]
 }
 
 

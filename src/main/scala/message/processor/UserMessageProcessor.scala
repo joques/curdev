@@ -10,13 +10,14 @@ import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.Programme
 import yester.message.request.{FindUserRequestMessage, CreateUserRequestMessage}
-import yester.message.response.{UserResponseMessage, UserWithPreProgrammeResponseMessage, UserResponseMessageJsonImplicits, UserWithPreProgrammeResponseMessageJsonImplicits}
+import yester.message.response.UserResponseMessage._
+import yester.message.response.UserWithPreProgrammeResponseMessage._
 
 
 final case class UserMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
 
-    implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
-    implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites
+    // implicit val userRespWriter: Writes[UserResponseMessage] = UserResponseMessageJsonImplicits.userResponseMessageWrites
+    // implicit val userWPRespWriter: Writes[UserWithPreProgrammeResponseMessage] = UserWithPreProgrammeResponseMessageJsonImplicits.uwPPResponseMessageWrites
 
 
     def receive = {

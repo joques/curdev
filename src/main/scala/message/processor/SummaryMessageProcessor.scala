@@ -11,7 +11,7 @@ import io.lamma._
 import yester.YesterProducer
 import yester.util.DBManager
 import yester.message.request.SimpleRequestMessage
-import yester.message.response.{SummaryResponseMessage, SummaryResponseMessageJsonImplicits}
+import yester.message.response.SummaryResponseMessage
 import yester.lib.{Programme, Summary}
 
 final case class SummaryMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {

@@ -14,6 +14,12 @@ final case class NeedAnalysis(consultations: Option[List[NAConsultationComponent
 object NeedAnalysis {
 	implicit val nacCodec: Codec[NeedAnalysis] = Codec.codec[NeedAnalysis]
 
+	implicit val nacosulFormat: Format[NAConsultationComponent] = naConsCompFmt
+	implicit val nasurvFormat: Format[NASurveyComponent] = naSurvCompFmt
+	implicit val naconFormat: Format[NAConclusionComponent] = naConclCompFmt
+	implicit val nabosFormat: Format[NABosComponent] = naBosCompFmt
+	implicit val nasenFormat: Format[NASenateComponent] = naSenateCompFmt
+
 	implicit val naFmt = Json.format[NeedAnalysis]
     implicit val naWrites = Json.writes[NeedAnalysis]
     implicit val naReads = Json.reads[NeedAnalysis]

@@ -8,8 +8,10 @@ import play.api.libs.json.{Reads, Json, Writes}
 import java.util.UUID
 import yester.YesterProducer
 import yester.util.DBManager
-import yester.lib.Programme
+import yester.lib.{Programme, UserWithPreProgramme}
 import yester.message.request.{FindUserRequestMessage, CreateUserRequestMessage}
+import yester.message.response.UserResponseMessage._
+import yester.message.response.UserWithPreProgrammeResponseMessage._
 import yester.message.response.{UserResponseMessage, UserWithPreProgrammeResponseMessage}
 
 
@@ -38,7 +40,7 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
         userResult.onComplete {
             case Success(userVal) => {
                 println(s"We got user $userVal")
-                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.simpleMsg.messageId, None, userVal)
+                val userSuccessRespMsg: UserResponseMessage = new UserResponseMessage(message.simpleMsg.messageId, None, Some(userVal))
                 val succMsgStr = Json.toJson(userSuccessRespMsg).toString()
                 println(s"the success message to be sent is $succMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("find-users-res", succMsgStr))
@@ -87,9 +89,9 @@ final case class UserMessageProcessor(messenger: YesterProducer) extends Message
 
                                 var userWPrePrg: Option[UserWithPreProgramme] = None
                                 if (preProgCodes.isEmpty) {
-                                    userWPrePrg = Some(new UserWithPreProgramme(userVal.get, None))
+                                    userWPrePrg = Some(new UserWithPreProgramme(userVal, None))
                                 } else {
-                                    userWPrePrg = Some(new UserWithPreProgramme(userVal.get, Option(preProgCodes)))
+                                    userWPrePrg = Some(new UserWithPreProgramme(userVal, Option(preProgCodes)))
                                 }
                                 val succRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, None, userWPrePrg)
                                 val succMsgStr = Json.toJson(succRespMsg).toString()

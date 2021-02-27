@@ -11,7 +11,7 @@ import yester.YesterProducer
 import yester.util.DBManager
 import yester.lib.{PreProgrammeComponent, Programme, CurriculumDevelopment}
 import yester.message.request.{CurriculumReviewRequestMessage, CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentDraftRevisionRequestMessage, CurriculumDevelopmentDraftSubmissionRequestMessage, CurriculumDevelopmentDraftValidationRequestMessage, CurriculumDevelopmentAppointCDCRequestMessage}
-import yester.message.response.SimpleResponseMessage
+import yester.message.response.{SimpleResponseMessage, UserWithPreProgrammeResponseMessage}
 
 final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer) extends MessageProcessor(messenger) {
     def receive = {
@@ -43,6 +43,22 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
             println("unknown message type ...")
     }
 
+    def compareProgCodes(prg: Programme, aCode: String): Boolean = {
+        if (prg.isPreProgramme) {
+            return false
+        } else {
+            prg.progComponent match {
+                case None => return false
+                case Some(prgC) => {
+                    prgC.code match {
+                        case None => return false
+                        case Some(pCode) => return return pCode == aCode
+                    }
+                }
+            }
+        }
+    }
+
     def startCurriculumReview(message: CurriculumReviewRequestMessage): Unit = {
         println("starting a programme review ...")
 
@@ -56,16 +72,17 @@ final case class CurriculumDevelopmentMessageProcessor(messenger: YesterProducer
                 println(s"the error message to be sent for all progs is $errMsgStr")
                 messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr))
             }
-            case Success(progSeq) => {
+            case Success(progs) => {
                 progs.rowsAs[Programme] match {
                     case Failure(rowError) => {
-                        val rowErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.simpleMsg.messageId, Option(rowError.getMessage), None)
+                        val rowErrorRespMsg: UserWithPreProgrammeResponseMessage = new UserWithPreProgrammeResponseMessage(message.messageId, Option(rowError.getMessage), None)
                         val errMsgStr11 = Json.toJson(rowErrorRespMsg).toString()
                         println(s"the error message to be sent is $errMsgStr11")
                         messenger.getProducer().send(new ProducerRecord[String,String]("curriculum-review-res", errMsgStr11))
                     }
                     case Success(progSeq) => {
-                        val toBeReviewedProgs: Seq[Programme] = progSeq.filter((prg: Programme) => ((! prg.isPreProgramme) && (prg.progComponent.get.code == reviewObj.code)))
+                        // val toBeReviewedProgs: Seq[Programme] = progSeq.filter((prg: Programme) => ((! prg.isPreProgramme) && (prg.progComponent.get.code == reviewObj.code)))
+                        val toBeReviewedProgs: Seq[Programme] = progSeq.filter((prg: Programme) => (compareProgCodes(prg, reviewObj.code)))
                         if (toBeReviewedProgs.isEmpty) {
                             val progErrorRespMsg1: SimpleResponseMessage = new SimpleResponseMessage(message.messageId, Option(s"No exisiting programme with code $reviewObj.code"), None)
                             val errMsgStr1 = Json.toJson(progErrorRespMsg1).toString

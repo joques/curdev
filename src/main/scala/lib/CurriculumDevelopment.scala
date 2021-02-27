@@ -10,6 +10,8 @@ final case class CurriculumDevelopment(pacMembers: Option[List[SingleCommitteeMe
 object CurriculumDevelopment {
 	implicit val codec: Codec[CurriculumDevelopment] = Codec.codec[CurriculumDevelopment]
 
+	implicit val scformat:Format[SingleCommitteeMember] = singleComFmt
+
 	implicit val cdFmt = Json.format[CurriculumDevelopment]
     implicit val cdWrites = Json.writes[CurriculumDevelopment]
     implicit val cdReads = Json.reads[CurriculumDevelopment]

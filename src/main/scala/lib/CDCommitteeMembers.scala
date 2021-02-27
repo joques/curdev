@@ -11,6 +11,8 @@ final case class CDCommitteeMembers(devCode: String, members: List[SingleCommitt
 object CDCommitteeMembers {
 	implicit val codec: Codec[CDCommitteeMembers] = Codec.codec[CDCommitteeMembers]
 
+	implicit val scformat:Format[SingleCommitteeMember] = singleComFmt
+
 	implicit val cdCmtMembersFmt = Json.format[CDCommitteeMembers]
     implicit val cdCmtMembersWrites = Json.writes[CDCommitteeMembers]
     implicit val cdCmtMembersReads = Json.reads[CDCommitteeMembers]

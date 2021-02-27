@@ -46,7 +46,7 @@ object DBManager {
 	}
 
 	//find a need analysis document based on its code
-	def findNeedAnalysisObject(naCode: String): Future[NeedAnaysis] = {
+	def findNeedAnalysisObject(naCode: String): Future[NeedAnalysis] = {
 		findDocByID("yester-need-analyses", naCode)
 			.map((v: GetResult) => v.contentAs[NeedAnalysis])
 			.map((v: Try[NeedAnalysis]) => v.get)
@@ -70,7 +70,7 @@ object DBManager {
 	}
 
 	//create a programme
-	def createProgramme(progKey: String, progData: Programme): Future[MutaationResult] = {
+	def createProgramme(progKey: String, progData: Programme): Future[MutationResult] = {
 		saveDoc[Programme]("yester-programmes",progKey, progData)
 	}
 

@@ -26,7 +26,7 @@
     libraryDependencies ++= Seq(
         "org.scala-lang" % "scala-library" % "2.12.13",
         "com.couchbase.client" %% "scala-client" % "1.1.2",
-        //"io.reactivex" % "rxscala_2.12" % "0.27.0",
+        "io.reactivex" % "rxscala_2.12" % "0.27.0",
         "net.cakesolutions" %% "scala-kafka-client" % "2.3.1",
 		    "net.cakesolutions" %% "scala-kafka-client-akka" % "2.3.1",
 		    "org.apache.logging.log4j" % "log4j-core" % "2.11.2",

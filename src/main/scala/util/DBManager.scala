@@ -30,7 +30,7 @@ object DBManager {
 	//find document inside a bucket using the document identifier
 	def findDocByID(bucketName: String, docID: String): Future[GetResult] = {
 		val curBucket = cluster.bucket(bucketName)
-		curBucket.waitUntilReady(30.seconds).get
+		// curBucket.waitUntilReady(30.seconds).get
 
 		val docColl = curBucket.defaultCollection
 		docColl.async.get(docID)
@@ -64,7 +64,7 @@ object DBManager {
 	//save a document in a bucket
 	def saveDoc[T](bucketName: String, docID: String, docData: T)(implicit jser: JsonSerializer[T]): Future[MutationResult] = {
 		val curBucket = cluster.bucket(bucketName)
-		curBucket.waitUntilReady(30.seconds).get
+		// curBucket.waitUntilReady(30.seconds).get
 		val docColl = curBucket.defaultCollection
 		docColl.async.upsert(docID, docData)
 	}

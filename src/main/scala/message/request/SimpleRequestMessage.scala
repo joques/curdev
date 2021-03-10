@@ -9,6 +9,6 @@ object SimpleRequestMessage {
 	implicit val codec: Codec[SimpleRequestMessage] = Codec.codec[SimpleRequestMessage]
 
 	implicit val simpleRequestMessageFmt = Json.format[SimpleRequestMessage]
-    implicit val simpleRequestMessageWrites = Json.writes[SimpleRequestMessage]
-    implicit val simpleRequestMessageReads = Json.reads[SimpleRequestMessage]
+  implicit val simpleRequestMessageWrites = Json.writes[SimpleRequestMessage]
+  implicit val simpleRequestMessageReads = Json.reads[SimpleRequestMessage]
 }

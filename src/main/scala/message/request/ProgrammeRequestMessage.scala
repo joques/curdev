@@ -10,6 +10,6 @@ object ProgrammeRequestMessage {
 	implicit val codec: Codec[ProgrammeRequestMessage] = Codec.codec[ProgrammeRequestMessage]
 
 	implicit val programmeRequestMessageFmt = Json.format[ProgrammeRequestMessage]
-    implicit val programmeRequestMessageeWrites = Json.writes[ProgrammeRequestMessage]
-    implicit val programmeRequestMessageReads = Json.reads[ProgrammeRequestMessage]
+  implicit val programmeRequestMessageeWrites = Json.writes[ProgrammeRequestMessage]
+  implicit val programmeRequestMessageReads = Json.reads[ProgrammeRequestMessage]
 }

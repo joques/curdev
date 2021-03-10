@@ -12,6 +12,6 @@ object Programme {
 	implicit val progCodec: Codec[Programme] = Codec.codec[Programme]
 
 	implicit val prgFmt = Json.format[Programme]
-    implicit val prgWrites = Json.writes[Programme]
-    implicit val prgReads = Json.reads[Programme]
+  implicit val prgWrites = Json.writes[Programme]
+  implicit val prgReads = Json.reads[Programme]
 }

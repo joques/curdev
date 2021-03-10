@@ -3,6 +3,7 @@ package yester.message.request
 import com.couchbase.client.scala.implicits.Codec
 import play.api.libs.json.{Reads, Json, Format}
 import yester.lib.Programme
+import yester.lib.Programme._
 
 final case class ProgrammeRequestMessage(messageId: String, content: Programme) extends ComplexRequestMessage[Programme](messageId, content)
 

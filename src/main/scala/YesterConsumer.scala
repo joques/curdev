@@ -1,7 +1,7 @@
 package yester
 
 import akka.actor._
-import java.io.Closeable
+import java.io.{Closeable, StringWritter, PrintWriter}
 import java.util.concurrent.{TimeUnit, Executors, ExecutorService}
 import org.apache.kafka.clients.consumer.{KafkaConsumer, ConsumerRecords, ConsumerRecord}
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -254,7 +254,7 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
                 shouldRun = false
                 val sw = new StringWriter
                 // val st = throwable.getStackTrace()
-                throwable.printStackTrace(new PrintWritter(sw))
+                throwable.printStackTrace(new PrintWriter(sw))
                 println("got an error...")
                 println(sw.toString)
         }

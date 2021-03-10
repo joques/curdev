@@ -252,8 +252,11 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
         catch {
             case throwable: Throwable =>
                 shouldRun = false
-                val st = throwable.getStackTrace()
-                println(s"got an error $st")
+                val sw = new StringWriter
+                // val st = throwable.getStackTrace()
+                throwable.printStackTrace(new PrintWritter(sw))
+                println("got an error...")
+                println(sw.toString)
         }
         finally {
             shutDownAndAwaitTermination(pool)

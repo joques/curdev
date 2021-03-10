@@ -25,6 +25,8 @@ import yester.message.request.{SimpleRequestMessage, ProgrammeRequestMessage, Ne
     ConsultationRequestMessage, BenchmarkRequestMessage, CurriculumDevelopmentAppointCDCRequestMessage, FinalDraftRequestMessage, EndorsementRequestMessage, StartReviewRequestMessage, RecommendReviewRequestMessage
 }
 
+import yester.message.request.ProgrammeRequestMessage._
+
 
 final case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {
     var consumer: KafkaConsumer[String, String] = null

@@ -1,4 +1,4 @@
-#!/bin/bsh
+#!/bin/bash
 ### Begin init info
 # Provides: Yester
 ### End init info

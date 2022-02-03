@@ -4,7 +4,7 @@
 ### End init info
 
 SERVICE_NAME=Yester
-PATH_TO_JAR=/home/lasta/yester-ser/target/scala-2.11/yester-assembly-0.1.0.jar
+PATH_TO_JAR=/home/curi/yester/target/scala-2.12/yester-assembly-0.2.5.jar
 PID_PATH_NAME=/tmp/yester-pid
 
 case $1 in

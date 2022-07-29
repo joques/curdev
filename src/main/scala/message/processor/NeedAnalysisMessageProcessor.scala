@@ -228,9 +228,9 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
 
     def addNeedAnalysisAPCRecommendation(message: NeedAnalysisAPCRecommendRequestMessage): Unit = {
       println("adding APC recommendation record for need analysis...")
-      val apcReCommendationObj = message.content
+      val apcRecommendationObj = message.content
 
-      val needAnalysisObjRes = DBManager.findNeedAnalysisObject(apcReCommendationObj.devCode)
+      val needAnalysisObjRes = DBManager.findNeedAnalysisObject(apcRecommendationObj.devCode)
 
       needAnalysisObjRes.onComplete {
         case Failure(naFailure) => {
@@ -240,10 +240,10 @@ final case class NeedAnalysisMessageProcessor(messenger: YesterProducer) extends
           val addAPCRecommendationRes1 = DBManager.addOrUpdateNeedAnalysis(apcRecommendationObj.devCode, na1)
           handleInsertionResultWithSimpleResponse(addAPCRecommendationRes1, message.messageId, "need-analysis-apc-recommend-res")
         }
-        case Success(naObj) =>
+        case Success(naObj) => {
           val naAPCComp = new NAAPCComponent(apcRecommendationObj.date, apcRecommendationObj.status, apcRecommendationObj.commitHash)
           val na: NeedAnalysis = new NeedAnalysis(naObj.consultations, naObj.survey, naObj.conclusion,  naObj.bos, naObj.senate,  Some(naAPCComp))
-          val addAPCRecommendationRes = DBManager.addOrUpdateNeedAnalysis(senateRecommendationObj.devCode, na)
+          val addAPCRecommendationRes = DBManager.addOrUpdateNeedAnalysis(apcRecommendationObj.devCode, na)
                 handleInsertionResultWithSimpleResponse(addAPCRecommendationRes, message.messageId, "need-analysis-apc-recommend-res")
         }
       }

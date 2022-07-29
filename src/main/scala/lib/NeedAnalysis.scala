@@ -8,8 +8,9 @@ import NASurveyComponent._
 import NAConclusionComponent._
 import NABosComponent._
 import NASenateComponent._
+import NAAPCComponent._
 
-final case class NeedAnalysis(consultations: Option[List[NAConsultationComponent]], survey: Option[NASurveyComponent], conclusion: Option[NAConclusionComponent], bos: Option[NABosComponent], senate: Option[NASenateComponent])
+final case class NeedAnalysis(consultations: Option[List[NAConsultationComponent]], survey: Option[NASurveyComponent], conclusion: Option[NAConclusionComponent], bos: Option[NABosComponent], senate: Option[NASenateComponent], apc: Option[NAAPCComponent])
 
 object NeedAnalysis {
 	implicit val nacCodec: Codec[NeedAnalysis] = Codec.codec[NeedAnalysis]
@@ -19,6 +20,7 @@ object NeedAnalysis {
 	implicit val naconFormat: Format[NAConclusionComponent] = naConclCompFmt
 	implicit val nabosFormat: Format[NABosComponent] = naBosCompFmt
 	implicit val nasenFormat: Format[NASenateComponent] = naSenateCompFmt
+    implicit val naapcFormat: Format[NAAPCComponent] = naAPCCompFmt
 
 	implicit val naFmt = Json.format[NeedAnalysis]
     implicit val naWrites = Json.writes[NeedAnalysis]

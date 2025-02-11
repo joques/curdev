@@ -20,7 +20,7 @@
     ),
     mainClass in (Compile) := Some("yester.Yester"),
     resolvers ++= Seq(
-        Resolver.bintrayRepo("cakesolutions", "maven"),
+        // Resolver.bintrayRepo("cakesolutions", "maven"),
         Resolver.bintrayRepo("mathieuancelin", "reactivecouchbase-maven")
     ),
     libraryDependencies ++= Seq(
@@ -35,7 +35,8 @@
         "com.typesafe.play" % "play-json_2.12" % "2.9.1",
         //"org.reactivecouchbase" %% "reactivecouchbase-rs-core" % "1.2.1",
         "io.lamma" %% "lamma" % "2.3.1",
-        "io.leonard" %% "play-json-traits" % "1.5.1"
+        "io.leonard" %% "play-json-traits" % "1.5.1",
+        "org.xerial.snappy" % "snappy-java" % "1.1.10.5"
     ),
     // environment-specific
     //mappings in Universal += {

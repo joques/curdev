@@ -1,7 +1,6 @@
-# SBT
+# SBT build artifacts
 target/
 project/target/
-project/project/
 *.lock
 
 # IDEs
@@ -29,8 +28,12 @@ Thumbs.db
 # sbt-based caches
 .cache/
 
+# Bazel
+.bazel/
+.bazel-out/
+
 # Metals (Scala language server)
-.metals/
+.metal/
 
 # BSP (Build Server Protocol)
 .bsp/

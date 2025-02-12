@@ -27,4 +27,4 @@ RUN git clone https://github.com/cakesolutions/scala-kafka-client.git /app/scala
 RUN sbt clean compile
 
 # CMD ["sbt run"]
-CMD ["/bin/bash", "-c", "nohup scala /app/target/scala-2.12/yester-assembly-0.2.5.jar > /dev/null 2>&1 & tail -f /dev/null"]
+CMD ["/bin/bash", "-c", "nohup java -jar /app/target/scala-2.12/yester-assembly-0.2.5.jar > /dev/null 2>&1 & tail -f /dev/null"]

@@ -2,10 +2,11 @@ package yester
 
 import java.util.{Properties, UUID}
 import org.apache.kafka.clients.producer.KafkaProducer
+import config.AppConfig
 
 final case class YesterProducer() {
     val props = new Properties()
-    props.put("bootstrap.servers", "127.0.0.1:9092")
+    props.put("bootstrap.servers", AppConfig.Kafka.bootrapServer)
     props.put("acks", "all")
     props.put("retries", "0")
     props.put("batch.size", "16384")

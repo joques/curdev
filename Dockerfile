@@ -1,5 +1,21 @@
 FROM amazoncorretto:11.0.26-alpine3.18
 
+ARG KAFKA_BROKER_HOST
+ENV KAFKA_BROKER_HOST=${KAFKA_BROKER_HOST}
+
+ARG ZOOKEEPER_HOST_URL
+ENV ZOOKEEPER_HOST_URL=${ZOOKEEPER_HOST_URL}
+
+ARG DB_URL
+ENV DB_URL=${DB_URL}
+
+ARG DB_USER
+ENV DB_USER=${DB_USER}
+
+ARG DB_PASSWORD
+ENV DB_PASSWORD=${DB_PASSWORD}
+
+
 WORKDIR /app
 
 COPY project/ ./project/
@@ -27,4 +43,4 @@ COPY src/ ./src/
 
 RUN sbt clean assembly
 
-CMD ["/bin/bash", "-c", "nohup java -jar /app/target/scala-2.12/yester-assembly-0.2.5.jar > /dev/null 2>&1 & tail -f /dev/null"]
+CMD ["java", "-jar", "/app/target/scala-2.12/yester-assembly-0.2.5.jar"]

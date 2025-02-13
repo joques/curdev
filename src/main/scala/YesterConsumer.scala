@@ -26,6 +26,7 @@ import yester.message.request.{SimpleRequestMessage, ProgrammeRequestMessage, Ne
 }
 
 import yester.message.request.ProgrammeRequestMessage._
+import config.AppConfig
 
 
 final case class YesterConsumer (topics: List[String]) extends Closeable with Runnable {
@@ -221,8 +222,8 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             val groupIDSuffix: String = UUID.randomUUID().toString
             props.put("group.id", s"yester-$groupIDSuffix")
 			//this should now depend on the environment
-            props.put("bootstrap.servers", "127.0.0.1:9092")
-            props.put("zookeeper.connect", "127.0.0.1:2181")
+            props.put("bootstrap.servers", AppConfig.Kafka.bootrapServer)
+            props.put("zookeeper.connect", AppConfig.Kafka.zookeeperConnect)
             props.put("enable.auto.commit", "true")
             props.put("auto.commit.interval.ms", "3000")
             props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")

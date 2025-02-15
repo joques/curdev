@@ -11,6 +11,18 @@ The key functionalities offered by _yester_ include:
 
 The early design of the **micro service** should include a communication management component (message consumer and message producer); a database management component (offering an API to manipulate RethinkDB)
 
+# Pre-requisites
+In order to run app you to have following running
+1. **Couchbase with these buckets**
+- yester-curricula-dev
+- yester-need-analyses
+- yester-need-curricula-dev
+- yester-programmes
+- yester-users
+
+2. **Kafka and Zookeeper**
+- Run the provided shell script to create the topics
+
 # Build and Run Image
 
 ```powershell

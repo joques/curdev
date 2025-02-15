@@ -11,6 +11,29 @@ The key functionalities offered by _yester_ include:
 
 The early design of the **micro service** should include a communication management component (message consumer and message producer); a database management component (offering an API to manipulate RethinkDB)
 
+# Build and Run Image
+
+```powershell
+brew install direnv
+
+echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc   
+
+source ~/.zshrc
+
+direnv allow .
+```
+
+```powershell
+docker build -f Dockerfile -t pdqa-microservices .
+
+docker run -d \   
+  -e KAFKA_BROKER_HOST="host.docker.internal:9092" \
+  -e ZOOKEEPER_HOST_URL="host.docker.internal:2181" \
+  -e DB_URL="host.docker.internal" \
+  -e DB_USER="" \
+  -e DB_PASSWORD="" \
+  pdqa-microservices
+  ```
 
 # Design Notes
 Before going any further one needs to take a closer look at the following points

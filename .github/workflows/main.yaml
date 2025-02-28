@@ -38,11 +38,11 @@ jobs:
 
                 run: |
                     docker build -f Dockerfile \
-                    -t ghcr.io/joques/pdqa-microservices:$(echo $GITHUB_SHA | head -c7) .
+                    -t ghcr.io/curiapp/pdqa-microservices:$(echo $GITHUB_SHA | head -c7) .
 
             -   name: Push image to GitHub Container Registry
                 run: |
-                      docker push ghcr.io/joques/pdqa-microservices:$(echo $GITHUB_SHA | head -c7)
+                      docker push ghcr.io/curiapp/pdqa-microservices:$(echo $GITHUB_SHA | head -c7)
               
     gitops_develop:
         name: Update GitOps Image Tag
@@ -53,16 +53,16 @@ jobs:
         -   name: Clone GitOps repository
             uses: actions/checkout@v3
             with:
-                repository: joques/dev-ops
+                repository: curiapp/dev-ops
                 token: ${{ secrets.PAT }}
                 ref: master
         
         -   name: Kustomize CBI-develop
-            if: github.repository == 'joques/curdev'
+            if: github.repository == 'curiapp/curdev'
             run: |
                 cd overlays/develop
                 SHA=$(echo ${{needs.build_develop.outputs.output1}} | head -c7)
-                kustomize edit set image ghcr.io/joques/pdqa-microservices:$SHA
+                kustomize edit set image ghcr.io/curiapp/pdqa-microservices:$SHA
                 git config user.name github-actions[bot]
                 git config user.email 41898282+github-actions[bot]@users.noreply.github.com
                 git add .

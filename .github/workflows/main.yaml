@@ -54,7 +54,7 @@ jobs:
             uses: actions/checkout@v4
             with:
                 repository: curiapp/dev-ops
-                token: ${{ secrets.GITHUB_TOKEN }}
+                token: ${{ secrets.PAT }}
                 ref: master
         
         -   name: Kustomize CBI-develop

@@ -49,6 +49,8 @@ jobs:
         needs: build_develop
         if: github.ref == 'refs/heads/feature/local-setup'
         runs-on: ubuntu-latest
+        permissions:
+          contents: write
         steps:
         -   name: Clone GitOps repository
             uses: actions/checkout@v4

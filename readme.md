@@ -22,7 +22,7 @@ In order to run app you to have following running
 
 2. **Kafka and Zookeeper**
 - Run the provided shell script to create the topics
-
+ 
 # Build and Run Image
 
 ```powershell

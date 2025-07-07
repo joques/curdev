@@ -19,7 +19,7 @@ import java.util.Properties
 import java.util.UUID
 import play.api.libs.json.{Reads, Json, Writes}
 import yester.message.request.{SimpleRequestMessage, ProgrammeRequestMessage, NeedAnalysisConsultationRequestMessage, NeedAnalysisSurveyRequestMessage, NeedAnalysisConcludeRequestMessage,
-    NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessage,
+    NeedAnalysisBosStartRequestMessage, NeedAnalysisBosRecommendRequestMessage, NeedAnalysisSenateRecommendRequestMessage, NeedAnalysisAPCRecommendRequestMessage,
     NeedAnalysisSenateStartRequestMessage, CurriculumReviewRequestMessage, FindUserRequestMessage, CreateUserRequestMessage, CurriculumDevelopmentAuthorizationRequestMessage, CommitteeMembersRequestMessage,
     CurriculumDevelopmentAppointPACRequestMessage, CurriculumDevelopmentDraftRevisionRequestMessage, CurriculumDevelopmentDraftSubmissionRequestMessage, CurriculumDevelopmentDraftValidationRequestMessage,
     ConsultationRequestMessage, BenchmarkRequestMessage, CurriculumDevelopmentAppointCDCRequestMessage, FinalDraftRequestMessage, EndorsementRequestMessage, StartReviewRequestMessage, RecommendReviewRequestMessage
@@ -131,6 +131,10 @@ final case class YesterConsumer (topics: List[String]) extends Closeable with Ru
             case "need-analysis-senate-start-req" => {
                 val needAnalysisSSMessage = Json.parse(recordValue).as[NeedAnalysisSenateStartRequestMessage]
                 actorMap("need-analysis") ! needAnalysisSSMessage
+            }
+            case "need-analysis-apc-recommend-req" => {
+              val needAnalysisAPCRMessage = Json.parse(recordValue).as[NeedAnalysisAPCRecommendRequestMessage]
+              actorMap("need-analysis") ! needAnalysisAPCRMessage
             }
             case "need-analysis-senate-recommend-req" => {
                 val needAnalysisSRMessage = Json.parse(recordValue).as[NeedAnalysisSenateRecommendRequestMessage]

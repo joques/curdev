@@ -3,7 +3,7 @@ package yester.lib
 import play.api.libs.json.Json
 import com.couchbase.client.scala.implicits.Codec
 
-final case class SingleCommitteeMember(firstName: String, lastName: String, organization: String, emailAddress: String, cellphone: String, workNumber: String)
+final case class SingleCommitteeMember(firstName: String, lastName: String, emailAddress: String, cellphone: String, workNumber: String, organization: Option[String], occupation: Option[String])
 
 object SingleCommitteeMember {
     implicit val sCMCodec: Codec[SingleCommitteeMember] = Codec.codec[SingleCommitteeMember]
